@@ -1,5 +1,5 @@
 // cd to /backend
-// npm init --yes
+// ?(maybe not do this)? npm init --yes
 // npm install
 // node server
 // go to localhost:3000
@@ -11,7 +11,6 @@ const axios = require('axios').default;
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 app.use(express.static('../frontend'))
 
 app.listen(port, () => {
