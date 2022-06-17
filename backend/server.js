@@ -1,5 +1,6 @@
+// How To Setup Server
+// ===========================================
 // cd to /backend
-// ?(maybe not do this)? npm init --yes
 // npm install
 // node server
 // go to localhost:3000
@@ -11,11 +12,14 @@ const axios = require('axios').default;
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(express.static('../frontend'))
+app.use(express.static(__dirname + '/../frontend'))
+
+
 
 app.listen(port, () => {
 	console.log('Listening on *:3000');
 });
 
-// come up with our branching system
-// https://docs.github.com/en/get-started/quickstart/github-flow
+// favicon
+var favicon = require('serve-favicon');
+app.use(favicon(__dirname + '/../frontend/resources/logo.png'));
