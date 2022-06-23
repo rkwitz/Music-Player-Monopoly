@@ -5,7 +5,7 @@
 // node server
 // go to localhost:3000
 
-import "secret.js";
+import "secret.mjs";
 
 const express = require('express');
 const app = express();
