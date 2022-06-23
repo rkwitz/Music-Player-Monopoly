@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # Secret
+secret.mjs
 secret.js
