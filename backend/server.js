@@ -5,8 +5,7 @@
 // node server
 // go to localhost:3000
 
-import "secret.mjs";
-
+const { config } = require('./config'); // 0: client ID, 1: client secret
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -46,8 +45,8 @@ const scopes = [
 ];
 var spotifyApi = new SpotifyWebApi({
 	// make sure you don't push with clientID or secret filled in
-    clientId: id,
-    clientSecret: secret,
+    clientId: config[0],
+    clientSecret: config[1],
     redirectUri: 'http://localhost:3000/callback'
 });
 
