@@ -132,3 +132,4 @@ dist
 # secret
 secret.js
 secret.mjs
+config.js
