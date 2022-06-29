@@ -73,16 +73,9 @@ app.get('/callback', (req, res) => {
 		spotifyApi.setAccessToken(access_token);
 		spotifyApi.setRefreshToken(refresh_token);
 
-		// console.log('access_token:', access_token);
-		// console.log('refresh_token:', refresh_token);
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
 		res.redirect('/landing.html');
 		spotifyApi.searchPlaylists('workout')
-		// .then(function(data) {
-		// 	console.log('Found playlists are', data.body);
-		// }, function(err) {
-		// 	console.log(err, 'Something went wrong!');
-		// });
 
 		setInterval(async () => {
 			const data = await spotifyApi.refreshAccessToken();
@@ -98,6 +91,11 @@ app.get('/callback', (req, res) => {
 	});
 });
 
+function correctKeys(ob1, ob2) {
+	if (Object.keys(ob1).length == Object.keys(ob2).length) {
+		return Object.keys(ob1).every(key => ob2.hasOwnProperty(key));
+	} else return false;
+}
 
 /*********************************************************************************************************************/
 // statistic endpoints
@@ -105,10 +103,7 @@ app.get('/callback', (req, res) => {
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
 	format = {"range": "short|medium|long", "numberArtists": "#"}
-	// error checking of request body
-	if (!(req.body.hasOwnProperty("range") && req.body.hasOwnProperty("numberArtists") 
-		&& Object.keys(req.body).length == 2
-		&& (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long"))) {
+	if (!(correctKeys(format, req.body) && (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long"))) {
 		res.status(400).json({"request body format": format});
 		return;
 	}
