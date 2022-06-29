@@ -78,11 +78,11 @@ app.get('/callback', (req, res) => {
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
 		res.redirect('/landing.html');
 		spotifyApi.searchPlaylists('workout')
-		.then(function(data) {
-			console.log('Found playlists are', data.body);
-		}, function(err) {
-			console.log(err, 'Something went wrong!');
-		});
+		// .then(function(data) {
+		// 	console.log('Found playlists are', data.body);
+		// }, function(err) {
+		// 	console.log(err, 'Something went wrong!');
+		// });
 
 		setInterval(async () => {
 			const data = await spotifyApi.refreshAccessToken();
@@ -96,6 +96,27 @@ app.get('/callback', (req, res) => {
 			console.error('Error getting Tokens:', error);
 			res.send(`Error getting Tokens: ${error}`);
 	});
+});
+
+
+/*********************************************************************************************************************/
+// statistic endpoints
+
+app.get('/myTopArtists', (req, res) => {
+	// how the req body must be formatted to make a request to the backend
+	format = {"range": "short|medium|long", "numberArtists": "#"}
+
+	if (!(req.body.hasOwnProperty("range") && req.body.hasOwnProperty("numberArtists") && Object.keys(req.body).length == 2)) {
+		res.status(400).json({"request body format": format});
+		return;
+	}
+	spotifyApi.getMyTopArtists()
+  .then(function(data) {
+    let topArtists = data.body.items;
+    res.status(200).send(topArtists);
+  }, function(err) {
+    res.status(500).json(err);
+  });
 });
 
 
