@@ -73,8 +73,8 @@ app.get('/callback', (req, res) => {
 		spotifyApi.setAccessToken(access_token);
 		spotifyApi.setRefreshToken(refresh_token);
 
-		console.log('access_token:', access_token);
-		console.log('refresh_token:', refresh_token);
+		// console.log('access_token:', access_token);
+		// console.log('refresh_token:', refresh_token);
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
 		res.redirect('/landing.html');
 		spotifyApi.searchPlaylists('workout')
@@ -105,18 +105,28 @@ app.get('/callback', (req, res) => {
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
 	format = {"range": "short|medium|long", "numberArtists": "#"}
-
-	if (!(req.body.hasOwnProperty("range") && req.body.hasOwnProperty("numberArtists") && Object.keys(req.body).length == 2)) {
+	let range = req.body.range;
+	// error checking of request body
+	if (!(req.body.hasOwnProperty("range") && req.body.hasOwnProperty("numberArtists") 
+		&& Object.keys(req.body).length == 2
+		&& (range == "short" || range == "medium" || range == "long"))) {
 		res.status(400).json({"request body format": format});
 		return;
 	}
-	spotifyApi.getMyTopArtists()
-  .then(function(data) {
-    let topArtists = data.body.items;
-    res.status(200).send(topArtists);
-  }, function(err) {
-    res.status(500).json(err);
-  });
+
+	axios.get('https://api.spotify.com/v1/me/top/artists ', {
+		params: {limit: 50, offset: 0, time_range: `${range}_term`},
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+			Host: "api.spotify.com",
+		},
+	}).then((data) => {
+		res.status(200).json(data['data']);
+	})
+	.catch((err) => {
+		res.status(500).json(err);
+	});
 });
 
 
