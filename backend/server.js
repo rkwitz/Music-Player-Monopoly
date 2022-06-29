@@ -105,17 +105,16 @@ app.get('/callback', (req, res) => {
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
 	format = {"range": "short|medium|long", "numberArtists": "#"}
-	let range = req.body.range;
 	// error checking of request body
 	if (!(req.body.hasOwnProperty("range") && req.body.hasOwnProperty("numberArtists") 
 		&& Object.keys(req.body).length == 2
-		&& (range == "short" || range == "medium" || range == "long"))) {
+		&& (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long"))) {
 		res.status(400).json({"request body format": format});
 		return;
 	}
-
+    let range = `${req.body.range}_term`;
 	axios.get('https://api.spotify.com/v1/me/top/artists ', {
-		params: {limit: 50, offset: 0, time_range: `${range}_term`},
+		params: {limit: 50, offset: 0, time_range: range},
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
