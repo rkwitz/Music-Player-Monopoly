@@ -142,7 +142,7 @@ async function topArtistsParser(range, num) {
 }
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
-	format = {"range": "short|medium|long", "numberArtists": "1 - 99"}
+	format = {range: "short|medium|long", numberArtists: "1 - 99"}
 	if (!(correctKeys(format, req.body) && (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long") 
 	&& !isNaN(req.body.numberArtists) && parseInt(req.body.numberArtists) > 0 && parseInt(req.body.numberArtists) <= 99)) {
 		res.status(400).json({"request body format": format});
@@ -151,7 +151,7 @@ app.get('/myTopArtists', (req, res) => {
 	let range = `${req.body.range}_term`;
 	let num = parseInt(req.body.numberArtists);	
 	topArtistsParser(range, num).then((data) => {
-		res.status(200).send(data);
+		res.status(200).json(JSON.parse(data));
 	})
 	.catch((err) => {
 		res.status(500).json(err);
