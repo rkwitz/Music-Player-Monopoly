@@ -100,23 +100,58 @@ function correctKeys(ob1, ob2) {
 /*********************************************************************************************************************/
 // statistic endpoints
 
+async function topArtistsParser(range, num) {
+	var buffer = "";
+	for (var rem = num, off = 0; rem > 0; rem -= 49, off += 49) {
+		var lim = 0;
+		if (rem >= 50) {
+			lim = 49;
+		}
+		else {
+			lim = rem;
+		}
+		await axios.get('https://api.spotify.com/v1/me/top/artists ', {
+			params: {limit: lim, offset: off, time_range: range},
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+				Host: "api.spotify.com",
+			},
+		}).then((data) => {
+			buffer = buffer.concat(JSON.stringify(data['data']));
+		});
+	}
+	let info = "";
+	info = info.concat("{\"artists\":[");
+	for (let index = (buffer.indexOf("external_urls")), i = 0; i != num; index = (buffer.indexOf("external_urls", index + 10)), i++) {
+		if (i != 0) {
+			info = info.concat(",");
+		}
+		info = info.concat("{", 
+		"\"name\"",buffer.substring(buffer.indexOf("name\"", index) + 5, buffer.indexOf("\"", buffer.indexOf("name\"", index) + 8) + 1), ",",
+		"\"followers\"", buffer.substring(buffer.indexOf("total\"", index) + 6, buffer.indexOf("}", buffer.indexOf("total\"", index) + 8)), ",",
+		"\"popularity\"", buffer.substring(buffer.indexOf("popularity\"", index) + 11, buffer.indexOf(",", buffer.indexOf("popularity\"", index) + 13)), ",",
+		"\"genres\"", buffer.substring(buffer.indexOf("genres\"", index) + 7, buffer.indexOf("]", buffer.indexOf("genres\"", index)) + 1), ",",
+		"\"image\"", buffer.substring(buffer.indexOf("url\"", index) + 4, buffer.indexOf(",", buffer.indexOf("url\"", index))), ",",
+		"\"url\"", buffer.substring(buffer.indexOf("spotify\"", index) + 8, buffer.indexOf("}", buffer.indexOf("spotify\"", index))), ",",
+		"\"uri\"", buffer.substring(buffer.indexOf("uri\"", index) + 4, buffer.indexOf("}", buffer.indexOf("uri\"", index))),
+		"}");
+	}
+	info = info.concat("],\"total\":", num, "}");
+	return info;
+}
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
-	format = {"range": "short|medium|long", "numberArtists": "#"}
-	if (!(correctKeys(format, req.body) && (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long"))) {
+	format = {"range": "short|medium|long", "numberArtists": "1 - 99"}
+	if (!(correctKeys(format, req.body) && (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long") 
+	&& !isNaN(req.body.numberArtists) && parseInt(req.body.numberArtists) > 0 && parseInt(req.body.numberArtists) <= 99)) {
 		res.status(400).json({"request body format": format});
 		return;
 	}
-    let range = `${req.body.range}_term`;
-	axios.get('https://api.spotify.com/v1/me/top/artists ', {
-		params: {limit: 50, offset: 0, time_range: range},
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-			Host: "api.spotify.com",
-		},
-	}).then((data) => {
-		res.status(200).json(data['data']);
+	let range = `${req.body.range}_term`;
+	let num = parseInt(req.body.numberArtists);	
+	topArtistsParser(range, num).then((data) => {
+		res.status(200).send(data);
 	})
 	.catch((err) => {
 		res.status(500).json(err);
