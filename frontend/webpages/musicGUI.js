@@ -1,9 +1,19 @@
+function preload(){
+    trans = loadImage("../resources/transparentButton.png");
+}
+
 function setup(){
-    createCanvas(windowWidth, windowHeight);
+    var cnv = createCanvas(windowWidth, windowHeight);
+    cnv.parent("musicContainer");
 
     homeLink = createA('landing.html', '');
     statLink = createA('stats.html', '');
-    
+
+    let songButton = createButton('');
+    songButton.style('background-color', (0,0,0,0));
+    songButton.style('background-size', (200,100));
+    songButton.position(windowWidth/2-240-120, 250);
+
     draw();
 }
 
@@ -24,4 +34,13 @@ function draw() {
     textSize(28);
     textAlign(CENTER, BOTTOM);
     text("Music", windowWidth/2, 130);
+
+    stroke(255);
+    fill(0,0,0,0);
+    rect(windowWidth/2-240-120, 250, 240, 96, 20);
+    rect(windowWidth/2+120, 250, 240, 96, 20);
+
+    textAlign(CENTER, TOP);
+    text("Liked Songs", windowWidth/2-240,250+15);
+    text("Liked Albums", windowWidth/2+240,250+15);
 }

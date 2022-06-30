@@ -3,6 +3,7 @@
 
 function drawScreen() {
     background(40);
+    stroke(0);
     textAlign(CENTER, TOP);
     textSize(64);
     fill(0);

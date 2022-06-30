@@ -1,6 +1,7 @@
 // create buttons that call increment statIndex and call drawStat();
 function setup(){
-    createCanvas(windowWidth, windowHeight);
+    var cnv = createCanvas(windowWidth, windowHeight);
+    cnv.parent("statsContainer");
     const LeftButton = createButton('<<');
     const RightButton = createButton('>>');
 
@@ -12,7 +13,7 @@ function setup(){
 
     musicLink = createA('music.html', '');
     homeLink = createA('landing.html', '');
-    
+
     draw();
 }
 
