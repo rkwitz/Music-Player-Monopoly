@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 
-    let req = {'range': 'short', 'numberArtists': 12}
+    let req = {'range': 'long', 'numberArtists': 40}
 
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),

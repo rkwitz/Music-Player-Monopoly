@@ -1,15 +1,15 @@
-// class informationCard {
-//     constructor(data) {
-//         this.data = data;
-//     }
-//     get data() {
-//         return this.data;
-//     }
-//     set data(data) {
-//         this.data = data;
-//     }
-//     html() {}
-// }
+class informationCard {
+    constructor(data) {
+        this.data = data;
+    }
+    get data() {
+        return this.data;
+    }
+    set data(data) {
+        this.data = data;
+    }
+    html() {}
+}
 
 class artistCard  {
     constructor(data) {
@@ -62,7 +62,6 @@ class artistCard  {
         img.className = 'artist-image';
         img.src = this.data.image;
         img.alt = `A photo of the artist "${this.data.name}"`;
-        // card.style.backgroundImage = "url('" + this.data.image + "')";
 
         card.append(name);
         card.append(img);
