@@ -104,9 +104,9 @@ function correctKeys(ob1, ob2) {
 
 async function topArtistsParser(range, num) {
 	var buffer = "";
-	for (var rem = num, off = 0; rem > 0; rem -= 49, off += 49) {
-		var lim = 0;
-		if (rem >= 50) {
+	var lim = 0;
+	for (var rem = num, off = 0, i = 0; rem > 0; rem -= lim, off += 49, i++) {
+		if ((rem >= 50) && (i == 0)) {
 			lim = 49;
 		}
 		else {
@@ -125,21 +125,22 @@ async function topArtistsParser(range, num) {
 	}
 	let info = "";
 	info = info.concat("{\"artists\":[");
-	for (let index = (buffer.indexOf("external_urls")), i = 0; i != num; index = (buffer.indexOf("external_urls", index + 10)), i++) {
+	let itr = 0;
+	for (let index = (buffer.indexOf("external_urls")), i = 0; index != -1; index = (buffer.indexOf("external_urls", index + 10)), i++, itr++) {
 		if (i != 0) {
 			info = info.concat(",");
 		}
 		info = info.concat("{", 
-		"\"name\"",buffer.substring(buffer.indexOf("name\"", index) + 5, buffer.indexOf("\"", buffer.indexOf("name\"", index) + 8) + 1), ",",
-		"\"followers\"", buffer.substring(buffer.indexOf("total\"", index) + 6, buffer.indexOf("}", buffer.indexOf("total\"", index) + 8)), ",",
-		"\"popularity\"", buffer.substring(buffer.indexOf("popularity\"", index) + 11, buffer.indexOf(",", buffer.indexOf("popularity\"", index) + 13)), ",",
-		"\"genres\"", buffer.substring(buffer.indexOf("genres\"", index) + 7, buffer.indexOf("]", buffer.indexOf("genres\"", index)) + 1), ",",
-		"\"image\"", buffer.substring(buffer.indexOf("url\"", index) + 4, buffer.indexOf(",", buffer.indexOf("url\"", index))), ",",
-		"\"url\"", buffer.substring(buffer.indexOf("spotify\"", index) + 8, buffer.indexOf("}", buffer.indexOf("spotify\"", index))), ",",
-		"\"uri\"", buffer.substring(buffer.indexOf("uri\"", index) + 4, buffer.indexOf("}", buffer.indexOf("uri\"", index))),
+		"\"name\"",buffer.substring(buffer.indexOf("\"name\"", index) + 6, buffer.indexOf("\"", buffer.indexOf("\"name\"", index) + 9) + 1), ",",
+		"\"followers\"", buffer.substring(buffer.indexOf("\"total\"", index) + 7, buffer.indexOf("}", buffer.indexOf("\"total\"", index) + 9)), ",",
+		"\"popularity\"", buffer.substring(buffer.indexOf("\"popularity\"", index) + 12, buffer.indexOf(",", buffer.indexOf("\"popularity\"", index) + 14)), ",",
+		"\"genres\"", buffer.substring(buffer.indexOf("\"genres\"", index) + 8, buffer.indexOf("]", buffer.indexOf("\"genres\"", index)) + 1), ",",
+		"\"image\"", buffer.substring(buffer.indexOf("\"url\"", index) + 5, buffer.indexOf(",", buffer.indexOf("\"url\"", index))), ",",
+		"\"url\"", buffer.substring(buffer.indexOf("\"spotify\"", index) + 9, buffer.indexOf("}", buffer.indexOf("\"spotify\"", index))), ",",
+		"\"uri\"", buffer.substring(buffer.indexOf("\"uri\"", index) + 5, buffer.indexOf("}", buffer.indexOf("\"uri\"", index))),
 		"}");
 	}
-	info = info.concat("],\"total\":", num, "}");
+	info = info.concat("],\"total\":", itr, "}");
 	return info;
 }
 app.get('/myTopArtists', (req, res) => {
