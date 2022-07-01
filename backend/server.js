@@ -110,8 +110,6 @@ async function topArtistsParser(range, num) {
 		else {
 			lim = rem;
 		}
-		console.log(lim);
-		console.log(off);
 		await axios.get('https://api.spotify.com/v1/me/top/artists ', {
 			params: {limit: lim, offset: off, time_range: range},
 			headers: {
@@ -127,7 +125,6 @@ async function topArtistsParser(range, num) {
 	info = info.concat("{\"artists\":[");
 	let itr = 0;
 	for (let index = (buffer.indexOf("external_urls")), i = 0; index != -1; index = (buffer.indexOf("external_urls", index + 10)), i++, itr++) {
-		console.log(index);
 		if (i != 0) {
 			info = info.concat(",");
 		}
