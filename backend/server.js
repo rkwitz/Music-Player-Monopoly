@@ -10,9 +10,11 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const axios = require('axios').default;
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+// const bodyParser = require('body-parser');
+// app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
 // app.use(express.static(__dirname + '/../frontend'));
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -143,15 +145,20 @@ async function topArtistsParser(range, num) {
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
 	format = {range: "short|medium|long", numberArtists: "1 - 99"}
-	if (!(correctKeys(format, req.body) && (req.body.range == "short" || req.body.range == "medium" || req.body.range == "long") 
-	&& !isNaN(req.body.numberArtists) && parseInt(req.body.numberArtists) > 0 && parseInt(req.body.numberArtists) <= 99)) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Content-type', 'application/json');
+	let request = req.query;
+	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
+	&& !isNaN(request.numberArtists) && parseInt(request.numberArtists) > 0 && parseInt(request.numberArtists) <= 99)) {
 		res.status(400).json({"request body format": format});
+		console.log("incorrect request body:", '\n', request);
 		return;
 	}
-	let range = `${req.body.range}_term`;
-	let num = parseInt(req.body.numberArtists);	
+	let range = `${request.range}_term`;
+	let num = parseInt(request.numberArtists);	
 	topArtistsParser(range, num).then((data) => {
 		res.status(200).json(JSON.parse(data));
+		console.log(`sent top ${num} artists`);
 	})
 	.catch((err) => {
 		res.status(500).json(err);

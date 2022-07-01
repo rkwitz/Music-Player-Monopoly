@@ -1,17 +1,20 @@
-class informationCard {
+// class informationCard {
+//     constructor(data) {
+//         this.data = data;
+//     }
+//     get data() {
+//         return this.data;
+//     }
+//     set data(data) {
+//         this.data = data;
+//     }
+//     html() {}
+// }
+
+class artistCard  {
     constructor(data) {
         this.data = data;
     }
-    get data() {
-        return this.data;
-    }
-    set data(data) {
-        this.data = data;
-    }
-    html();
-}
-
-class artistCard extends informationCard{
     html() {
         // return html element to be displayed on page 
         // const format = {
@@ -38,12 +41,17 @@ class artistCard extends informationCard{
         // TODO: some sort of graphic with popularity?
 
         let genres = document.createElement('ul');
-        genres.classNAME = 'genre-list'
-        this.data.genres.foreach((genre) => {
-            let genre = document.createElement('li');
-            genre.className = 'genre-item';
-            genre.append(document.createElement('p').setAttribute('innerHTML', genre).setAttribute("className", "genre"));
-            genres.append(genre);
+        genres.className = 'genre-list'
+        let genreList = Array();
+        genreList = this.data.genres
+        genreList.forEach((genreName) => {
+            let li = document.createElement('li');
+            li.className = 'genre-item';
+            let genre = document.createElement('p');
+            genre.innerHTML = genreName;
+            genre.className = "genre";
+            li.append(genre);
+            genres.append(li);
         });
 
         let name = document.createElement('h3');
@@ -54,13 +62,17 @@ class artistCard extends informationCard{
         img.className = 'artist-image';
         img.src = this.data.image;
         img.alt = `A photo of the artist "${this.data.name}"`;
+        // card.style.backgroundImage = "url('" + this.data.image + "')";
 
-        card.append(name).append(img).append(genres).append(followers);
+        card.append(name);
+        card.append(img);
+        card.append(genres);
+        card.append(followers);
         return card;
     }
 }
 
-class playlistCard extends informationCard{
+class playlistCard  {
     html(clickable) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
@@ -70,7 +82,7 @@ class playlistCard extends informationCard{
     }
 }
 
-class trackCard extends informationCard{
+class trackCard  {
     html(clickable) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page

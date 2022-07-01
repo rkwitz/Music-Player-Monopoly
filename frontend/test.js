@@ -1,11 +1,20 @@
-document.onload = function() {
+$( document ).ready(function() {
+
+    let req = {'range': 'short', 'numberArtists': 12}
+
     $.ajax({
-        method: "POST",
-        url: "some.php",
-        data: { range: "medium", numberArtists: 10 }        
-      }).done(result => {
-        console.log(result);
-      }).fail(err => {
-        console.log("Something went wrong:" + err);
+        url: "/myTopArtists/?" + $.param(req),
+        type: "GET",
+        ContentType: 'application/json',
+        success: result => {
+            console.log(result);
+            for (let i=0; i<result.total; ++i) {
+                let element = new artistCard(result.artists[i]);
+                document.body.append(element.html());
+            }
+        }, error: err => {
+            console.log("Something went wrong:");
+            console.log(err.responseJSON);
+        }
     });
-}
+});
