@@ -123,7 +123,6 @@ async function topArtistsParser(range, num) {
 			buffer = buffer.concat(JSON.stringify(data['data']));
 		});
 	}
-	console.log(buffer);
 	let info = "";
 	info = info.concat("{\"artists\":[");
 	let itr = 0;
