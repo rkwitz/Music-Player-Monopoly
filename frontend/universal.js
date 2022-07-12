@@ -41,6 +41,10 @@ class artistCard  {
         
         // TODO: some sort of graphic with popularity?
 
+        let genreTitle = document.createElement('h4');
+        genreTitle.innerHTML = "Genres:";
+        genreTitle.className = "genre-title"
+
         let genres = document.createElement('ul');
         genres.className = 'genre-list'
         let genreList = Array();
@@ -70,6 +74,7 @@ class artistCard  {
 
         card.append(name);
         card.append(img);
+        card.append(genreTitle);
         card.append(genres);
         card.append(followers);
         return card;
