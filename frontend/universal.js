@@ -36,6 +36,7 @@ class artistCard  {
 
         let followers = document.createElement('p');
         followers.innerHTML = this.data.followers.toLocaleString("en-US"); // adds commas
+        followers.innerHTML += " followers";
         followers.className = "followers";
         
         // TODO: some sort of graphic with popularity?
@@ -44,14 +45,18 @@ class artistCard  {
         genres.className = 'genre-list'
         let genreList = Array();
         genreList = this.data.genres
+        let maxGenres = 4;
         genreList.forEach((genreName) => {
-            let li = document.createElement('li');
-            li.className = 'genre-item';
-            let genre = document.createElement('p');
-            genre.innerHTML = genreName;
-            genre.className = "genre";
-            li.append(genre);
-            genres.append(li);
+            if (maxGenres != 0) {
+                let li = document.createElement('li');
+                li.className = 'genre-item';
+                let genre = document.createElement('p');
+                genre.innerHTML = genreName;
+                genre.className = "genre";
+                li.append(genre);
+                genres.append(li);
+                maxGenres--;
+            }
         });
 
         let name = document.createElement('h3');

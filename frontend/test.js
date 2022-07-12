@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 
-    let req = {'range': 'long', 'numberArtists': 40}
+    let req = {'range': 'medium', 'numberArtists': 40}
 
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),
@@ -9,8 +9,9 @@ $( document ).ready(function() {
         success: result => {
             console.log(result);
             for (let i=0; i<result.total; ++i) {
-                let element = new artistCard(result.artists[i]);
-                document.body.append(element.html());
+                let artist = new artistCard(result.artists[i]);
+                let container = document.getElementById("card-container");
+                container.append(artist.html());
             }
         }, error: err => {
             console.log("Something went wrong:");
