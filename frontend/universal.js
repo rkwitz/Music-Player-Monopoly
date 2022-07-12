@@ -1,19 +1,18 @@
+/*  =============================================================
+    ==               logic for informationCards                ==
+    =============================================================
+*/
+
 class informationCard {
     constructor(data) {
-        this.data = data;
-    }
-    get data() {
-        return this.data;
-    }
-    set data(data) {
-        this.data = data;
+        this.data = data; // data from frontend
     }
     html() {}
 }
 
-class artistCard  {
+class artistCard extends informationCard  {
     constructor(data) {
-        this.data = data;
+        super(data);
     }
     html() {
         // return html element to be displayed on page 
@@ -81,7 +80,10 @@ class artistCard  {
     }
 }
 
-class playlistCard  {
+class playlistCard extends informationCard {
+    constructor(data) {
+        super(data);
+    }
     html(clickable) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
@@ -91,11 +93,93 @@ class playlistCard  {
     }
 }
 
-class trackCard  {
+class trackCard extends informationCard {
+    constructor(data) {
+        super(data);
+    }
     html(clickable) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
 
         // make a button or something that requests to play this track from backend
+    }
+}
+
+/*  =============================================================
+    ==               logic for statistics page                 ==
+    =============================================================
+*/
+
+class category {
+    constructor(name, statistics) {
+        this.statistics = statistics; // arry of statistic objects within the catagory
+        this.name = name; // string
+        this.currentStat = 0;
+    }
+    get name() {
+        return this.name;
+    }
+    get statistics() {
+        return this.statistics;
+    }
+    set currentStat(num) {
+        this.currentStat = num;
+    }
+    html(container) {
+        // in here add event handler to upon click
+        // performStatistic() method run on every statistic
+        // to multiple containers (some hidden) on the page
+        let title = document.createElement("h2");
+        title.innerHTML = this.statistics[this.currentStat].name;
+
+        let content = document.createElement("section");
+        content.id = "statistic-content";
+        this.statistics[this.currentStat].performStatistic(content);
+
+        let left = document.createElement("btn");
+        left.id = "left-btn";
+        left.innerHTML = "left";
+        let right = document.createElement("btn");
+        right.id = "right-btn";
+        right.innerHTML = "right";
+        // add event listeners to change currently visualized data
+        document.addEventListener('click',function(e){
+            if(e.target && e.target.id== 'left-btn'){
+                if (!(this.currentStat - 1 <= 0)) {
+                    this.currentStat--;
+                    this.statistics[this.currentStat].performStatistic(content);
+                    title.innerHTML = this.statistics[this.currentStat].name;
+                }
+             }
+        });
+        document.addEventListener('click',function(e){
+            if(e.target && e.target.id== 'right-btn'){
+                if (!(this.currentStat + 1 > this.statistics.length)) {
+                    this.currentStat++;
+                    this.statistics[this.currentStat].performStatistic(content);
+                    title.innerHTML = this.statistics[this.currentStat].name;
+                }
+            }
+        });
+        container.append(title);
+        container.append(content);
+        container.append(left);
+        container.append(right);
+    }
+}
+
+class statistic {
+    constructor(name, functionality) {
+        this.name = name; // string
+        this.functionality = functionality; // function
+    }
+    get name() {
+        return this.name;
+    }
+    performStatistic(container) {
+        // perform whatever functionality necessary for this statistic
+        // append content to container
+        container.innerHTML = "";
+        this.functionality(container);
     }
 }
