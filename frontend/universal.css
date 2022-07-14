@@ -8,6 +8,33 @@ img {
     box-sizing: border-box;
 }
 
+header {
+    border: thin solid rgb(29, 29, 29); 
+	width:100%; 
+	height:150px; 
+	text-align: center; 
+	background-color: rgb(22, 22, 22); 
+	word-wrap: break-word; /* words won't go from the boundry */ 
+    color: white;
+    font-size: 30px;
+}
+
+#icon {
+    position:absolute; top:25px; left:25px; width:100px; height:100px;
+}
+#landing-btn {
+    position: absolute; top: 125px; left: 150px;
+}
+#music-btn {
+    position: absolute; top: 125px; left: 225px;
+}
+#stats-btn {
+    position: absolute; top: 125px; left: 300px;
+}
+
+body{
+    background-color: rgb(36, 36, 36); 
+}
 /*  =============================================================
     ==             stylying for informationCards               ==
     =============================================================
