@@ -167,3 +167,125 @@ app.listen(port, () => {
 // favicon
 var favicon = require('serve-favicon');
 app.use(favicon(__dirname + '/../frontend/resources/logo.png'));
+
+// Get a User's Available Devices
+spotifyApi.getMyDevices()
+  .then(function(data) {
+    let availableDevices = data.body.devices;
+    console.log(availableDevices);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+
+// Get Information About The User's Current Playback State
+spotifyApi.getMyCurrentPlaybackState()
+  .then(function(data) {
+    // Output items
+    if (data.body && data.body.is_playing) {
+      console.log("User is currently playing something!");
+    } else {
+      console.log("User is not playing anything, or doing so in private.");
+    }
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+
+// Get Current User's Recently Played Tracks
+spotifyApi.getMyRecentlyPlayedTracks({
+  limit : 20
+}).then(function(data) {
+    // Output items
+    console.log("Your 20 most recently played tracks are:");
+    data.body.items.forEach(item => console.log(item.track));
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+
+// Get the User's Currently Playing Track 
+spotifyApi.getMyCurrentPlayingTrack()
+  .then(function(data) {
+    console.log('Now playing: ' + data.body.item.name);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+
+// Pause a User's Playback
+spotifyApi.pause()
+  .then(function() {
+    console.log('Playback paused');
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Seek To Position In Currently Playing Track
+spotifyApi.seek(positionMs)
+  .then(function() {
+    console.log('Seek to ' + positionMs);
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Set Repeat Mode On User’s Playback
+spotifyApi.setRepeat('track')
+  .then(function () {
+    console.log('Repeat track.');
+    }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Set Volume For User's Playback
+spotifyApi.setVolume(50)
+  .then(function () {
+    console.log('Setting volume to 50.');
+    }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Skip User’s Playback To Next Track
+spotifyApi.skipToNext()
+  .then(function() {
+    console.log('Skip to next');
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Skip User’s Playback To Previous Track 
+spotifyApi.skipToPrevious()
+  .then(function() {
+    console.log('Skip to previous');
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Start/Resume a User's Playback 
+spotifyApi.play()
+  .then(function() {
+    console.log('Playback started');
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Toggle Shuffle For User’s Playback
+spotifyApi.setShuffle(true)
+  .then(function() {
+    console.log('Shuffle is on.');
+  }, function  (err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
+
+// Transfer a User's Playback
+spotifyApi.transferMyPlayback(deviceIds)
+  .then(function() {
+    console.log('Transfering playback to ' + deviceIds);
+  }, function(err) {
+    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    console.log('Something went wrong!', err);
+  });
