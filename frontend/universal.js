@@ -1,3 +1,8 @@
+$( document ).ready(function() {
+    let container = document.getElementById("statistic-content");
+    topCategory.html(container);
+});
+
 /*  =============================================================
     ==               logic for informationCards                ==
     =============================================================
@@ -16,20 +21,6 @@ class ArtistCard extends InformationCard  {
     }
     html(clickable = true) {
         // return html element to be displayed on page 
-        // const format = {
-        //     name: "Cage The Elephant",
-        //     followers: 2921544,
-        //     popularity: 73,
-        //     genres: [
-        //       "modern alternative rock",
-        //       "modern rock",
-        //       "punk blues",
-        //       "rock"
-        //     ],
-        //     image: "https://i.scdn.co/image/ab6761610000e5eb7d994f7e137c10249de19455",
-        //     url: "https://open.spotify.com/artist/26T3LtbuGT1Fu9m0eRq5X3",
-        //     uri: "spotify:artist:26T3LtbuGT1Fu9m0eRq5X3"
-        // }
         let card = document.createElement('div');
         card.classList.add('card', 'artist-card');
 
@@ -109,53 +100,65 @@ class TrackCard extends InformationCard {
     ==               logic for statistics page                 ==
     =============================================================
 */
-
 class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
         this.name = name; // string
         this.currentStat = 0;
     }
-    html(container) {
+    html(statContainer) {
         // in here add event handler to upon click
         // performStatistic() method run on every statistic
         // to multiple containers (some hidden) on the page
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[this.currentStat].name;
+        title.className = "stat-title"
 
         let content = document.createElement("section");
-        content.id = "statistic-content";
+        content.id = "card-container";
         this.statistics[this.currentStat].performStatistic(content);
 
         let left = document.createElement("btn");
         left.id = "left-btn";
+        left.className = "-1"
         left.innerHTML = "left";
         let right = document.createElement("btn");
         right.id = "right-btn";
         right.innerHTML = "right";
+        right.className = "1"
         // add event listeners to change currently visualized data
-        document.addEventListener('click',function(e){
+        document.addEventListener('click',(e) => {
             if(e.target && e.target.id== 'left-btn'){
-                if (!(this.currentStat - 1 <= 0)) {
-                    this.currentStat--;
-                    this.statistics[this.currentStat].performStatistic(content);
-                    title.innerHTML = this.statistics[this.currentStat].name;
-                }
-             }
-        });
-        document.addEventListener('click',function(e){
-            if(e.target && e.target.id== 'right-btn'){
-                if (!(this.currentStat + 1 > this.statistics.length)) {
-                    this.currentStat++;
-                    this.statistics[this.currentStat].performStatistic(content);
-                    title.innerHTML = this.statistics[this.currentStat].name;
+                let targetIndex = parseInt(e.target.className);
+                console.log(targetIndex)
+                if (targetIndex >= 0) {
+                    this.statistics[targetIndex].performStatistic(content);
+                    title.innerHTML = this.statistics[targetIndex].name;
+                    e.target.className = --targetIndex;
+                    let right = parseInt(document.getElementById("right-btn").className);
+                    document.getElementById("right-btn").className = --right;
                 }
             }
         });
-        container.append(title);
-        container.append(content);
-        container.append(left);
-        container.append(right);
+        document.addEventListener('click',(e) => {
+            if(e.target && e.target.id== 'right-btn'){
+                let targetIndex = parseInt(e.target.className);
+                console.log(targetIndex)
+                if (targetIndex < this.statistics.length) {
+                    // console.log(targetIndex)
+                    // console.log(this.statistics[targetIndex])
+                    this.statistics[targetIndex].performStatistic(content);
+                    title.innerHTML = this.statistics[targetIndex].name;
+                    e.target.className = ++targetIndex;
+                    let left = parseInt(document.getElementById("left-btn").className);
+                    document.getElementById("left-btn").className = ++left;
+                }
+            }
+        });
+        statContainer.append(title);
+        statContainer.append(left);
+        statContainer.append(content);
+        statContainer.append(right);
     }
 }
 
@@ -164,7 +167,10 @@ class Statistic {
         this.name = name; // string
         this.functionality = functionality; // function
     }
-    get name() {
+    // set name(name) {
+    //     this.name = name;
+    // }
+    name() {
         return this.name;
     }
     performStatistic(container) {
