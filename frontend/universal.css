@@ -58,6 +58,16 @@ header {
     top: 125px;
     left: 300px;
 }
+#login-btn {
+    position: absolute;
+    top: 125px; 
+    left: 150px;
+}
+#logout-btn {
+    position: absolute;
+    top: 125px; 
+    right: 100px;
+}
 
 body{
     background-color: rgb(36, 36, 36); 

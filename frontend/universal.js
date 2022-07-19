@@ -1,3 +1,7 @@
+$( document ).ready(function() {
+    var login = new Login();
+    login.html(document.body);
+});
 /*  =============================================================
     ==               logic for informationCards                ==
     =============================================================
@@ -172,5 +176,60 @@ class Statistic {
         // append content to container
         container.innerHTML = "";
         this.functionality(container);
+    }
+}
+
+/*  =============================================================
+    ==               User Login                                ==
+    =============================================================
+*/
+
+class Login {
+    login() {
+        location.href = "/login";
+    }
+    logout() {
+        const url = 'https://www.spotify.com/logout/';
+        console.log(this.isLogged());
+        while(this.isLogged()) {
+            const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
+            setTimeout(() => spotifyLogoutWindow.close(), 1000);
+            setTimeout(() => location.href = "/index.html", 1050);
+        }
+    }
+    isLogged() {
+        $.ajax({
+            url: "/isLogged",
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                return result;
+            }, error: err => {
+                return false;
+            }
+        });
+    }
+    html(container) {
+        let loginbtn = document.createElement("btn");
+        loginbtn.id = "login-btn";
+        loginbtn.innerHTML = "Login";
+
+        document.addEventListener('click',(e) => {
+            if(e.target && e.target.id== 'login-btn'){
+                this.login();
+             }
+        });
+
+        let logoutbtn = document.createElement("btn");
+        logoutbtn.id = "logout-btn";
+        logoutbtn.innerHTML = "Logout";
+
+        document.addEventListener('click',(e) => {
+            if(e.target && e.target.id== 'logout-btn'){
+                this.logout();
+             }
+        });
+        container.prepend(loginbtn);
+        container.prepend(logoutbtn);
     }
 }
