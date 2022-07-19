@@ -3,18 +3,18 @@
     =============================================================
 */
 
-class informationCard {
+class InformationCard {
     constructor(data) {
         this.data = data; // data from frontend
     }
-    html() {}
+    html(clickable = true) {}
 }
 
-class artistCard extends informationCard  {
+class ArtistCard extends InformationCard  {
     constructor(data) {
         super(data);
     }
-    html() {
+    html(clickable = true) {
         // return html element to be displayed on page 
         // const format = {
         //     name: "Cage The Elephant",
@@ -80,11 +80,11 @@ class artistCard extends informationCard  {
     }
 }
 
-class playlistCard extends informationCard {
+class PlaylistCard extends InformationCard {
     constructor(data) {
         super(data);
     }
-    html(clickable) {
+    html(clickable = true) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
 
@@ -93,11 +93,11 @@ class playlistCard extends informationCard {
     }
 }
 
-class trackCard extends informationCard {
+class TrackCard extends InformationCard {
     constructor(data) {
         super(data);
     }
-    html(clickable) {
+    html(clickable = true) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
 
@@ -110,20 +110,11 @@ class trackCard extends informationCard {
     =============================================================
 */
 
-class category {
+class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
         this.name = name; // string
         this.currentStat = 0;
-    }
-    get name() {
-        return this.name;
-    }
-    get statistics() {
-        return this.statistics;
-    }
-    set currentStat(num) {
-        this.currentStat = num;
     }
     html(container) {
         // in here add event handler to upon click
@@ -168,7 +159,7 @@ class category {
     }
 }
 
-class statistic {
+class Statistic {
     constructor(name, functionality) {
         this.name = name; // string
         this.functionality = functionality; // function

@@ -10,7 +10,7 @@ let topArtistFunction = function(container) {
         ContentType: 'application/json',
         success: result => {
             for (let i=0; i<result.total; ++i) {
-                let artist = new artistCard(result.artists[i]);
+                let artist = new ArtistCard(result.artists[i]);
                 container.append(artist.html());
             }
         }, error: err => {
@@ -21,6 +21,6 @@ let topArtistFunction = function(container) {
 }
 
 
-let topArtist = new statistic("Top Artists", topArtistFunction);
+let topArtist = new Statistic("Top Artists", topArtistFunction);
 
-let topCategory = new category("Your Tops", [topArtist]);
+let topCategory = new Category("Your Tops", [topArtist]);
