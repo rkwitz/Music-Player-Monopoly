@@ -2,6 +2,12 @@
     ==                      Universal                          ==
     =============================================================
 */
+:root {
+    --card-color: rgb(170, 170, 170);
+    --accent-color: rgb(255, 69, 69);
+    --header-height: 150px;
+}
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
@@ -19,10 +25,6 @@ html, body {
     height: 100%;
 }
 
-:root {
-    --card-color: rgb(175, 175, 175);
-}
-
 /*  =============================================================
     ==                    Styling for Header                   ==
     =============================================================
@@ -30,7 +32,7 @@ html, body {
 header {
     border: thin solid rgb(29, 29, 29); 
 	width:100%; 
-	height:150px; 
+	height: var(--header-height); 
 	text-align: center; 
 	background-color: rgb(22, 22, 22); 
 	word-wrap: break-word; /* words won't go from the boundry */ 
@@ -91,7 +93,7 @@ body{
     flex-direction: column;
     align-items: center;
 
-    cursor: pointer;
+    /* cursor: pointer; */
     margin: 0;
 }
 
@@ -160,33 +162,80 @@ body{
     ==             stylying for Statistics Page                ==
     =============================================================
 */
+#statistic-container {
+    --sidebar-width: 150px;
+    height: 100%;
+}
+
+#statistic-sidebar {
+    width: var(--sidebar-width);
+    height: calc(100% - 2 * var(--header-height));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    z-index: 99;
+    background: rgb(56, 56, 56);
+}
+
+.category {
+    border: none;
+    max-width: 100px;
+    padding: .5em 1em;
+    height: 50px;
+    margin-top: 1em;
+    border-radius: 15px;
+    background: grey;
+    cursor: pointer;
+}
+
+.current {
+    background: var(--accent-color)
+}
 
 #statistic-content {
+    margin-left: 100px;
+    margin-right: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    right: 0;
 }
 
 #statistic-content #card-container{
-    margin-top: 5em;
+    margin-top: 11em;
 }
 
 .stat-title {
     position: absolute;
-    top: 0;
+    font-size: 35px;
+    top: 1em;
+    color: var(--accent-color);
 }
 
-#left-btn {
+#left-btn, #right-btn {
+    --size: 30px;
     position: fixed;
-    left: 0;
+    z-index: 99;
     top: calc(50% + 20px);
     cursor: pointer;
+}
+
+#left-btn {    
+    left: 0;
+    transform: translateX(calc(var(--sidebar-width) + var(--size)));
+
+    border-top: var(--size) solid transparent;
+    border-bottom: var(--size) solid transparent; 
+    border-right:var(--size) solid var(--accent-color);
 }
 
 #right-btn {
-    position: fixed;
+    transform: translateX(calc(-1 *(var(--sidebar-width) + var(--size))));
     right: 0;
-    top: calc(50% + 20px);
-    cursor: pointer;
+ 
+    border-top: var(--size) solid transparent;
+    border-bottom: var(--size) solid transparent;
+    border-left: var(--size) solid var(--accent-color);
 }

@@ -1,11 +1,26 @@
 /*  =============================================================
+    ==                         Main                            ==
+    =============================================================
+*/
+
+$( document ).ready(function() {
+    // create "Your Tops" Category
+    let topArtist = new Statistic("Top Artists", topArtistFunction);
+    let topCategory = new Category("Your Tops", [topArtist]);
+
+    let sidebar = document.getElementById("statistic-sidebar");
+    let content = document.getElementById("statistic-content");
+    topCategory.html(sidebar, content);
+});
+
+/*  =============================================================
     ==                      User Statistics                    ==
     =============================================================
 */
 
 // top category
 let topArtistFunction = function(container) {
-    let req = {'range': 'medium', 'numberArtists': 40}
+    let req = {'range': 'long', 'numberArtists': 50}
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),
         type: "GET",
@@ -24,13 +39,3 @@ let topArtistFunction = function(container) {
         }
     });
 }
-
-let monkey = function(container) {
-    container.append("monkey");
-}
-
-
-let topArtist = new Statistic("Top Artists", topArtistFunction);
-let topArtist2 = new Statistic("Top Artists", monkey);
-
-let topCategory = new Category("Your Tops", [topArtist, topArtist2, topArtist, topArtist, topArtist2]);

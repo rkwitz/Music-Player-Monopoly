@@ -1,7 +1,7 @@
-$( document ).ready(function() {
-    let container = document.getElementById("statistic-content");
-    topCategory.html(container);
-});
+/*  =============================================================
+    ==                         Main                            ==
+    =============================================================
+*/
 
 /*  =============================================================
     ==               logic for informationCards                ==
@@ -106,10 +106,29 @@ class Category {
         this.name = name; // string
         this.currentStat = 0;
     }
-    html(statContainer) {
+    html(catContainer, statContainer) {
+        let btn = document.createElement("button");
+        btn.className = "category";
+        btn.innerHTML = this.name;
+        btn.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("current")) {
+                var elems = document.querySelectorAll(".category");
+                [].forEach.call(elems, function(el) {
+                    el.classList.remove("current");
+                });
+
+                e.target.classList.add("current");
+                this.enterStat(statContainer);
+            }
+        });
+        catContainer.append(btn);
+    }
+
+    enterStat(statContainer) {
         // in here add event handler to upon click
         // performStatistic() method run on every statistic
         // to multiple containers (some hidden) on the page
+        statContainer.innerHTML = "";
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[this.currentStat].name;
         title.className = "stat-title"
@@ -121,36 +140,28 @@ class Category {
         let left = document.createElement("btn");
         left.id = "left-btn";
         left.className = "-1"
-        left.innerHTML = "left";
         let right = document.createElement("btn");
         right.id = "right-btn";
-        right.innerHTML = "right";
         right.className = "1"
         // add event listeners to change currently visualized data
-        document.addEventListener('click',(e) => {
-            if(e.target && e.target.id== 'left-btn'){
-                let targetIndex = parseInt(e.target.className);
-                if (targetIndex >= 0) {
-                    this.statistics[targetIndex].performStatistic(content);
-                    title.innerHTML = this.statistics[targetIndex].name;
-                    e.target.className = --targetIndex;
-                    let right = parseInt(document.getElementById("right-btn").className);
-                    document.getElementById("right-btn").className = --left;
-                }
+        left.addEventListener('click',(e) => {
+            let targetIndex = parseInt(e.target.className);
+            if (targetIndex >= 0) {
+                this.statistics[targetIndex].performStatistic(content);
+                title.innerHTML = this.statistics[targetIndex].name;
+                e.target.className = --targetIndex;
+                let right = parseInt(document.getElementById("right-btn").className);
+                document.getElementById("right-btn").className = --left;
             }
         });
-        document.addEventListener('click',(e) => {
-            if(e.target && e.target.id== 'right-btn'){
-                let targetIndex = parseInt(e.target.className);
-                if (targetIndex < this.statistics.length) {
-                    // console.log(targetIndex)
-                    // console.log(this.statistics[targetIndex])
-                    this.statistics[targetIndex].performStatistic(content);
-                    title.innerHTML = this.statistics[targetIndex].name;
-                    e.target.className = ++targetIndex;
-                    let left = parseInt(document.getElementById("left-btn").className);
-                    document.getElementById("left-btn").className = ++left;
-                }
+        right.addEventListener('click',(e) => {
+            let targetIndex = parseInt(e.target.className);
+            if (targetIndex < this.statistics.length) {
+                this.statistics[targetIndex].performStatistic(content);
+                title.innerHTML = this.statistics[targetIndex].name;
+                e.target.className = ++targetIndex;
+                let left = parseInt(document.getElementById("left-btn").className);
+                document.getElementById("left-btn").className = ++left;
             }
         });
         statContainer.append(title);
@@ -164,12 +175,6 @@ class Statistic {
     constructor(name, functionality) {
         this.name = name; // string
         this.functionality = functionality; // function
-    }
-    // set name(name) {
-    //     this.name = name;
-    // }
-    name() {
-        return this.name;
     }
     performStatistic(container) {
         // perform whatever functionality necessary for this statistic
