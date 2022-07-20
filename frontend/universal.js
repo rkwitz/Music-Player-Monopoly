@@ -130,20 +130,18 @@ class Category {
         document.addEventListener('click',(e) => {
             if(e.target && e.target.id== 'left-btn'){
                 let targetIndex = parseInt(e.target.className);
-                console.log(targetIndex)
                 if (targetIndex >= 0) {
                     this.statistics[targetIndex].performStatistic(content);
                     title.innerHTML = this.statistics[targetIndex].name;
                     e.target.className = --targetIndex;
                     let right = parseInt(document.getElementById("right-btn").className);
-                    document.getElementById("right-btn").className = --right;
+                    document.getElementById("right-btn").className = --left;
                 }
             }
         });
         document.addEventListener('click',(e) => {
             if(e.target && e.target.id== 'right-btn'){
                 let targetIndex = parseInt(e.target.className);
-                console.log(targetIndex)
                 if (targetIndex < this.statistics.length) {
                     // console.log(targetIndex)
                     // console.log(this.statistics[targetIndex])

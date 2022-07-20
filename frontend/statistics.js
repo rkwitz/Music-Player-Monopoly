@@ -13,7 +13,10 @@ let topArtistFunction = function(container) {
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let artist = new ArtistCard(result.artists[i]);
-                container.append(artist.html());
+                htmlArt = artist.html()
+                htmlArt.dataset.ranking = i+1;
+                htmlArt.classList.add('card-numbered');
+                container.append(htmlArt);
             }
         }, error: err => {
             console.log("Something went wrong:");
