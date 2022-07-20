@@ -215,6 +215,30 @@ app.get('/playbackState', (req, res) => {
   });
 });
 
+// Skip User’s Playback To Next Track
+app.get('/skipNext', (req, res) => {
+  spotifyApi.skipToNext()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});
+
+// Skip User’s Playback To Previous Track 
+app.get('/skipPrevious', (req, res) => {
+  spotifyApi.skipToPrevious()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});
+
 /*
 // Get a User's Available Devices
 spotifyApi.getMyDevices()
@@ -267,24 +291,6 @@ spotifyApi.setVolume(50)
   .then(function () {
     console.log('Setting volume to 50.');
     }, function(err) {
-    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    console.log('Something went wrong!', err);
-  });
-
-// Skip User’s Playback To Next Track
-spotifyApi.skipToNext()
-  .then(function() {
-    console.log('Skip to next');
-  }, function(err) {
-    //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    console.log('Something went wrong!', err);
-  });
-
-// Skip User’s Playback To Previous Track 
-spotifyApi.skipToPrevious()
-  .then(function() {
-    console.log('Skip to previous');
-  }, function(err) {
     //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
     console.log('Something went wrong!', err);
   });

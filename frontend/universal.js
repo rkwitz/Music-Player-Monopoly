@@ -185,20 +185,13 @@ class Playback {
     constructor(){}
     
     html(container) {
-/*
-        let play = document.createElement("btn");
-        play.id = "playback-button";
-        document.addEventListener('click',function(e){
-            if(e.target && e.target.id== 'playback-button'){
-
-             }
-        });
-        */
 
         let footer = document.createElement("footer");
-        footer.innerHTML = "<footer><ul id='playback'><li> <button id='playback-button'></button> </li><li></li><li></li></ul></footer>";
+        footer.innerHTML = "<ul id='playback'><li> <button id='skip-backwards'></button> </li><li> <button id='playback-button'></button> </li><li> <button id='skip-forward'></button> </li></ul>";
         container.append(footer);
         var btn = $("#playback-button");
+        var skipForwards = $("#skip-forward");
+        var skipBackwards = $("#skip-backwards");
         $.ajax({
             url: "/playbackState",
             type: "GET",
@@ -209,6 +202,7 @@ class Playback {
                 }
             }, error: err => {}
         });
+        //play or pause clicked
         btn.click(function() {
             if (btn.hasClass("paused")) {
                 $.ajax({
@@ -257,6 +251,56 @@ class Playback {
                 });
             }
             return false;
+        });
+        //skip foward clicked
+        skipForwards.click(function() {
+            $.ajax({
+                url: "/skipNext",
+                type: "GET",
+                ContentType: 'application/json',
+                success: result => {
+                    console.log("Skipped Forward Sucessfully")
+                    $.ajax({
+                        url: "/playbackState",
+                        type: "GET",
+                        ContentType: 'application/json',
+                        success: result => {
+                            if (result == "paused") {
+                                btn.toggleClass("paused");
+                            }
+                        }, error: err => {}
+                    });
+                }, error: err => {
+                    alert("Something Went Wrong");
+                    console.log("Something went wrong:");
+                    console.log(err.responseJSON);
+                }
+            });
+        });
+        //skip backwards clicked
+        skipBackwards.click(function() {
+            $.ajax({
+                url: "/skipPrevious",
+                type: "GET",
+                ContentType: 'application/json',
+                success: result => {
+                    console.log("Skipped Backward Sucessfully")
+                    $.ajax({
+                        url: "/playbackState",
+                        type: "GET",
+                        ContentType: 'application/json',
+                        success: result => {
+                            if (result == "paused") {
+                                btn.toggleClass("paused");
+                            }
+                        }, error: err => {}
+                    });
+                }, error: err => {
+                    alert("Something Went Wrong");
+                    console.log("Something went wrong:");
+                    console.log(err.responseJSON);
+                }
+            });
         });
     }
 }

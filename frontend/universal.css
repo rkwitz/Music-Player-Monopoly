@@ -197,35 +197,94 @@ body{
 */
 
 footer {
-	width:100%; 
-	height:80px; 
-	background-color: transparent;
+	width:30%; 
+    height: 70px;
+	background-color: rgb(22, 22, 22);
     display:flex;
     justify-content:center;
+    left: 50%;
+    transform: translateX(-50%);
     position: sticky;
-    bottom: 0;
+    bottom: 10px;
+    flex-direction: row;
+    border-radius: 30px;
 }
 
 #playback-button {
     border: 0;
     width: 0;
-    height: 37px;
+    height: 24.6px;
     background: transparent;
     box-sizing: border-box;
     border-color: transparent transparent transparent #ffffff;
     transition: 100ms all ease;
     cursor: pointer;
     border-style: solid;
-    border-width: 18.5px 0 18.5px 30px;
+    border-width: 12.3px 0 12.3px 20px;
+    margin-left: 15px;
 }
 #playback-button.paused {
     border-style: double;
-    border-width: 0px 0 0px 30px;
+    border-width: 0px 0 0px 20px;
+    transform: translateY(3px);
 }
 #playback-button:hover {
     border-color: transparent transparent transparent #ffffff;
 }
 
+#skip-forward {
+    border: 0;
+    width: 0;
+    height: 24.6px;
+    background: transparent;
+    box-sizing: border-box;
+    border-color: transparent transparent transparent #ffffff;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 12.3px 0 12.3px 20px;
+    position: relative;
+}
+
+#skip-forward::after {
+    content: "";
+    height: 24.6px;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+}
+
+#skip-backwards {
+    border: 0;
+    width: 0;
+    height: 24.6px;
+    background: transparent;
+    box-sizing: border-box;
+    border-color: transparent #ffffff transparent transparent;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 12.3px 20px 12.3px 0px;
+}
+
+#skip-backwards::after {
+    content: "";
+    height: 24.6px;
+    width: 4px;
+    position: absolute;
+    right: 111px;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+}
+
 #playback {
     list-style:none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
   }
