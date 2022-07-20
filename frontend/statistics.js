@@ -5,7 +5,7 @@
 
 // top category
 let topArtistFunction = function(container) {
-    let req = {'range': 'medium', 'numberArtists': 40}
+    let req = {'range': 'short', 'numberArtists': 50}
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),
         type: "GET",

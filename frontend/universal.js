@@ -1,6 +1,8 @@
 $( document ).ready(function() {
     let container = document.getElementById("statistic-content");
     topCategory.html(container);
+    let playback = new Playback();
+    playback.html(document.body);
 });
 
 /*  =============================================================
@@ -176,5 +178,85 @@ class Statistic {
         // append content to container
         container.innerHTML = "";
         this.functionality(container);
+    }
+}
+
+class Playback {
+    constructor(){}
+    
+    html(container) {
+/*
+        let play = document.createElement("btn");
+        play.id = "playback-button";
+        document.addEventListener('click',function(e){
+            if(e.target && e.target.id== 'playback-button'){
+
+             }
+        });
+        */
+
+        let footer = document.createElement("footer");
+        footer.innerHTML = "<footer><ul id='playback'><li> <button id='playback-button'></button> </li><li></li><li></li></ul></footer>";
+        container.append(footer);
+        var btn = $("#playback-button");
+        $.ajax({
+            url: "/playbackState",
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                if (result == "playing") {
+                    btn.toggleClass("paused");
+                }
+            }, error: err => {}
+        });
+        btn.click(function() {
+            if (btn.hasClass("paused")) {
+                $.ajax({
+                    url: "/pause",
+                    type: "GET",
+                    ContentType: 'application/json',
+                    success: result => {
+                        btn.toggleClass("paused");
+                        console.log("Paused Sucessfully");
+                    }, error: err => {
+                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            alert("No Active Device Found");
+                        }
+                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                            btn.toggleClass("paused");
+                        }
+                        else {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/play",
+                    type: "GET",
+                    ContentType: 'application/json',
+                    success: result => {
+                        btn.toggleClass("paused");
+                        console.log("Played Sucessfully");
+                    }, error: err => {
+                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            alert("No Active Device Found");
+                        }
+                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                            btn.toggleClass("paused");
+                        }
+                        else {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
     }
 }
