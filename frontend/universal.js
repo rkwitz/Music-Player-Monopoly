@@ -4,8 +4,6 @@
 */
 
 $( document ).ready(function() {
-    let container = document.getElementById("statistic-content");
-    topCategory.html(container);
     let playback = new Playback();
     playback.html(document.body);
 });
