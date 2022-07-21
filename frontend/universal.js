@@ -139,6 +139,7 @@ class Category {
                 [].forEach.call(elems, function(el) {
                     el.classList.remove("current");
                 });
+                console.log(statContainer);
 
                 e.target.classList.add("current");
                 this.enterStat(statContainer);
@@ -186,10 +187,10 @@ class Category {
                 document.getElementById("left-btn").className = ++left;
             }
         });
-        container.append(title);
-        container.append(content);
-        container.append(left);
-        container.append(right);
+        statContainer.append(title);
+        statContainer.append(content);
+        statContainer.append(left);
+        statContainer.append(right);
     }
 }
 
