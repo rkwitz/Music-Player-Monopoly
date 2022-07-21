@@ -6,8 +6,10 @@
 $( document ).ready(function() {
     var login = new Login();
     login.html(document.body);
-    let playback = new Playback();
-    playback.html(document.body);
+    if (location.href !=  ("http://localhost:3000/index.html")){ 
+        let playback = new Playback();
+        playback.html(document.body);
+    }
 });
 /*  =============================================================
     ==               logic for informationCards                ==
@@ -234,27 +236,33 @@ class Login {
         });
     }
     html(container) {
-        let loginbtn = document.createElement("btn");
-        loginbtn.id = "login-btn";
-        loginbtn.innerHTML = "Login";
+        console.log(location.href);
+        
+        if (location.href !=  ("http://localhost:3000/index.html")){ 
+            let logoutbtn = document.createElement("btn");
+            logoutbtn.id = "logout-btn";
+            logoutbtn.innerHTML = "Logout";
 
-        document.addEventListener('click',(e) => {
-            if(e.target && e.target.id== 'login-btn'){
-                this.login();
-             }
-        });
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'logout-btn'){
+                    this.logout();
+                }
+            });
+            container.prepend(logoutbtn);
+        }
+        else {
+            let loginbtn = document.createElement("btn");
+            loginbtn.id = "login-btn";
+            loginbtn.innerHTML = "Login";
 
-        let logoutbtn = document.createElement("btn");
-        logoutbtn.id = "logout-btn";
-        logoutbtn.innerHTML = "Logout";
-
-        document.addEventListener('click',(e) => {
-            if(e.target && e.target.id== 'logout-btn'){
-                this.logout();
-             }
-        });
-        container.prepend(loginbtn);
-        container.prepend(logoutbtn);
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'login-btn'){
+                    this.login();
+                }
+            });
+            container.prepend(loginbtn);
+        }
+        
     }
 }
 /*  =============================================================
