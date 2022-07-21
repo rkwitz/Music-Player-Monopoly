@@ -1,6 +1,13 @@
+/*  =============================================================
+    ==                         Main                            ==
+    =============================================================
+*/
+
 $( document ).ready(function() {
     var login = new Login();
     login.html(document.body);
+    let playback = new Playback();
+    playback.html(document.body);
 });
 /*  =============================================================
     ==               logic for informationCards                ==
@@ -120,10 +127,29 @@ class Category {
         this.name = name; // string
         this.currentStat = 0;
     }
-    html(container) {
+    html(catContainer, statContainer) {
+        let btn = document.createElement("button");
+        btn.className = "category";
+        btn.innerHTML = this.name;
+        btn.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("current")) {
+                var elems = document.querySelectorAll(".category");
+                [].forEach.call(elems, function(el) {
+                    el.classList.remove("current");
+                });
+
+                e.target.classList.add("current");
+                this.enterStat(statContainer);
+            }
+        });
+        catContainer.append(btn);
+    }
+
+    enterStat(statContainer) {
         // in here add event handler to upon click
         // performStatistic() method run on every statistic
         // to multiple containers (some hidden) on the page
+        statContainer.innerHTML = "";
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[this.currentStat].name;
 
@@ -133,27 +159,29 @@ class Category {
 
         let left = document.createElement("btn");
         left.id = "left-btn";
-        left.innerHTML = "left";
+        left.className = "-1"
         let right = document.createElement("btn");
         right.id = "right-btn";
-        right.innerHTML = "right";
+        right.className = "1"
         // add event listeners to change currently visualized data
-        document.addEventListener('click',function(e){
-            if(e.target && e.target.id== 'left-btn'){
-                if (!(this.currentStat - 1 <= 0)) {
-                    this.currentStat--;
-                    this.statistics[this.currentStat].performStatistic(content);
-                    title.innerHTML = this.statistics[this.currentStat].name;
-                }
-             }
+        left.addEventListener('click',(e) => {
+            let targetIndex = parseInt(e.target.className);
+            if (targetIndex >= 0) {
+                this.statistics[targetIndex].performStatistic(content);
+                title.innerHTML = this.statistics[targetIndex].name;
+                e.target.className = --targetIndex;
+                let right = parseInt(document.getElementById("right-btn").className);
+                document.getElementById("right-btn").className = --left;
+            }
         });
-        document.addEventListener('click',function(e){
-            if(e.target && e.target.id== 'right-btn'){
-                if (!(this.currentStat + 1 > this.statistics.length)) {
-                    this.currentStat++;
-                    this.statistics[this.currentStat].performStatistic(content);
-                    title.innerHTML = this.statistics[this.currentStat].name;
-                }
+        right.addEventListener('click',(e) => {
+            let targetIndex = parseInt(e.target.className);
+            if (targetIndex < this.statistics.length) {
+                this.statistics[targetIndex].performStatistic(content);
+                title.innerHTML = this.statistics[targetIndex].name;
+                e.target.className = ++targetIndex;
+                let left = parseInt(document.getElementById("left-btn").className);
+                document.getElementById("left-btn").className = ++left;
             }
         });
         container.append(title);
@@ -167,9 +195,6 @@ class Statistic {
     constructor(name, functionality) {
         this.name = name; // string
         this.functionality = functionality; // function
-    }
-    get name() {
-        return this.name;
     }
     performStatistic(container) {
         // perform whatever functionality necessary for this statistic
@@ -230,5 +255,132 @@ class Login {
         });
         container.prepend(loginbtn);
         container.prepend(logoutbtn);
+    }
+}
+/*  =============================================================
+    ==               Playback                                  ==
+    =============================================================
+*/
+class Playback {
+    constructor(){}
+    
+    html(container) {
+
+        let footer = document.createElement("footer");
+        footer.innerHTML = "<ul id='playback'><li> <button id='skip-backwards'></button> </li><li> <button id='playback-button'></button> </li><li> <button id='skip-forward'></button> </li></ul>";
+        container.append(footer);
+        var btn = $("#playback-button");
+        var skipForwards = $("#skip-forward");
+        var skipBackwards = $("#skip-backwards");
+        $.ajax({
+            url: "/playbackState",
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                if (result == "playing") {
+                    btn.toggleClass("paused");
+                }
+            }, error: err => {}
+        });
+        //play or pause clicked
+        btn.click(function() {
+            if (btn.hasClass("paused")) {
+                $.ajax({
+                    url: "/pause",
+                    type: "GET",
+                    ContentType: 'application/json',
+                    success: result => {
+                        btn.toggleClass("paused");
+                        console.log("Paused Sucessfully");
+                    }, error: err => {
+                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            alert("No Active Device Found");
+                        }
+                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                            btn.toggleClass("paused");
+                        }
+                        else {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/play",
+                    type: "GET",
+                    ContentType: 'application/json',
+                    success: result => {
+                        btn.toggleClass("paused");
+                        console.log("Played Sucessfully");
+                    }, error: err => {
+                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            alert("No Active Device Found");
+                        }
+                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                            btn.toggleClass("paused");
+                        }
+                        else {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+        //skip foward clicked
+        skipForwards.click(function() {
+            $.ajax({
+                url: "/skipNext",
+                type: "GET",
+                ContentType: 'application/json',
+                success: result => {
+                    console.log("Skipped Forward Sucessfully")
+                    $.ajax({
+                        url: "/playbackState",
+                        type: "GET",
+                        ContentType: 'application/json',
+                        success: result => {
+                            if (result == "paused") {
+                                btn.toggleClass("paused");
+                            }
+                        }, error: err => {}
+                    });
+                }, error: err => {
+                    alert("Something Went Wrong");
+                    console.log("Something went wrong:");
+                    console.log(err.responseJSON);
+                }
+            });
+        });
+        //skip backwards clicked
+        skipBackwards.click(function() {
+            $.ajax({
+                url: "/skipPrevious",
+                type: "GET",
+                ContentType: 'application/json',
+                success: result => {
+                    console.log("Skipped Backward Sucessfully")
+                    $.ajax({
+                        url: "/playbackState",
+                        type: "GET",
+                        ContentType: 'application/json',
+                        success: result => {
+                            if (result == "paused") {
+                                btn.toggleClass("paused");
+                            }
+                        }, error: err => {}
+                    });
+                }, error: err => {
+                    alert("Something Went Wrong");
+                    console.log("Something went wrong:");
+                    console.log(err.responseJSON);
+                }
+            });
+        });
     }
 }

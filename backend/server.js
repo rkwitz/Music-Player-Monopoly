@@ -193,3 +193,67 @@ app.listen(port, () => {
 // favicon
 var favicon = require('serve-favicon');
 app.use(favicon(__dirname + '/../frontend/resources/logo.png'));
+
+// Pause a User's Playback
+app.get('/pause', (req, res) => {
+  spotifyApi.pause()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});
+
+// Start/Resume a User's Playback
+app.get('/play', (req, res) => {
+  spotifyApi.play()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});
+
+// Get Information About The User's Current Playback State
+app.get('/playbackState', (req, res) => {
+  spotifyApi.getMyCurrentPlaybackState()
+    .then(function(data) {
+      // Output items
+      if (data.body && data.body.is_playing) {
+        res.status(200).send("playing");
+      } else {
+        res.status(200).send("paused");
+      }
+    }, function(err) {
+      res.status(500).json(err);
+      console.log(err);
+  });
+});
+
+// Skip User’s Playback To Next Track
+app.get('/skipNext', (req, res) => {
+  spotifyApi.skipToNext()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});
+
+// Skip User’s Playback To Previous Track 
+app.get('/skipPrevious', (req, res) => {
+  spotifyApi.skipToPrevious()
+    .then(function() {
+      res.status(200).send();
+    }, function(err) {
+      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      res.status(500).json(err);
+      console.log(err);
+    });
+});

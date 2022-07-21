@@ -2,6 +2,12 @@
     ==                      Universal                          ==
     =============================================================
 */
+:root {
+    --card-color: rgb(170, 170, 170);
+    --accent-color: rgb(255, 69, 69);
+    --header-height: 150px;
+}
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
@@ -26,7 +32,7 @@ html, body {
 header {
     border: thin solid rgb(29, 29, 29); 
 	width:100%; 
-	height:150px; 
+	height: var(--header-height); 
 	text-align: center; 
 	background-color: rgb(22, 22, 22); 
 	word-wrap: break-word; /* words won't go from the boundry */ 
@@ -89,7 +95,7 @@ body{
 }
 
 .card {
-    background: rgb(192, 192, 192);
+    background: var(--card-color);
     border-radius: 20px;
     transform: scale(1);
     transition: transform 200ms ease-in-out;
@@ -97,12 +103,25 @@ body{
     flex-direction: column;
     align-items: center;
 
-    cursor: pointer;
+    /* cursor: pointer; */
     margin: 0;
 }
 
 .card:hover {
     transform: scale(1.1);
+}
+
+.card-numbered::before {
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    font-size: 20px;
+    content: attr(data-ranking);
+    position: absolute;
+    top: -1.2em;
+    background: var(--card-color);
+    padding: .7em;
+    border-radius: 25px 25px 0 0;
 }
 
 
@@ -117,6 +136,7 @@ body{
     width: 100%;
     padding: 0 1em;
     text-align: center;
+    margin-top: 2em;
 }
 
 .artist-image {
@@ -152,33 +172,180 @@ body{
     ==             stylying for Statistics Page                ==
     =============================================================
 */
+#statistic-container {
+    --sidebar-width: 150px;
+    height: 100%;
+}
+
+#statistic-sidebar {
+    width: var(--sidebar-width);
+    height: calc(100% - 2 * var(--header-height));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    z-index: 99;
+    background: rgb(56, 56, 56);
+}
+
+.category {
+    border: none;
+    max-width: 100px;
+    padding: .5em 1em;
+    height: 50px;
+    margin-top: 1em;
+    border-radius: 15px;
+    background: grey;
+    cursor: pointer;
+}
+
+.current {
+    background: var(--accent-color)
+}
 
 #statistic-content {
+    margin-left: 100px;
+    margin-right: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    right: 0;
 }
 
 #statistic-content #card-container{
-    margin-top: 5em;
+    margin-top: 11em;
 }
 
 .stat-title {
     position: absolute;
-    top: 0;
+    font-size: 35px;
+    top: 1em;
+    color: var(--accent-color);
 }
 
-#left-btn {
+#left-btn, #right-btn {
+    --size: 30px;
     position: fixed;
-    left: 0;
+    z-index: 99;
     top: calc(50% + 20px);
     cursor: pointer;
+}
+
+#left-btn {    
+    left: 0;
+    transform: translateX(calc(var(--sidebar-width) + var(--size)));
+
+    border-top: var(--size) solid transparent;
+    border-bottom: var(--size) solid transparent; 
+    border-right:var(--size) solid var(--accent-color);
 }
 
 #right-btn {
-    position: fixed;
-    right: 0;
-    top: calc(50% + 20px);
-    cursor: pointer;
+    transform: translateX(calc(-1 *(var(--sidebar-width) + var(--size))));
+    right: 0; 
+    border-top: var(--size) solid transparent;
+    border-bottom: var(--size) solid transparent;
+    border-left: var(--size) solid var(--accent-color);
 }
+
+
+/*  =============================================================
+    ==                 Styling for Music Player                ==
+    =============================================================
+*/
+
+footer {
+	width:30%; 
+    height: 70px;
+	background-color: rgb(22, 22, 22);
+    display:flex;
+    justify-content:center;
+    left: 50%;
+    transform: translateX(-50%);
+    position: fixed;
+    bottom: 10px;
+    flex-direction: row;
+    border-radius: 30px;
+}
+
+#playback-button {
+    border: 0;
+    width: 0;
+    height: 24.6px;
+    background: transparent;
+    box-sizing: border-box;
+    border-color: transparent transparent transparent #ffffff;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 12.3px 0 12.3px 20px;
+    margin-left: 15px;
+}
+#playback-button.paused {
+    border-style: double;
+    border-width: 0px 0 0px 20px;
+    transform: translateY(3px);
+}
+#playback-button:hover {
+    border-color: transparent transparent transparent #ffffff;
+}
+
+#skip-forward {
+    border: 0;
+    width: 0;
+    height: 24.6px;
+    background: transparent;
+    box-sizing: border-box;
+    border-color: transparent transparent transparent #ffffff;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 12.3px 0 12.3px 20px;
+    position: relative;
+}
+
+#skip-forward::after {
+    content: "";
+    height: 24.6px;
+    width: 4px;
+    position: absolute;
+    right: 10px;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+}
+
+#skip-backwards {
+    border: 0;
+    width: 0;
+    height: 24.6px;
+    background: transparent;
+    box-sizing: border-box;
+    border-color: transparent #ffffff transparent transparent;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 12.3px 20px 12.3px 0px;
+    position: relative;
+}
+
+#skip-backwards::after {
+    content: "";
+    height: 24.6px;
+    width: 4px;
+    position: absolute;
+    left: 10px;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+}
+
+#playback {
+    list-style:none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
