@@ -6,7 +6,7 @@
 $( document ).ready(function() {
     var login = new Login();
     login.html(document.body);
-    if (location.href !=  ("http://localhost:3000/index.html")){ 
+    if ((location.href ==  "http://localhost:3000/landing.html") || (location.href ==  "http://localhost:3000/stats.html") || (location.href ==  "http://localhost:3000/music.html")){ 
         let playback = new Playback();
         playback.html(document.body);
     }
@@ -236,9 +236,7 @@ class Login {
         });
     }
     html(container) {
-        console.log(location.href);
-        
-        if (location.href !=  ("http://localhost:3000/index.html")){ 
+        if ((location.href ==  "http://localhost:3000/landing.html") || (location.href ==  "http://localhost:3000/stats.html") || (location.href ==  "http://localhost:3000/music.html")){ 
             let logoutbtn = document.createElement("btn");
             logoutbtn.id = "logout-btn";
             logoutbtn.innerHTML = "Logout";
