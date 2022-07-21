@@ -1,7 +1,9 @@
 /*  =============================================================
-    ==                      top category                       ==
+    ==                      User Statistics                    ==
     =============================================================
 */
+
+// top category
 let topArtistFunction = function(container) {
     let req = {'range': 'medium', 'numberArtists': 40}
     $.ajax({
@@ -20,7 +22,12 @@ let topArtistFunction = function(container) {
     });
 }
 
+let monkey = function(container) {
+    container.append("monkey");
+}
+
 
 let topArtist = new Statistic("Top Artists", topArtistFunction);
+let topArtist2 = new Statistic("Top Artists", monkey);
 
-let topCategory = new Category("Your Tops", [topArtist]);
+let topCategory = new Category("Your Tops", [topArtist, topArtist2, topArtist, topArtist, topArtist2]);
