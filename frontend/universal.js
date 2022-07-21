@@ -4,10 +4,13 @@
 */
 
 $( document ).ready(function() {
-    let playback = new Playback();
-    playback.html(document.body);
+    var login = new Login();
+    login.html(document.body);
+    if (location.href !=  ("http://localhost:3000/index.html")){ 
+        let playback = new Playback();
+        playback.html(document.body);
+    }
 });
-
 /*  =============================================================
     ==               logic for informationCards                ==
     =============================================================
@@ -26,6 +29,20 @@ class ArtistCard extends InformationCard  {
     }
     html(clickable = true) {
         // return html element to be displayed on page 
+        // const format = {
+        //     name: "Cage The Elephant",
+        //     followers: 2921544,
+        //     popularity: 73,
+        //     genres: [
+        //       "modern alternative rock",
+        //       "modern rock",
+        //       "punk blues",
+        //       "rock"
+        //     ],
+        //     image: "https://i.scdn.co/image/ab6761610000e5eb7d994f7e137c10249de19455",
+        //     url: "https://open.spotify.com/artist/26T3LtbuGT1Fu9m0eRq5X3",
+        //     uri: "spotify:artist:26T3LtbuGT1Fu9m0eRq5X3"
+        // }
         let card = document.createElement('div');
         card.classList.add('card', 'artist-card');
 
@@ -105,6 +122,7 @@ class TrackCard extends InformationCard {
     ==               logic for statistics page                 ==
     =============================================================
 */
+
 class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
@@ -136,10 +154,9 @@ class Category {
         statContainer.innerHTML = "";
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[this.currentStat].name;
-        title.className = "stat-title"
 
         let content = document.createElement("section");
-        content.id = "card-container";
+        content.id = "statistic-content";
         this.statistics[this.currentStat].performStatistic(content);
 
         let left = document.createElement("btn");
@@ -169,10 +186,10 @@ class Category {
                 document.getElementById("left-btn").className = ++left;
             }
         });
-        statContainer.append(title);
-        statContainer.append(left);
-        statContainer.append(content);
-        statContainer.append(right);
+        container.append(title);
+        container.append(content);
+        container.append(left);
+        container.append(right);
     }
 }
 
@@ -189,6 +206,69 @@ class Statistic {
     }
 }
 
+/*  =============================================================
+    ==               User Login                                ==
+    =============================================================
+*/
+
+class Login {
+    login() {
+        location.href = "/login";
+    }
+    logout() {
+        const url = 'https://www.spotify.com/logout/';
+        console.log(this.isLogged());
+        const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
+        setTimeout(() => spotifyLogoutWindow.close(), 1000);
+        setTimeout(() => location.href = "/index.html", 1050);
+        
+    }
+    isLogged() {
+        $.ajax({
+            url: "/isLogged",
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                return result;
+            }, error: err => {
+                return false;
+            }
+        });
+    }
+    html(container) {
+        console.log(location.href);
+        
+        if (location.href !=  ("http://localhost:3000/index.html")){ 
+            let logoutbtn = document.createElement("btn");
+            logoutbtn.id = "logout-btn";
+            logoutbtn.innerHTML = "Logout";
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'logout-btn'){
+                    this.logout();
+                }
+            });
+            container.prepend(logoutbtn);
+        }
+        else {
+            let loginbtn = document.createElement("btn");
+            loginbtn.id = "login-btn";
+            loginbtn.innerHTML = "Login";
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'login-btn'){
+                    this.login();
+                }
+            });
+            container.prepend(loginbtn);
+        }
+        
+    }
+}
+/*  =============================================================
+    ==               Playback                                  ==
+    =============================================================
+*/
 class Playback {
     constructor(){}
     

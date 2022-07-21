@@ -166,6 +166,25 @@ app.get('/myTopArtists', (req, res) => {
 	});
 });
 
+app.get('/isLogged', (req, res) => {
+	var token = 0;
+	try{
+		token = spotifyApi.getAccessToken()
+	}
+	catch{
+		res.status(200).json(false);
+	}
+	finally{
+		if (token != 0){
+			res.status(200).json(true);
+		}
+		else {
+			res.status(200).json(false);
+		}
+
+	}
+
+});
 
 app.listen(port, () => {
 	console.log('Listening on *:3000');
