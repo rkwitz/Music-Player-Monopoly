@@ -154,9 +154,9 @@ class Category {
         statContainer.innerHTML = "";
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[this.currentStat].name;
-
+        title.className = "stat-title"
         let content = document.createElement("section");
-        content.id = "statistic-content";
+        content.id = "card-container";
         this.statistics[this.currentStat].performStatistic(content);
 
         let left = document.createElement("btn");
@@ -186,10 +186,10 @@ class Category {
                 document.getElementById("left-btn").className = ++left;
             }
         });
-        container.append(title);
-        container.append(content);
-        container.append(left);
-        container.append(right);
+        statContainer.append(title);
+        statContainer.append(left);
+        statContainer.append(content);
+        statContainer.append(right);
     }
 }
 
