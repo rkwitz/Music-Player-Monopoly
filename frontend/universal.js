@@ -119,7 +119,7 @@ class TrackCard extends InformationCard {
 }
 
 /*  =============================================================
-    ==               logic for statistics page                 ==
+    ==                  logic for statistics                   ==
     =============================================================
 */
 

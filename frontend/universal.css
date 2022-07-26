@@ -211,88 +211,6 @@ body{
 }
 
 /*  =============================================================
-    ==             stylying for Statistics Page                ==
-    =============================================================
-*/
-#statistic-container {
-    --sidebar-width: 150px;
-    height: 100%;
-}
-
-#statistic-sidebar {
-    width: var(--sidebar-width);
-    height: calc(100% - 2 * var(--header-height));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    z-index: 99;
-    background: rgb(56, 56, 56);
-}
-
-.category {
-    border: none;
-    max-width: 100px;
-    padding: .5em 1em;
-    height: 50px;
-    margin-top: 1em;
-    border-radius: 15px;
-    background: grey;
-    cursor: pointer;
-}
-
-.current {
-    background: var(--accent-color)
-}
-
-#statistic-content {
-    margin-left: 100px;
-    margin-right: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    right: 0;
-}
-
-#statistic-content #card-container{
-    margin-top: 11em;
-}
-
-.stat-title {
-    position: absolute;
-    font-size: 35px;
-    top: 1em;
-    color: var(--accent-color);
-}
-
-#left-btn, #right-btn {
-    --size: 30px;
-    position: fixed;
-    z-index: 99;
-    top: calc(50% + 20px);
-    cursor: pointer;
-}
-
-#left-btn {    
-    left: 0;
-    transform: translateX(calc(var(--sidebar-width) + var(--size)));
-
-    border-top: var(--size) solid transparent;
-    border-bottom: var(--size) solid transparent; 
-    border-right:var(--size) solid var(--accent-color);
-}
-
-#right-btn {
-    transform: translateX(calc(-1 *(var(--sidebar-width) + var(--size))));
-    right: 0; 
-    border-top: var(--size) solid transparent;
-    border-bottom: var(--size) solid transparent;
-    border-left: var(--size) solid var(--accent-color);
-}
-
-
-/*  =============================================================
     ==                 Styling for Music Player                ==
     =============================================================
 */
@@ -390,4 +308,3 @@ footer {
     margin: 0;
     padding: 0;
 }
-
