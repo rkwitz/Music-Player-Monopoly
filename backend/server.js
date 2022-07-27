@@ -1,10 +1,3 @@
-// How To Setup Server
-// ===========================================
-// cd to /backend
-// npm install
-// node server
-// go to localhost:3000
-
 const { config } = require('./config'); // 0: client ID, 1: client secret
 const express = require('express');
 const app = express();
