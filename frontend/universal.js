@@ -97,6 +97,7 @@ class PlaylistCard extends InformationCard {
     constructor(data) {
         super(data);
         this.playlistID = data;
+        
         // call backend for tracks in playlist
         let req = {"playlistID": this.playlistID};
         $.ajax({
@@ -104,21 +105,51 @@ class PlaylistCard extends InformationCard {
             type: "GET",
             ContentType: 'application/json',
             success: result => {
-                // build TrackCard() []
+                let trackArr = result;
+                let trackCards = Array();
+                trackArr.forEach( (e) => {
+                    // create Tracks cards for each track in playlist
+                    let track = new TrackCard(e);
+                    trackCards.push(track);
+                });
+                this.trackCards = trackCards;
             }, error: err => {
-                
+                alert("Something went wrong bulding a PlaylistCard")
             }
         });
-
-        
     }
 
-    html(clickable = true) {
-        // bool clickable --> whether or not this card is interactive
-        // return html element to be displayed on page
+    html(sidebar, listContainer) {
+        let btn = document.createElement("button");
+        btn.className = "playlist";
+        // btn.innerHTML = data.name;
+        btn.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("current")) {
+                var elems = document.querySelectorAll(".playlist");
+                [].forEach.call(elems, function(el) {
+                    el.classList.remove("current");
+                });
 
-        // make a button or something that requests all tracks in playlist from backend
-        // somehow create trackCards for each card (maybe in here, maybe not I'm not sure)
+                e.target.classList.add("current");
+                this.enterPlaylist(listContainer);
+            }
+        });
+        sidebar.append(btn);
+    }
+
+    enterPlaylist(container) {
+        container.innerHTML = ""; // clear the container
+        let title = document.createElement("h2");
+        // title.innerHTML = data.name;
+        title.className = "music-title"
+        let content = document.createElement("div");
+        content.id = "card-container";
+        // display tracks and playlist information
+        this.trackCards.forEach( (track) => { // iterate over TrackCards()
+            content.append(track.html());
+        })
+        container.append(title);
+        container.append(content);
     }
 }
 
@@ -143,7 +174,6 @@ class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
         this.name = name; // string
-        this.currentStat = 0;
     }
     html(catContainer, statContainer) {
         let btn = document.createElement("button");
@@ -165,15 +195,15 @@ class Category {
 
     enterStat(statContainer) {
         // in here add event handler to upon click
-        // performStatistic() method run on every statistic
-        // to multiple containers (some hidden) on the page
+        // performStatistic() method run on specific statistic in member var arr
+        // stat is chosen by class on left or right arrow
         statContainer.innerHTML = "";
         let title = document.createElement("h2");
-        title.innerHTML = this.statistics[this.currentStat].name;
+        title.innerHTML = this.statistics[0].name;
         title.className = "stat-title"
-        let content = document.createElement("section");
+        let content = document.createElement("div");
         content.id = "card-container";
-        this.statistics[this.currentStat].performStatistic(content);
+        this.statistics[0].performStatistic(content);
 
         let left = document.createElement("btn");
         left.id = "left-btn";

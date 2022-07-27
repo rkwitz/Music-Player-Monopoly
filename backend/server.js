@@ -264,6 +264,9 @@ app.get('/playlistGetTracks', (req, res) => {
   	.then(function(data) {
 		
     	//FINSIH HERE
+		// TODO: return [] of track {}'s as well as info about the playlist
+		//                               such as title, image length of playlist in time?
+		//                               wtvr is nice to have
 		
   	}, function(err) {
 		res.status(500).json(err);
