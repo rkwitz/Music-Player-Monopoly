@@ -257,3 +257,70 @@ app.get('/skipPrevious', (req, res) => {
       console.log(err);
     });
 });
+
+//NOT DONE
+/*
+// Get a playlist
+app.get('/playlistGetTracks', (req, res) => {
+	format = {id: "idNumberHere"}
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Content-type', 'application/json');
+	let request = req.query;
+	let id = `${request.id}`;
+	spotifyApi.getPlaylist(id)
+  	.then(function(data) {
+		
+    	//FINSIH HERE
+		
+  	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+});
+*/
+
+// Get a user's playlists
+app.get('/usersPlaylists', (req, res) => {
+	let id;
+	spotifyApi.getMe()
+	.then(function(data) {
+		id = data.body.id;
+	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+	spotifyApi.getUserPlaylists(id)
+  	.then(function(data) {
+		let playlistIds = Array()
+		for (let i = 0; i < data.body.items.length; i++) {
+			if (id == data.body.items[i].owner.id) {
+				playlistIds.push(data.body.items[i].id)
+			}
+		}
+		res.status(200).json(playlistIds);
+  	},function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+});
+  
+
+// Get the User's Currently Playing Track
+app.get('/trackPlaying', (req, res) => {
+	spotifyApi.getMyCurrentPlayingTrack()
+  	.then(function(data) {
+		let result = {}
+		result.name = data.body.item.name
+		let artistArr = Array()
+		for (let i = 0; i < data.body.item.artists.length; i++) {
+			artistArr.push(data.body.item.artists[i].name)
+		}
+		result.artist = artistArr;
+		result.album = data.body.item.album.name
+		result.art = data.body.item.album.images[0].url
+		res.status(200).json(result);
+  	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  });
+});
