@@ -99,7 +99,7 @@ class PlaylistCard extends InformationCard {
         this.playlistID = data;
         
         // call backend for tracks in playlist
-        let req = {"playlistID": this.playlistID};
+        let req = {"id": this.playlistID};
         $.ajax({
             url: "/playlistGetTracks/?"  + $.param(req),
             type: "GET",
@@ -107,7 +107,7 @@ class PlaylistCard extends InformationCard {
             success: result => {
                 let trackArr = result;
                 let trackCards = Array();
-                trackArr.forEach( (e) => {
+                trackArr.forEach( (e) => { // TODO: this has to be normal loop
                     // create Tracks cards for each track in playlist
                     let track = new TrackCard(e);
                     trackCards.push(track);
