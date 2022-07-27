@@ -96,7 +96,23 @@ class ArtistCard extends InformationCard  {
 class PlaylistCard extends InformationCard {
     constructor(data) {
         super(data);
+        this.playlistID = data;
+        // call backend for tracks in playlist
+        let req = {"playlistID": this.playlistID};
+        $.ajax({
+            url: "/playlistGetTracks/?"  + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                // build TrackCard() []
+            }, error: err => {
+                
+            }
+        });
+
+        
     }
+
     html(clickable = true) {
         // bool clickable --> whether or not this card is interactive
         // return html element to be displayed on page
