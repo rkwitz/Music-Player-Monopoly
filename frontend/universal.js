@@ -107,11 +107,11 @@ class PlaylistCard extends InformationCard {
             success: result => {
                 let trackArr = result;
                 let trackCards = Array();
-                trackArr.forEach( (e) => { // TODO: this has to be normal loop
+                for (let i=0; i<trackArr.length; ++i) {
                     // create Tracks cards for each track in playlist
-                    let track = new TrackCard(e);
+                    let track = new TrackCard(trackArr[i]);
                     trackCards.push(track);
-                });
+                }
                 this.trackCards = trackCards;
             }, error: err => {
                 alert("Something went wrong bulding a PlaylistCard")

@@ -305,6 +305,7 @@ app.get('/usersPlaylists', (req, res) => {
 app.get('/trackPlaying', (req, res) => {
 	spotifyApi.getMyCurrentPlayingTrack()
   	.then(function(data) {
+		console.log(data.body);
 		let result = {}
 		result.name = data.body.item.name
 		let artistArr = Array()
@@ -314,6 +315,8 @@ app.get('/trackPlaying', (req, res) => {
 		result.artist = artistArr;
 		result.album = data.body.item.album.name
 		result.art = data.body.item.album.images[0].url
+		result.id = data.body.item.id;
+		result.realeaseDate = data.body.item.album.release_date;
 		res.status(200).json(result);
   	}, function(err) {
 		res.status(500).json(err);
