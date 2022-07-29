@@ -51,7 +51,6 @@ let topSongsFunction = function(container) {
         type: "GET",
         ContentType: 'application/json',
         success: result => {
-            console.log(result)
             for (let i=0; i<result.total; ++i) {
                 let song = new SongsCard(result.songs[i]);
                 htmlArt = song.html();
