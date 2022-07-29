@@ -196,6 +196,8 @@ async function topSongsParser(range, num) {
 				song.artists = artistArr
 				song.album = data.data.items[j].album.name
 				song.art = data.data.items[j].album.images[0].url
+				song.id = data.data.items[j].id
+				song.releaseDate = data.data.items[j].album.release_date
 				songs.push(song)
 			}
 		});
@@ -332,6 +334,7 @@ app.get('/playlistGetTracks', (req, res) => {
 		let result = {}
 		let songsArr = Array()
 		result.name = data.body.name
+		result.art = data.body.images[0].url
 		for (let i = 0; i < data.body.tracks.items.length; i++) {
 			let song = {}
 			song.name = data.body.tracks.items[i].track.name
@@ -342,6 +345,8 @@ app.get('/playlistGetTracks', (req, res) => {
 			song.artists = artistArr
 			song.album = data.body.tracks.items[i].track.album.name
 			song.art = data.body.tracks.items[i].track.album.images[0].url
+			song.id = data.body.tracks.items[i].track.id
+			song.releaseDate = data.body.tracks.items[i].track.album.release_date
 			songsArr.push(song)
 		}
 		result.songs = songsArr
