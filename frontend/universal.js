@@ -97,7 +97,9 @@ class PlaylistCard extends InformationCard {
     constructor(data) {
         super(data);
         this.playlistID = data;
-        
+    }
+
+    html(sidebar, playlistContainer) {
         // call backend for tracks in playlist
         let req = {"id": this.playlistID};
         $.ajax({
@@ -105,7 +107,8 @@ class PlaylistCard extends InformationCard {
             type: "GET",
             ContentType: 'application/json',
             success: result => {
-                let trackArr = result;
+                this.name = result.name;
+                let trackArr = result.songs;
                 let trackCards = Array();
                 for (let i=0; i<trackArr.length; ++i) {
                     // create Tracks cards for each track in playlist
@@ -113,34 +116,31 @@ class PlaylistCard extends InformationCard {
                     trackCards.push(track);
                 }
                 this.trackCards = trackCards;
+                let btn = document.createElement("button");
+                btn.className = "playlist";
+                btn.innerHTML = this.name;
+                btn.addEventListener("click", (e) => {
+                if (!e.target.classList.contains("current")) {
+                    var elems = document.querySelectorAll(".playlist");
+                    [].forEach.call(elems, function(el) {
+                        el.classList.remove("current");
+                });
+
+                e.target.classList.add("current");
+                this.enterPlaylist(playlistContainer);
+            }
+        });
+        sidebar.append(btn);
             }, error: err => {
                 alert("Something went wrong bulding a PlaylistCard")
             }
         });
     }
 
-    html(sidebar, listContainer) {
-        let btn = document.createElement("button");
-        btn.className = "playlist";
-        // btn.innerHTML = data.name;
-        btn.addEventListener("click", (e) => {
-            if (!e.target.classList.contains("current")) {
-                var elems = document.querySelectorAll(".playlist");
-                [].forEach.call(elems, function(el) {
-                    el.classList.remove("current");
-                });
-
-                e.target.classList.add("current");
-                this.enterPlaylist(listContainer);
-            }
-        });
-        sidebar.append(btn);
-    }
-
     enterPlaylist(container) {
         container.innerHTML = ""; // clear the container
         let title = document.createElement("h2");
-        // title.innerHTML = data.name;
+        title.innerHTML = this.name;
         title.className = "music-title"
         let content = document.createElement("div");
         content.id = "card-container";
@@ -158,10 +158,56 @@ class TrackCard extends InformationCard {
         super(data);
     }
     html(clickable = true) {
-        // bool clickable --> whether or not this card is interactive
-        // return html element to be displayed on page
+        // return html element to be displayed on page 
+        // const format = {
+        //     "name": "Kids",
+        //     "artist": [
+        //       "MGMT"
+        //     ],
+        //     "album": "Oracular Spectacular",
+        //     "art": "https://i.scdn.co/image/ab67616d0000b2738b32b139981e79f2ebe005eb",
+        //     "id": "1jJci4qxiYcOHhQR247rEU",
+        //     "realeaseDate": "2007-12-14"
+        // }
+        let card = document.createElement('div');
+        card.classList.add('card', 'track-card');
 
-        // make a button or something that requests to play this track from backend
+        let name = document.createElement('h3');
+        name.className = 'track-name';
+        name.innerHTML = this.data.name;
+
+        let artistTitle = document.createElement('h4');
+        artistTitle.innerHTML = "artists:";
+        artistTitle.className = "artists-title"
+
+        let artists = document.createElement('ul');
+        artists.className = 'track-list'
+        let artistList = Array();
+        artistList = this.data.artists
+        let maxArtists = 3;
+        for (let i=0; i<artistList.length; ++i) {
+            if (maxArtists != 0) {
+                let li = document.createElement('li');
+                li.className = 'artist-item';
+                let artist = document.createElement('p');
+                artist.innerHTML = artistList[i];
+                artist.className = "artist";
+                li.append(artist);
+                artists.append(li);
+                maxArtists--;
+            }
+        }
+
+        let img = document.createElement('img');
+        img.className = 'track-image';
+        img.src = this.data.art;
+        img.alt = `A photo of the track "${this.data.name}" by ${this.data.artists[0]}`;
+
+        card.append(img);
+        card.append(name);
+        card.append(artistTitle);
+        card.append(artists);
+        return card;
     }
 }
 
