@@ -228,7 +228,8 @@ class Histogram {
         for (var i = 0; i < this.labels.length;i++){
             this.data.push(data[this.labels[i]]);
         }
-        
+        console.log(this.labels);
+        console.log(this.data);
     }
     html() {
         let hist = document.createElement('canvas');
@@ -302,7 +303,15 @@ class PiChart {  // Top 5
                         'red',
                         'green',
                         'yellow',
-                        'purple'
+                        'purple',
+                        'orange',
+                        'maroon',
+                        'fuchsia',
+                        'lime',
+                        'olive',
+                        'navy',
+                        'teal',
+                        'aqua'
                     ],
                     hoverOffset: 4
                 }]

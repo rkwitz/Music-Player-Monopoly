@@ -51,7 +51,7 @@ let topSongsFunction = function(container) {
         ContentType: 'application/json',
         success: result => {
             for (let i=0; i<result.total; ++i) {
-                let song = new SongsCard(result.songs[i]);
+                let song = new TrackCard(result.songs[i]);
                 htmlArt = song.html();
                 htmlArt.dataset.ranking = i+1;
                 htmlArt.classList.add('card-numbered');
@@ -87,10 +87,12 @@ let topDecadesFunction = function(container) {
                 //parse date to year string
                 let date = result.songs[i].releaseDate;
                 year = parseInt(date.substring(0,4));
-                labels = Objects.keys(decades);
+                labels = Object.keys(decades);
+                console.log(labels);
                 for (var j = labels.length-1; j >= 0;j--){
                     if (year >= (1940 + 10*j)) {
-                        decades.labels[j] += num-i;
+                        decades[labels[j]] += num-1;
+                        break;
                     }
                 }
             }
@@ -119,7 +121,7 @@ let topGenreFunction = function(container) {
                 genreList = result.artists[i].genres;
                 genreList.forEach((genreName) => {
                     if (genres.hasOwnProperty(genreName)){
-                        genres.genreName += num-i;
+                        genres[genreName] += num-i;
                     }
                     else {
                         genres[genreName] = num-i;
@@ -136,8 +138,8 @@ let topGenreFunction = function(container) {
                 return second[1] - first[1];
             });
             
-            // Create a new array with only the first 5 items
-            items = items.slice(0, 5);
+            // Create a new array with only the first 13 items
+            items = items.slice(0, 13);
 
             sortedGenre={}
             items.forEach((v) => {

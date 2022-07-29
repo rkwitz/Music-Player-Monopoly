@@ -161,6 +161,7 @@ app.get('/myTopArtists', (req, res) => {
 });
 
 async function topSongsParser(range, num) {
+	let numItems = 0
 	let rem = num
 	let itr
 	if (rem > 49) {
@@ -187,6 +188,7 @@ async function topSongsParser(range, num) {
 				size = data.data.items.length
 			}
 			for (let j = 0; j < size; j++) {
+				numItems++
 				let song = {}
 				song.name = data.data.items[j].name
 				let artistArr = Array()
@@ -205,6 +207,7 @@ async function topSongsParser(range, num) {
 		off = 49
 		rem = rem - 49
 	}
+	result.total = numItems
 	result.songs = songs
 	return result
 }
