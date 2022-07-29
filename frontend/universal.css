@@ -211,6 +211,22 @@ body{
 }
 
 /*  =============================================================
+    ==            stylying for Other Statistics                ==
+    =============================================================
+*/
+.canvas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    height: 50%;
+    position: relative;
+    gap: 20px;
+}
+
+/*  =============================================================
     ==             stylying for Statistics Page                ==
     =============================================================
 */
