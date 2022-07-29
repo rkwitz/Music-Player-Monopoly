@@ -247,11 +247,11 @@ class Histogram {
             options: {
                 plugins: {
                     legend: {
-                        display: false
+                        display: false,
                     },
                     title: {
-                        display: true,
-                        text: 'Most Listened to Decades of Music',
+                        display: false,
+                        text: '',
                         padding: {
                             top: 10,
                             bottom: 30
@@ -262,7 +262,6 @@ class Histogram {
                     x: {
                         title: {
                             display: true,
-                            text: 'Decade'
                         }
                     },
                     y: {
@@ -318,10 +317,15 @@ class PiChart {  // Top 5
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Most Listened to Genres of Music',
+                        text: '',
                         padding: {
                             top: 10,
                             bottom: 30
+                        }
+                    },
+                    legend: {
+                        font: {
+                            size: 20
                         }
                     }
                 },
