@@ -228,8 +228,6 @@ class Histogram {
         for (var i = 0; i < this.labels.length;i++){
             this.data.push(data[this.labels[i]]);
         }
-        console.log(this.labels);
-        console.log(this.data);
     }
     html() {
         let hist = document.createElement('canvas');

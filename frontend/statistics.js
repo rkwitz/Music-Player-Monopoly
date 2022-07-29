@@ -88,7 +88,6 @@ let topDecadesFunction = function(container) {
                 let date = result.songs[i].releaseDate;
                 year = parseInt(date.substring(0,4));
                 labels = Object.keys(decades);
-                console.log(labels);
                 for (var j = labels.length-1; j >= 0;j--){
                     if (year >= (1940 + 10*j)) {
                         decades[labels[j]] += num-1;
