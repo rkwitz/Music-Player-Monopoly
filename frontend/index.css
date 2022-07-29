@@ -1,0 +1,18 @@
+#overview {
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: calc(100% - var(--header-height) - 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#overview p {
+    padding: 0 calc(15% + 2em);
+}
+
+#overview .emphasis {
+    color: var(--accent-color);
+}
