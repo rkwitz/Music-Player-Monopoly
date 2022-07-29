@@ -299,25 +299,31 @@ app.get('/usersPlaylists', (req, res) => {
     	console.log(err);
   	});
 });
-  
+
+async function buildTrack(trackData) {
+	// assumes it is taking a track {} from spotify API
+	let result = {}
+	console.log(trackData);
+	result.name = trackData.item.name
+	let artistArr = Array()
+	for (let i = 0; i < trackData.item.artists.length; i++) {
+		artistArr.push(trackData.item.artists[i].name)
+	}
+	result.artist = artistArr;
+	result.album = trackData.item.album.name
+	result.art = trackData.item.album.images[0].url
+	result.id = trackData.item.id;
+	result.realeaseDate = trackData.item.album.release_date;
+	return result;
+}
 
 // Get the User's Currently Playing Track
 app.get('/trackPlaying', (req, res) => {
 	spotifyApi.getMyCurrentPlayingTrack()
   	.then(function(data) {
-		console.log(data.body);
-		let result = {}
-		result.name = data.body.item.name
-		let artistArr = Array()
-		for (let i = 0; i < data.body.item.artists.length; i++) {
-			artistArr.push(data.body.item.artists[i].name)
-		}
-		result.artist = artistArr;
-		result.album = data.body.item.album.name
-		result.art = data.body.item.album.images[0].url
-		result.id = data.body.item.id;
-		result.realeaseDate = data.body.item.album.release_date;
-		res.status(200).json(result);
+		buildTrack(data.body).then(e =>{
+			res.status(200).json(e);
+		});
   	}, function(err) {
 		res.status(500).json(err);
     	console.log(err);
