@@ -381,7 +381,23 @@ app.get('/usersPlaylists', (req, res) => {
     	console.log(err);
   	});
 });
-  
+
+async function buildTrack(trackData) {
+	// assumes it is taking a track {} from spotify API
+	let result = {}
+	console.log(trackData);
+	result.name = trackData.item.name
+	let artistArr = Array()
+	for (let i = 0; i < trackData.item.artists.length; i++) {
+		artistArr.push(trackData.item.artists[i].name)
+	}
+	result.artist = artistArr;
+	result.album = trackData.item.album.name
+	result.art = trackData.item.album.images[0].url
+	result.id = trackData.item.id;
+	result.realeaseDate = trackData.item.album.release_date;
+	return result;
+}
 
 // Get the User's Currently Playing Track
 app.get('/trackPlaying', (req, res) => {

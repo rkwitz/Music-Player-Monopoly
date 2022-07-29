@@ -96,13 +96,65 @@ class ArtistCard extends InformationCard  {
 class PlaylistCard extends InformationCard {
     constructor(data) {
         super(data);
+        this.playlistID = data;
     }
-    html(clickable = true) {
-        // bool clickable --> whether or not this card is interactive
-        // return html element to be displayed on page
 
-        // make a button or something that requests all tracks in playlist from backend
-        // somehow create trackCards for each card (maybe in here, maybe not I'm not sure)
+    html(sidebar, playlistContainer) {
+        // call backend for tracks in playlist
+        let req = {"id": this.playlistID};
+        $.ajax({
+            url: "/playlistGetTracks/?"  + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            success: result => {
+                this.img = result.art;
+                this.name = result.name;
+                let trackArr = result.songs;
+                let trackCards = Array();
+                for (let i=0; i<trackArr.length; ++i) {
+                    // create Tracks cards for each track in playlist
+                    let track = new TrackCard(trackArr[i]);
+                    trackCards.push(track);
+                }
+                this.trackCards = trackCards;
+                let btn = document.createElement("button");
+                btn.className = "playlist";
+                btn.innerHTML = this.name;
+                btn.addEventListener("click", (e) => {
+                    if (!e.target.classList.contains("current")) {
+                        var elems = document.querySelectorAll(".playlist");
+                        [].forEach.call(elems, function(el) {
+                            el.classList.remove("current");
+                        });
+                        e.target.classList.add("current");
+                        this.enterPlaylist(playlistContainer);
+                    }
+                });
+                sidebar.append(btn);
+            }, error: err => {
+                alert("Something went wrong bulding a PlaylistCard")
+            }
+        });
+    }
+
+    enterPlaylist(container) {
+        container.innerHTML = ""; // clear the container
+        let title = document.createElement("h2");
+        title.innerHTML = this.name;
+        title.className = "music-title"
+        let img = document.createElement("img");
+        img.src = this.img;
+        img.className = "music-img";
+        img.alt = `Playlist cover for ${this.name}`;
+        let content = document.createElement("div");
+        content.id = "card-container";
+        // display tracks and playlist information
+        this.trackCards.forEach( (track) => { // iterate over TrackCards()
+            content.append(track.html());
+        });
+        container.append(title);
+        container.append(img);
+        container.append(content);
     }
 }
 
@@ -111,10 +163,56 @@ class TrackCard extends InformationCard {
         super(data);
     }
     html(clickable = true) {
-        // bool clickable --> whether or not this card is interactive
-        // return html element to be displayed on page
+        // return html element to be displayed on page 
+        // const format = {
+        //     "name": "Kids",
+        //     "artist": [
+        //       "MGMT"
+        //     ],
+        //     "album": "Oracular Spectacular",
+        //     "art": "https://i.scdn.co/image/ab67616d0000b2738b32b139981e79f2ebe005eb",
+        //     "id": "1jJci4qxiYcOHhQR247rEU",
+        //     "realeaseDate": "2007-12-14"
+        // }
+        let card = document.createElement('div');
+        card.classList.add('card', 'track-card');
 
-        // make a button or something that requests to play this track from backend
+        let name = document.createElement('h3');
+        name.className = 'track-name';
+        name.innerHTML = this.data.name;
+
+        let artistTitle = document.createElement('h4');
+        artistTitle.innerHTML = "artists:";
+        artistTitle.className = "artists-title"
+
+        let artists = document.createElement('ul');
+        artists.className = 'track-list'
+        let artistList = Array();
+        artistList = this.data.artists
+        let maxArtists = 3;
+        for (let i=0; i<artistList.length; ++i) {
+            if (maxArtists != 0) {
+                let li = document.createElement('li');
+                li.className = 'artist-item';
+                let artist = document.createElement('p');
+                artist.innerHTML = artistList[i];
+                artist.className = "artist";
+                li.append(artist);
+                artists.append(li);
+                maxArtists--;
+            }
+        }
+
+        let img = document.createElement('img');
+        img.className = 'track-image';
+        img.src = this.data.art;
+        img.alt = `A photo of the track "${this.data.name}" by ${this.data.artists[0]}`;
+
+        card.append(img);
+        card.append(name);
+        card.append(artistTitle);
+        card.append(artists);
+        return card;
     }
 }
 
@@ -234,7 +332,6 @@ class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
         this.name = name; // string
-        this.currentStat = 0;
     }
     html(catContainer, statContainer) {
         let btn = document.createElement("button");
@@ -256,15 +353,15 @@ class Category {
 
     enterStat(statContainer) {
         // in here add event handler to upon click
-        // performStatistic() method run on every statistic
-        // to multiple containers (some hidden) on the page
+        // performStatistic() method run on specific statistic in member var arr
+        // stat is chosen by class on left or right arrow
         statContainer.innerHTML = "";
         let title = document.createElement("h2");
-        title.innerHTML = this.statistics[this.currentStat].name;
+        title.innerHTML = this.statistics[0].name;
         title.className = "stat-title"
-        let content = document.createElement("section");
+        let content = document.createElement("div");
         content.id = "card-container";
-        this.statistics[this.currentStat].performStatistic(content);
+        this.statistics[0].performStatistic(content);
 
         let left = document.createElement("btn");
         left.id = "left-btn";
