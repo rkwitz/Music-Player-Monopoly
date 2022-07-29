@@ -217,7 +217,114 @@ class TrackCard extends InformationCard {
 }
 
 /*  =============================================================
-    ==                  logic for statistics                   ==
+    ==           Other Methods of Displaying Stats             ==
+    =============================================================
+*/
+class Histogram {
+    constructor(data) {
+        this.labels = Object.keys(data);
+
+        this.data = Array();
+        for (var i = 0; i < this.labels.length;i++){
+            this.data.push(data[this.labels[i]]);
+        }
+    }
+    html() {
+        let hist = document.createElement('canvas');
+        hist.id = 'histogram';
+        hist.classList.add('histogram');
+
+        const ctx = hist.getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: this.labels,
+                datasets: [{
+                    data: this.data,
+                    backgroundColor: 'blue'
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Most Listened to Decades of Music',
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Decade'
+                        }
+                    },
+                    y: {
+                        display: false
+                    }
+                }
+            }
+        });
+        return hist;
+    }
+}
+
+class PiChart {  // Top 5
+    constructor(data) {
+        this.labels = Object.keys(data);
+
+        this.data = [];
+        for (var i = 0; i < this.labels.length;i++){
+            this.data.push(data[this.labels[i]]);
+        }
+    }
+    html() {
+        let pie = document.createElement('canvas');
+        pie.id = 'pie';
+        pie.classList.add('pie');
+
+        const ctx = pie.getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: this.labels,
+                datasets: [{
+                    data: this.data,
+                    backgroundColor: [
+                        'blue',
+                        'red',
+                        'green',
+                        'yellow',
+                        'purple'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Most Listened to Genres of Music',
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
+            }
+        });
+        return pie;
+    }
+}
+
+/*  =============================================================
+    ==               logic for statistics page                 ==
     =============================================================
 */
 
@@ -261,7 +368,7 @@ class Category {
         left.className = "-1"
         let right = document.createElement("btn");
         right.id = "right-btn";
-        right.className = "1"
+        right.className = "1";
         // add event listeners to change currently visualized data
         left.addEventListener('click',(e) => {
             let targetIndex = parseInt(e.target.className);
@@ -270,7 +377,7 @@ class Category {
                 title.innerHTML = this.statistics[targetIndex].name;
                 e.target.className = --targetIndex;
                 let right = parseInt(document.getElementById("right-btn").className);
-                document.getElementById("right-btn").className = --left;
+                document.getElementById("right-btn").className = --right;
             }
         });
         right.addEventListener('click',(e) => {
