@@ -374,6 +374,12 @@ class Category {
         left.addEventListener('click',(e) => {
             let targetIndex = parseInt(e.target.className);
             if (targetIndex >= 0) {
+                // hide button briefly to account for api call 
+                // otherwise user can "unalign" stats
+                e.target.style.display = 'none';
+                setTimeout(() => {
+                    e.target.style.display = 'block';
+                }, 1000)
                 this.statistics[targetIndex].performStatistic(content);
                 title.innerHTML = this.statistics[targetIndex].name;
                 e.target.className = --targetIndex;
@@ -384,6 +390,12 @@ class Category {
         right.addEventListener('click',(e) => {
             let targetIndex = parseInt(e.target.className);
             if (targetIndex < this.statistics.length) {
+                // hide button briefly to account for api call 
+                // otherwise user can "unalign" stats
+                e.target.style.display = 'none';
+                setTimeout(() => {
+                    e.target.style.display = 'block';
+                }, 1000)
                 this.statistics[targetIndex].performStatistic(content);
                 title.innerHTML = this.statistics[targetIndex].name;
                 e.target.className = ++targetIndex;
