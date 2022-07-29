@@ -30,7 +30,6 @@ let topArtistFunction = function(container) {
         ContentType: 'application/json',
         success: result => {
             for (let i=0; i<result.total; ++i) {
-                console.log(result);
                 let artist = new ArtistCard(result.artists[i]);
                 htmlArt = artist.html();
                 htmlArt.dataset.ranking = i+1;
@@ -117,13 +116,13 @@ let topGenreFunction = function(container) {
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let genreList = Array();
-                genreList = result.artists[i].genre;
+                genreList = result.artists[i].genres;
                 genreList.forEach((genreName) => {
                     if (genres.hasOwnProperty(genreName)){
                         genres.genreName += num-i;
                     }
                     else {
-                        genre[genreName] = num-i;
+                        genres[genreName] = num-i;
                     }
                 });
             }
