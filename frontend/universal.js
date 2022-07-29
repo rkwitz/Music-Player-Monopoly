@@ -107,6 +107,7 @@ class PlaylistCard extends InformationCard {
             type: "GET",
             ContentType: 'application/json',
             success: result => {
+                this.img = result.art;
                 this.name = result.name;
                 let trackArr = result.songs;
                 let trackCards = Array();
@@ -120,17 +121,16 @@ class PlaylistCard extends InformationCard {
                 btn.className = "playlist";
                 btn.innerHTML = this.name;
                 btn.addEventListener("click", (e) => {
-                if (!e.target.classList.contains("current")) {
-                    var elems = document.querySelectorAll(".playlist");
-                    [].forEach.call(elems, function(el) {
-                        el.classList.remove("current");
+                    if (!e.target.classList.contains("current")) {
+                        var elems = document.querySelectorAll(".playlist");
+                        [].forEach.call(elems, function(el) {
+                            el.classList.remove("current");
+                        });
+                        e.target.classList.add("current");
+                        this.enterPlaylist(playlistContainer);
+                    }
                 });
-
-                e.target.classList.add("current");
-                this.enterPlaylist(playlistContainer);
-            }
-        });
-        sidebar.append(btn);
+                sidebar.append(btn);
             }, error: err => {
                 alert("Something went wrong bulding a PlaylistCard")
             }
@@ -142,13 +142,18 @@ class PlaylistCard extends InformationCard {
         let title = document.createElement("h2");
         title.innerHTML = this.name;
         title.className = "music-title"
+        let img = document.createElement("img");
+        img.src = this.img;
+        img.className = "music-img";
+        img.alt = `Playlist cover for ${this.name}`;
         let content = document.createElement("div");
         content.id = "card-container";
         // display tracks and playlist information
         this.trackCards.forEach( (track) => { // iterate over TrackCards()
             content.append(track.html());
-        })
+        });
         container.append(title);
+        container.append(img);
         container.append(content);
     }
 }
