@@ -76,7 +76,7 @@ let topDecadesFunction = function(container) {
         '2010s': 0,
         '2020s': 0
     };
-    const num = 150;
+    const num = 99;
     let req = {'range': 'long', 'numberSongs': num}
     $.ajax({
         url: "/myTopSongs/?" + $.param(req),
@@ -96,7 +96,6 @@ let topDecadesFunction = function(container) {
             }
             let histogram = new Histogram(decades);
             htmlArt = histogram.html();
-            htmlArt.dataset.ranking = i+1;
             htmlArt.classList.add('canvas');
             container.append(htmlArt);
         }, error: err => {
@@ -108,16 +107,16 @@ let topDecadesFunction = function(container) {
 
 let topGenreFunction = function(container) {
     var genres = {};
-    const num = 150;
-    let req = {'range': 'long', 'numberSongs': num}
+    const num = 99;
+    let req = {'range': 'long', 'numberArtists': num}
     $.ajax({
-        url: "/myTopSongs/?" + $.param(req),
+        url: "/myTopArtists/?" + $.param(req),
         type: "GET",
         ContentType: 'application/json',
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let genreList = Array();
-                genreList = result.songs[i].album.genre;
+                genreList = result.artist[i].genre;
                 genreList.forEach((genreName) => {
                     if (genres.hasOwnProperty(genreName)){
                         genres.genreName += num-i;
@@ -149,7 +148,6 @@ let topGenreFunction = function(container) {
 
             let piChart = new PiChart(sortedGenre);
             htmlArt = piChart.html();
-            htmlArt.dataset.ranking = i+1;
             htmlArt.classList.add('canvas');
             container.append(htmlArt);
         }, error: err => {
