@@ -126,9 +126,9 @@ class Histogram {
     constructor(data) {
         this.labels = Object.keys(data);
 
-        this.data = [];
+        this.data = Array();
         for (var i = 0; i < this.labels.length;i++){
-            this.data.append(data[this.labels[i]]);
+            this.data.push(data[this.labels[i]]);
         }
     }
     html() {
@@ -136,7 +136,7 @@ class Histogram {
         hist.id = 'histogram';
         hist.classList.add('histogram');
 
-        const ctx = document.getElementById('histogram').getContext('2d');
+        const ctx = hist.getContext('2d');
         const chart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -183,7 +183,7 @@ class PiChart {  // Top 5
 
         this.data = [];
         for (var i = 0; i < this.labels.length;i++){
-            this.data.append(data[this.labels[i]]);
+            this.data.push(data[this.labels[i]]);
         }
     }
     html() {
@@ -191,7 +191,7 @@ class PiChart {  // Top 5
         pie.id = 'pie';
         pie.classList.add('pie');
 
-        const ctx = document.getElementById('pie').getContext('2d');
+        const ctx = pie.getContext('2d');
         const chart = new Chart(ctx, {
             type: 'pie',
             data: {
