@@ -1,10 +1,3 @@
-// How To Setup Server
-// ===========================================
-// cd to /backend
-// npm install
-// node server
-// go to localhost:3000
-
 const { config } = require('./config'); // 0: client ID, 1: client secret
 const express = require('express');
 const app = express();
@@ -143,6 +136,7 @@ async function topArtistsParser(range, num) {
 	info = info.concat("],\"total\":", itr, "}");
 	return info;
 }
+
 app.get('/myTopArtists', (req, res) => {
 	// how the req body must be formatted to make a request to the backend
 	format = {range: "short|medium|long", numberArtists: "1 - 99"}
@@ -166,6 +160,75 @@ app.get('/myTopArtists', (req, res) => {
 	});
 });
 
+async function topSongsParser(range, num) {
+	let rem = num
+	let itr
+	if (rem > 49) {
+		itr = 2
+	}
+	else {
+		itr = 1
+	}
+	let lim = 49
+	let off = 0
+	let result = {}
+	let songs = Array()
+	for (let i = 0; i < itr; i++) {
+		await axios.get('https://api.spotify.com/v1/me/top/tracks ', {
+			params: {limit: lim, offset: off, time_range: range},
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+				Host: "api.spotify.com",
+			},
+		}).then((data) => {
+			let size = 50
+			if (data.data.items.length < size) {
+				size = data.data.items.length
+			}
+			for (let j = 0; j < size; j++) {
+				let song = {}
+				song.name = data.data.items[j].name
+				let artistArr = Array()
+				for (let k = 0; k < data.data.items[j].artists.length; k++) {
+					artistArr.push(data.data.items[j].artists[k].name)
+				}
+				song.artists = artistArr
+				song.album = data.data.items[j].album.name
+				song.art = data.data.items[j].album.images[0].url
+				songs.push(song)
+			}
+		});
+		lim = 50
+		off = 49
+		rem = rem - 49
+	}
+	result.songs = songs
+	return result
+}
+
+app.get('/myTopSongs', (req, res) => {
+	format = {range: "short|medium|long", numberSongs: "1 - 99"}
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Content-type', 'application/json');
+	let request = req.query;
+	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
+	&& !isNaN(request.numberSongs) && parseInt(request.numberSongs) > 0 && parseInt(request.numberSongs) <= 99)) {
+		res.status(400).json({"request body format": format});
+		console.log("incorrect request body:", '\n', request);
+		return;
+	}
+	let range = `${request.range}_term`;
+	let num = parseInt(request.numberSongs);	
+	topSongsParser(range, num).then((data) => {
+		res.status(200).json(data);
+		console.log(`sent top ${num} songs`);
+	})
+	.catch((err) => {
+		res.status(500).json(err);
+	});
+});
+
 app.get('/isLogged', (req, res) => {
 	var token = 0;
 	try{
@@ -183,7 +246,6 @@ app.get('/isLogged', (req, res) => {
 		}
 
 	}
-
 });
 
 app.listen(port, () => {
@@ -256,4 +318,82 @@ app.get('/skipPrevious', (req, res) => {
       res.status(500).json(err);
       console.log(err);
     });
+});
+
+// Get a playlist
+app.get('/playlistGetTracks', (req, res) => {
+	format = {id: "idNumberHere"}
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Content-type', 'application/json');
+	let request = req.query;
+	let id = `${request.id}`;
+	spotifyApi.getPlaylist(id)
+  	.then(function(data) {
+		let result = {}
+		let songsArr = Array()
+		result.name = data.body.name
+		for (let i = 0; i < data.body.tracks.items.length; i++) {
+			let song = {}
+			song.name = data.body.tracks.items[i].track.name
+			let artistArr = Array()
+			for (let j = 0; j < data.body.tracks.items[i].track.artists.length; j++) {
+				artistArr.push(data.body.tracks.items[i].track.artists[j].name)
+			}
+			song.artists = artistArr
+			song.album = data.body.tracks.items[i].track.album.name
+			song.art = data.body.tracks.items[i].track.album.images[0].url
+			songsArr.push(song)
+		}
+		result.songs = songsArr
+		res.status(200).json(result);
+  	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+});
+
+// Get a user's playlists
+app.get('/usersPlaylists', (req, res) => {
+	let id;
+	spotifyApi.getMe()
+	.then(function(data) {
+		id = data.body.id;
+	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+	spotifyApi.getUserPlaylists(id)
+  	.then(function(data) {
+		let playlistIds = Array()
+		for (let i = 0; i < data.body.items.length; i++) {
+			if (id == data.body.items[i].owner.id) {
+				playlistIds.push(data.body.items[i].id)
+			}
+		}
+		res.status(200).json(playlistIds);
+  	},function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  	});
+});
+  
+
+// Get the User's Currently Playing Track
+app.get('/trackPlaying', (req, res) => {
+	spotifyApi.getMyCurrentPlayingTrack()
+  	.then(function(data) {
+		let result = {}
+		result.name = data.body.item.name
+		let artistArr = Array()
+		for (let i = 0; i < data.body.item.artists.length; i++) {
+			artistArr.push(data.body.item.artists[i].name)
+		}
+		result.artists = artistArr;
+		result.album = data.body.item.album.name
+		result.art = data.body.item.album.images[0].url
+		res.status(200).json(result);
+  	}, function(err) {
+		res.status(500).json(err);
+    	console.log(err);
+  });
 });
