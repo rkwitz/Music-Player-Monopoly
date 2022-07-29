@@ -207,9 +207,9 @@ class TrackCard extends InformationCard {
         img.className = 'track-image';
         img.src = this.data.art;
         img.alt = `A photo of the track "${this.data.name}" by ${this.data.artists[0]}`;
-
-        card.append(img);
+        
         card.append(name);
+        card.append(img);
         card.append(artistTitle);
         card.append(artists);
         return card;
