@@ -6,10 +6,6 @@
 $( document ).ready(function() {
     var login = new Login();
     login.html(document.body);
-    if ((location.href ==  "http://localhost:3000/landing.html") || (location.href ==  "http://localhost:3000/stats.html") || (location.href ==  "http://localhost:3000/music.html")){ 
-        let playback = new Playback();
-        playback.html(document.body);
-    }
 });
 /*  =============================================================
     ==               logic for informationCards                ==
@@ -440,6 +436,9 @@ class Statistic {
 */
 
 class Login {
+    constructor() {
+        this.logged = false;
+    }
     login() {
         location.href = "/login";
     }
@@ -449,45 +448,86 @@ class Login {
         const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
         setTimeout(() => spotifyLogoutWindow.close(), 1000);
         setTimeout(() => location.href = "/index.html", 1050);
-        
+        $.ajax({
+            url: "/logout",
+            type: "GET",
+            ContentType: 'application/json',
+        });
     }
-    isLogged() {
+
+    setLoggedState(state) {
+        this.logged = state;
+    }
+    html(container) {
         $.ajax({
             url: "/isLogged",
             type: "GET",
             ContentType: 'application/json',
             success: result => {
-                return result;
+                if (result){ 
+                    let playback = new Playback();
+                    playback.html(document.body);
+
+                    let homebtn = document.createElement("button");
+                    homebtn.id = "home-btn";
+                    homebtn.innerHTML = "Home";
+        
+                    document.addEventListener('click',(e) => {
+                        if(e.target && e.target.id== 'home-btn'){
+                            location.href = "/index.html";
+                        }
+                    });
+
+                    let statsbtn = document.createElement("button");
+                    statsbtn.id = "stats-btn";
+                    statsbtn.innerHTML = "Stats";
+        
+                    document.addEventListener('click',(e) => {
+                        if(e.target && e.target.id== 'stats-btn'){
+                            location.href = "/stats.html";
+                        }
+                    });
+
+                    let musicbtn = document.createElement("button");
+                    musicbtn.id = "music-btn";
+                    musicbtn.innerHTML = "Music";
+        
+                    document.addEventListener('click',(e) => {
+                        if(e.target && e.target.id== 'music-btn'){
+                            location.href = "/music.html";
+                        }
+                    });
+
+                    let logoutbtn = document.createElement("btn");
+                    logoutbtn.id = "logout-btn";
+                    logoutbtn.innerHTML = "Logout";
+        
+                    document.addEventListener('click',(e) => {
+                        if(e.target && e.target.id== 'logout-btn'){
+                            this.logout();
+                        }
+                    });
+                    container.prepend(logoutbtn);
+                    container.prepend(homebtn);
+                    container.prepend(musicbtn);
+                    container.prepend(statsbtn);
+                }
+                else {
+                    let loginbtn = document.createElement("btn");
+                    loginbtn.id = "login-btn";
+                    loginbtn.innerHTML = "Login";
+        
+                    document.addEventListener('click',(e) => {
+                        if(e.target && e.target.id== 'login-btn'){
+                            this.login();
+                        }
+                    });
+                    container.prepend(loginbtn);
+                }
             }, error: err => {
-                return false;
+                console.log(err);
             }
         });
-    }
-    html(container) {
-        if ((location.href ==  "http://localhost:3000/landing.html") || (location.href ==  "http://localhost:3000/stats.html") || (location.href ==  "http://localhost:3000/music.html")){ 
-            let logoutbtn = document.createElement("btn");
-            logoutbtn.id = "logout-btn";
-            logoutbtn.innerHTML = "Logout";
-
-            document.addEventListener('click',(e) => {
-                if(e.target && e.target.id== 'logout-btn'){
-                    this.logout();
-                }
-            });
-            container.prepend(logoutbtn);
-        }
-        else {
-            let loginbtn = document.createElement("btn");
-            loginbtn.id = "login-btn";
-            loginbtn.innerHTML = "Login";
-
-            document.addEventListener('click',(e) => {
-                if(e.target && e.target.id== 'login-btn'){
-                    this.login();
-                }
-            });
-            container.prepend(loginbtn);
-        }
         
     }
 }

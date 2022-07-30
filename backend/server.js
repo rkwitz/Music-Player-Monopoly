@@ -69,7 +69,7 @@ app.get('/callback', (req, res) => {
 		spotifyApi.setRefreshToken(refresh_token);
 
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
-		res.redirect('/landing.html');
+		res.redirect('/index.html');
 		spotifyApi.searchPlaylists('workout')
 
 		setInterval(async () => {
@@ -235,22 +235,21 @@ app.get('/myTopSongs', (req, res) => {
 });
 
 app.get('/isLogged', (req, res) => {
-	var token = 0;
-	try{
-		token = spotifyApi.getAccessToken()
-	}
-	catch{
+	spotifyApi.getMe()
+	.then(function(data) {
+		res.status(200).json(true);
+	}, function(err) {
 		res.status(200).json(false);
-	}
-	finally{
-		if (token != 0){
-			res.status(200).json(true);
-		}
-		else {
-			res.status(200).json(false);
-		}
+  	});
+});
 
-	}
+app.get('/logout', (req, res) => {
+	spotifyApi = new SpotifyWebApi({
+		// make sure you don't push with clientID or secret filled in
+		clientId: config[0],
+		clientSecret: config[1],
+		redirectUri: 'http://localhost:3000/callback'
+	});
 });
 
 app.listen(port, () => {
