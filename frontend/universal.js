@@ -444,15 +444,14 @@ class Login {
     }
     logout() {
         const url = 'https://www.spotify.com/logout/';
-        console.log(this.isLogged());
         const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
         setTimeout(() => spotifyLogoutWindow.close(), 1000);
-        setTimeout(() => location.href = "/index.html", 1050);
         $.ajax({
             url: "/logout",
             type: "GET",
             ContentType: 'application/json',
         });
+        setTimeout(() => location.href = "/index.html", 1050);
     }
 
     setLoggedState(state) {
