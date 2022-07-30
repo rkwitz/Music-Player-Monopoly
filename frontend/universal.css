@@ -363,8 +363,10 @@ footer {
     padding: 0;
 }
 
-#album-art {
+.albumArt {
     width: 100px; 
     height: 100px;
+    position: absolute;
+    left: -50%;
     background-color: rgb(22, 22, 22);
 }

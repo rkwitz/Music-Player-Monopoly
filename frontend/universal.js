@@ -541,7 +541,10 @@ class Playback {
     html(container) {
 
         let footer = document.createElement("footer");
+        let image = document.createElement("img");
         footer.innerHTML = "<ul id='playback'><li> <button id='skip-backwards'></button> </li><li> <button id='playback-button'></button> </li><li> <button id='skip-forward'></button> </li></ul>";
+        image.className = "albumArt"
+        //footer.prepend(image)
         container.append(footer);
         var btn = $("#playback-button");
         var skipForwards = $("#skip-forward");
