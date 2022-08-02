@@ -8,6 +8,7 @@
 }
 
 #statistic-sidebar {
+    overflow: auto;
     width: var(--sidebar-width);
     height: calc(100% - 2 * var(--header-height));
     display: flex;
@@ -27,10 +28,6 @@
     border-radius: 15px;
     background: grey;
     cursor: pointer;
-}
-
-.current {
-    background: var(--accent-color)
 }
 
 #statistic-content {

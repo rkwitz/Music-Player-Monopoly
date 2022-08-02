@@ -14,6 +14,9 @@ $( document ).ready(function() {
     let sidebar = document.getElementById("statistic-sidebar");
     let content = document.getElementById("statistic-content");
     topCategory.html(sidebar, content);
+    // select the first category when entering this page
+    topCategory.enterStat(content);
+    Array.from(sidebar.children)[0].classList.add("current");
 });
 
 /*  =============================================================

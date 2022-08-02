@@ -115,7 +115,10 @@ class PlaylistCard extends InformationCard {
                 this.trackCards = trackCards;
                 let btn = document.createElement("button");
                 btn.className = "playlist";
+                btn.classList.add('small-white-btn');
+                btn.classList.add('min-width-50')
                 btn.innerHTML = this.name;
+                
                 btn.addEventListener("click", (e) => {
                     if (!e.target.classList.contains("current")) {
                         var elems = document.querySelectorAll(".playlist");
@@ -467,39 +470,58 @@ class Login {
                     let playback = new Playback();
                     playback.html(document.body);
 
-                    let homebtn = document.createElement("button");
+                    let homebtn = document.createElement("btn");
                     homebtn.id = "home-btn";
                     homebtn.innerHTML = "Home";
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'home-btn'){
-                            location.href = "/index.html";
-                        }
-                    });
+                    homebtn.classList.add('small-white-btn');
+                    
+                    if (location.href == 'http://localhost:3000/index.html'){
+                        homebtn.classList.add("current");
+                    }
+                    else{
+                        document.addEventListener('click',(e) => {
+                            if(e.target && e.target.id== 'home-btn'){
+                                location.href = "/index.html";
+                            }
+                        });
+                    }
 
-                    let statsbtn = document.createElement("button");
+                    let statsbtn = document.createElement("btn");
                     statsbtn.id = "stats-btn";
                     statsbtn.innerHTML = "Stats";
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'stats-btn'){
-                            location.href = "/stats.html";
-                        }
-                    });
+                    statsbtn.classList.add('small-white-btn');
+                    
+                    if (location.href == 'http://localhost:3000/stats.html'){
+                        statsbtn.classList.add("current");
+                    }
+                    else{
+                        document.addEventListener('click',(e) => {
+                            if(e.target && e.target.id== 'stats-btn'){
+                                location.href = "/stats.html";
+                            }
+                        });
+                    }
 
-                    let musicbtn = document.createElement("button");
+                    let musicbtn = document.createElement("btn");
                     musicbtn.id = "music-btn";
                     musicbtn.innerHTML = "Music";
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'music-btn'){
-                            location.href = "/music.html";
-                        }
-                    });
+                    musicbtn.classList.add('small-white-btn');
+                    
+                    if (location.href == 'http://localhost:3000/music.html'){
+                        musicbtn.classList.add("current");
+                    }
+                    else{
+                        document.addEventListener('click',(e) => {
+                            if(e.target && e.target.id== 'music-btn'){
+                                location.href = "/music.html";
+                            }
+                        });
+                    }
 
                     let logoutbtn = document.createElement("btn");
                     logoutbtn.id = "logout-btn";
                     logoutbtn.innerHTML = "Logout";
+                    logoutbtn.classList.add('large-white-btn');
         
                     document.addEventListener('click',(e) => {
                         if(e.target && e.target.id== 'logout-btn'){
@@ -515,6 +537,7 @@ class Login {
                     let loginbtn = document.createElement("btn");
                     loginbtn.id = "login-btn";
                     loginbtn.innerHTML = "Login";
+                    loginbtn.classList.add('large-white-btn');
         
                     document.addEventListener('click',(e) => {
                         if(e.target && e.target.id== 'login-btn'){
