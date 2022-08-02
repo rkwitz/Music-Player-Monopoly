@@ -96,15 +96,20 @@ function correctKeys(ob1, ob2) {
 // statistic endpoints
 
 async function topArtistsParser(range, num) {
-	var buffer = "";
-	var lim = 0;
-	for (var rem = num, off = 0, i = 0; rem > 0; rem -= lim, off += 49, i++) {
-		if ((rem >= 50) && (i == 0)) {
-			lim = 49;
-		}
-		else {
-			lim = rem;
-		}
+	let numItems = 0
+	let rem = num
+	let itr
+	if (rem > 49) {
+		itr = 2
+	}
+	else {
+		itr = 1
+	}
+	let lim = 49
+	let off = 0
+	let result = {}
+	let artists = Array()
+	for (let i = 0; i < itr; i++) {
 		await axios.get('https://api.spotify.com/v1/me/top/artists ', {
 			params: {limit: lim, offset: off, time_range: range},
 			headers: {
@@ -113,28 +118,39 @@ async function topArtistsParser(range, num) {
 				Host: "api.spotify.com",
 			},
 		}).then((data) => {
-			buffer = buffer.concat(JSON.stringify(data['data']));
+			let size = 50
+			if (data.data.items.length < size) {
+				size = data.data.items.length
+			}
+			for (let j = 0; j < size; j++) {
+				numItems++
+				let artist = {}
+				artist.name = data.data.items[j].name
+				let genreArr = Array()
+				for (let k = 0; k < data.data.items[j].genres; k++) {
+					genreArr.push(data.data.items[j].genres[k])
+				}
+				artist.popularity = data.data.items[j].popularity
+				if (data.data.items[j].images.length != 0) {
+					artist.image = data.data.items[j].images[0].url
+				}
+				else {
+					artist.image = "/resources/noimage.png"
+				}
+				artist.genres = genreArr
+				artist.id = data.data.items[j].id
+				artist.followers = data.data.items[j].followers.total
+				artist.uri = data.data.items[j].uri
+				artists.push(artist)
+			}
 		});
+		lim = 50
+		off = 49
+		rem = rem - 49
 	}
-	let info = "";
-	info = info.concat("{\"artists\":[");
-	let itr = 0;
-	for (let index = (buffer.indexOf("external_urls")), i = 0; index != -1; index = (buffer.indexOf("external_urls", index + 10)), i++, itr++) {
-		if (i != 0) {
-			info = info.concat(",");
-		}
-		info = info.concat("{", 
-		"\"name\"",buffer.substring(buffer.indexOf("\"name\"", index) + 6, buffer.indexOf("\"", buffer.indexOf("\"name\"", index) + 9) + 1), ",",
-		"\"followers\"", buffer.substring(buffer.indexOf("\"total\"", index) + 7, buffer.indexOf("}", buffer.indexOf("\"total\"", index) + 9)), ",",
-		"\"popularity\"", buffer.substring(buffer.indexOf("\"popularity\"", index) + 12, buffer.indexOf(",", buffer.indexOf("\"popularity\"", index) + 14)), ",",
-		"\"genres\"", buffer.substring(buffer.indexOf("\"genres\"", index) + 8, buffer.indexOf("]", buffer.indexOf("\"genres\"", index)) + 1), ",",
-		"\"image\"", buffer.substring(buffer.indexOf("\"url\"", index) + 5, buffer.indexOf(",", buffer.indexOf("\"url\"", index))), ",",
-		"\"url\"", buffer.substring(buffer.indexOf("\"spotify\"", index) + 9, buffer.indexOf("}", buffer.indexOf("\"spotify\"", index))), ",",
-		"\"uri\"", buffer.substring(buffer.indexOf("\"uri\"", index) + 5, buffer.indexOf("}", buffer.indexOf("\"uri\"", index))),
-		"}");
-	}
-	info = info.concat("],\"total\":", itr, "}");
-	return info;
+	result.total = numItems
+	result.artists = artists
+	return result
 }
 
 app.get('/myTopArtists', (req, res) => {
@@ -152,11 +168,12 @@ app.get('/myTopArtists', (req, res) => {
 	let range = `${request.range}_term`;
 	let num = parseInt(request.numberArtists);	
 	topArtistsParser(range, num).then((data) => {
-		res.status(200).json(JSON.parse(data));
+		res.status(200).json(data);
 		console.log(`sent top ${num} artists`);
 	})
 	.catch((err) => {
 		res.status(500).json(err);
+		console.log(err)
 	});
 });
 
@@ -197,7 +214,12 @@ async function topSongsParser(range, num) {
 				}
 				song.artists = artistArr
 				song.album = data.data.items[j].album.name
-				song.art = data.data.items[j].album.images[0].url
+				if (data.data.items[j].album.images.length != 0) {
+					song.art = data.data.items[j].album.images[0].url
+				}
+				else {
+					song.art = "/resources/noimage.png"
+				}
 				song.id = data.data.items[j].id
 				song.releaseDate = data.data.items[j].album.release_date
 				songs.push(song)
