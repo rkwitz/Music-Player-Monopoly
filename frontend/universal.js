@@ -476,7 +476,7 @@ class Login {
                     homebtn.classList.add('small-white-btn');
                     
                     if (location.href == 'http://localhost:3000/index.html'){
-                        homebtn.style.backgroundColor = '#999999'
+                        homebtn.classList.add("current");
                     }
                     else{
                         document.addEventListener('click',(e) => {
@@ -492,7 +492,7 @@ class Login {
                     statsbtn.classList.add('small-white-btn');
                     
                     if (location.href == 'http://localhost:3000/stats.html'){
-                        statsbtn.style.backgroundColor = '#999999'
+                        statsbtn.classList.add("current");
                     }
                     else{
                         document.addEventListener('click',(e) => {
@@ -508,7 +508,7 @@ class Login {
                     musicbtn.classList.add('small-white-btn');
                     
                     if (location.href == 'http://localhost:3000/music.html'){
-                        musicbtn.style.backgroundColor = '#999999'
+                        musicbtn.classList.add("current");
                     }
                     else{
                         document.addEventListener('click',(e) => {

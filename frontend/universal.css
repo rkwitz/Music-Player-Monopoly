@@ -4,8 +4,10 @@
 */
 :root {
     --card-color: rgb(170, 170, 170);
+    --btn-color: #999999;
     --accent-color: rgb(255, 69, 69);
     --header-height: 150px;
+    
 }
 
 *, *:before, *:after {
@@ -81,10 +83,10 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.large-white-btn:hover {background-color: #999999}
+.large-white-btn:hover {background-color: var(--btn-color)}
   
 .large-white-btn:active {
-    background-color: #999999;
+    background-color: var(--btn-color);
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
@@ -104,16 +106,22 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.small-white-btn:hover {background-color: #999999}
+.small-white-btn:hover {background-color: var(--btn-color)}
   
+.current {
+    background: var(--btn-color);
+    cursor: auto;
+}
+
 .small-white-btn:active {
-    background-color: #999999;
+    background-color: var(--btn-color);
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
 
 .min-width-50 {
     min-width: 50px;
+    max-width: 120px;
 }
 
 body{

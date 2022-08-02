@@ -9,6 +9,7 @@
 }
 
 #music-sidebar {
+    overflow: auto;
     width: var(--sidebar-width);
     height: calc(100% - 2 * var(--header-height));
     display: flex;
@@ -17,6 +18,11 @@
     position: fixed;
     z-index: 99;
     background: rgb(56, 56, 56);
+}
+
+#music-sidebar::-webkit-scrollbar-thumb {
+    background-color: black;
+    outline: 1px solid slategre
 }
 
 .category {
@@ -30,8 +36,8 @@
     cursor: pointer;
 }
 
-.current {
-    background: var(--accent-color)
+.playlist {
+    margin-top: 1em;
 }
 
 #music-content {
