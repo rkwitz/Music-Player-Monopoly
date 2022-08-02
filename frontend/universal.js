@@ -5,7 +5,7 @@
 
 $( document ).ready(function() {
     var login = new Login();
-    login.html(document.body);
+    login.html(document.getElementById('head'));
 });
 /*  =============================================================
     ==               logic for informationCards                ==
@@ -253,7 +253,7 @@ class Histogram {
                         text: '',
                         padding: {
                             top: 10,
-                            bottom: 30
+                            bottom: 5
                         }
                     }
                 },
@@ -325,7 +325,8 @@ class PiChart {  // Top 5
                     legend: {
                         font: {
                             size: 20
-                        }
+                        },
+                        position: 'bottom'
                     }
                 },
             }
