@@ -127,7 +127,7 @@ async function topArtistsParser(range, num) {
 				let artist = {}
 				artist.name = data.data.items[j].name
 				let genreArr = Array()
-				for (let k = 0; k < data.data.items[j].genres; k++) {
+				for (let k = 0; k < data.data.items[j].genres.length; k++) {
 					genreArr.push(data.data.items[j].genres[k])
 				}
 				artist.popularity = data.data.items[j].popularity
