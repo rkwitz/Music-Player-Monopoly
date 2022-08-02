@@ -44,13 +44,11 @@
     right: 0;
 }
 
-#musci-content #card-container{
-    margin-top: 11em;
+#music-content #card-container{
+    margin-top: 9em;
 }
 
 .music-title {
-    position: absolute;
     font-size: 35px;
-    top: 1em;
     color: var(--accent-color);
 }

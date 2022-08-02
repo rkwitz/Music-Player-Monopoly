@@ -224,7 +224,7 @@ body{
     margin-top: 2em;
 }
 
-.artist-image {
+.track-image {
     object-fit: cover;
     object-position: center;
     aspect-ratio: 1;
