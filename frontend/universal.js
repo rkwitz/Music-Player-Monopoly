@@ -283,6 +283,24 @@ class PiChart {  // Top 5
         }
     }
     html() {
+        let colors = [
+            'blue',
+            'red',
+            'green',
+            'yellow',
+            'purple',
+            'orange',
+            'maroon',
+            'fuchsia',
+            'lime',
+            'olive',
+            'navy',
+            'teal',
+            'aqua'
+        ];
+        if (this.data.length < 13){
+            colors = colors.slice(0, this.data.length);
+        }
         let pie = document.createElement('canvas');
         pie.id = 'pie';
         pie.classList.add('pie');
@@ -294,21 +312,7 @@ class PiChart {  // Top 5
                 labels: this.labels,
                 datasets: [{
                     data: this.data,
-                    backgroundColor: [
-                        'blue',
-                        'red',
-                        'green',
-                        'yellow',
-                        'purple',
-                        'orange',
-                        'maroon',
-                        'fuchsia',
-                        'lime',
-                        'olive',
-                        'navy',
-                        'teal',
-                        'aqua'
-                    ],
+                    backgroundColor: colors,
                     hoverOffset: 4
                 }]
             },
