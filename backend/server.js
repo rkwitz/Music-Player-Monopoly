@@ -70,8 +70,7 @@ app.get('/callback', (req, res) => {
 
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
 		res.redirect('/index.html');
-		spotifyApi.searchPlaylists('workout')
-
+		
 		setInterval(async () => {
 			const data = await spotifyApi.refreshAccessToken();
 			const access_token = data.body['access_token'];
