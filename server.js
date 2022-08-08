@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 // app.use(express.static(__dirname + '/../frontend'));
 const path = require('path');
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, './frontend')));
 
 
 // initialize OAuth
@@ -279,7 +279,7 @@ app.listen(port, () => {
 
 // favicon
 var favicon = require('serve-favicon');
-app.use(favicon(__dirname + '/../frontend/resources/logo.png'));
+app.use(favicon(__dirname + '/frontend/resources/logo.png'));
 
 // Pause a User's Playback
 app.get('/pause', (req, res) => {
