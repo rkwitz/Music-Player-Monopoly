@@ -2,9 +2,10 @@
     ==                         Main                            ==
     =============================================================
 */
+let login;
 
 $( document ).ready(function() {
-    var login = new Login();
+    login = new Login();
     login.html(document.getElementById('head'));
 });
 /*  =============================================================
@@ -473,6 +474,7 @@ class Login {
             ContentType: 'application/json',
             success: result => {
                 if (result){ 
+                    this.loginVerify = true;
                     let playback = new Playback();
                     playback.html(document.body);
 
@@ -544,6 +546,7 @@ class Login {
                     if (this.page != 'index.html' && this.page != ''){
                         location.href = "/index.html";
                     }
+                    this.loginVerify = true;
 
                     let loginbtn = document.createElement("btn");
                     loginbtn.id = "login-btn";
@@ -561,7 +564,7 @@ class Login {
                 console.log(err);
             }
         });
-        this.loginVerify = true;
+        
         
     }
 }

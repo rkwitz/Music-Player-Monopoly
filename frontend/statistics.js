@@ -122,18 +122,16 @@ let topGenreFunction = function(container) {
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let genreList = Array();
-                if (result.artists[i].generes){
-                    genreList = result.artists[i].genres;
-                    genreList.forEach((genreName) => {
-                        score = (num-i)*(rankWeight - 1) + num
-                        if (genres.hasOwnProperty(genreName)){
-                            genres[genreName] += score;
-                        }
-                        else {
-                            genres[genreName] = score;
-                        }
-                    });
-                }
+                genreList = result.artists[i].genres;
+                genreList.forEach((genreName) => {
+                    score = (num-i)*(rankWeight - 1) + num
+                    if (genres.hasOwnProperty(genreName)){
+                        genres[genreName] += score;
+                    }
+                    else {
+                        genres[genreName] = score;
+                    }
+                });
             }
             // Create items array
             var items = Object.keys(genres).map(function(key) {
