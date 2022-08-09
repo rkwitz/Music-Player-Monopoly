@@ -69,18 +69,19 @@ let topSongsFunction = function(container) {
 
 let topDecadesFunction = function(container) {
     var decades = {
-        '1940s': 0,
-        '1950s': 0,
-        '1960s': 0,
-        '1970s': 0,
-        '1980s': 0,
-        '1990s': 0,
-        '2000s': 0,
-        '2010s': 0,
-        '2020s': 0
+        '1940s': 0.0,
+        '1950s': 0.0,
+        '1960s': 0.0,
+        '1970s': 0.0,
+        '1980s': 0.0,
+        '1990s': 0.0,
+        '2000s': 0.0,
+        '2010s': 0.0,
+        '2020s': 0.0
     };
     const num = 99;
     let req = {'range': 'long', 'numberSongs': num}
+    const rankWeight = 5 // #1 top Track will add to the score of its decade by a factor of rankWeight more than the last available top Track
     $.ajax({
         url: "/myTopSongs/?" + $.param(req),
         type: "GET",
@@ -93,7 +94,7 @@ let topDecadesFunction = function(container) {
                 labels = Object.keys(decades);
                 for (var j = labels.length-1; j >= 0;j--){
                     if (year >= (1940 + 10*j)) {
-                        decades[labels[j]] += num-1;
+                        decades[labels[j]] += (num-i)*(rankWeight - 1) + num;
                         break;
                     }
                 }
@@ -112,6 +113,7 @@ let topDecadesFunction = function(container) {
 let topGenreFunction = function(container) {
     var genres = {};
     const num = 99;
+    const rankWeight = 5 // #1 top Artist will add to the score of its genres by a factor of rankWeight more than the last available top Artist
     let req = {'range': 'long', 'numberArtists': num}
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),
@@ -120,15 +122,18 @@ let topGenreFunction = function(container) {
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let genreList = Array();
-                genreList = result.artists[i].genres;
-                genreList.forEach((genreName) => {
-                    if (genres.hasOwnProperty(genreName)){
-                        genres[genreName] += num-i;
-                    }
-                    else {
-                        genres[genreName] = num-i;
-                    }
-                });
+                if (result.artists[i].generes){
+                    genreList = result.artists[i].genres;
+                    genreList.forEach((genreName) => {
+                        score = (num-i)*(rankWeight - 1) + num
+                        if (genres.hasOwnProperty(genreName)){
+                            genres[genreName] += score;
+                        }
+                        else {
+                            genres[genreName] = score;
+                        }
+                    });
+                }
             }
             // Create items array
             var items = Object.keys(genres).map(function(key) {

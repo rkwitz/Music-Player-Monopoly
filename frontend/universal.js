@@ -445,7 +445,8 @@ class Statistic {
 
 class Login {
     constructor() {
-        this.logged = false;
+        this.loginVerify = false;
+        this.page = window.location.pathname.split("/").pop();
     }
     login() {
         location.href = "/login";
@@ -480,7 +481,8 @@ class Login {
                     homebtn.innerHTML = "Home";
                     homebtn.classList.add('small-white-btn');
                     
-                    if (location.href == 'http://localhost:3000/index.html'){
+
+                    if (this.page == 'index.html'){
                         homebtn.classList.add("current");
                     }
                     else{
@@ -496,7 +498,7 @@ class Login {
                     statsbtn.innerHTML = "Stats";
                     statsbtn.classList.add('small-white-btn');
                     
-                    if (location.href == 'http://localhost:3000/stats.html'){
+                    if (this.page == 'stats.html'){
                         statsbtn.classList.add("current");
                     }
                     else{
@@ -512,7 +514,7 @@ class Login {
                     musicbtn.innerHTML = "Music";
                     musicbtn.classList.add('small-white-btn');
                     
-                    if (location.href == 'http://localhost:3000/music.html'){
+                    if (this.page == 'music.html'){
                         musicbtn.classList.add("current");
                     }
                     else{
@@ -539,6 +541,10 @@ class Login {
                     container.prepend(statsbtn);
                 }
                 else {
+                    if (this.page != 'index.html' && this.page != ''){
+                        location.href = "/index.html";
+                    }
+
                     let loginbtn = document.createElement("btn");
                     loginbtn.id = "login-btn";
                     loginbtn.innerHTML = "Login";
@@ -555,6 +561,7 @@ class Login {
                 console.log(err);
             }
         });
+        this.loginVerify = true;
         
     }
 }
