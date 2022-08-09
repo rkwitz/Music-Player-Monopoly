@@ -400,12 +400,18 @@ app.get('/usersPlaylists', (req, res) => {
 		res.status(500).json(err);
     	console.log(err);
   	});
-	spotifyApi.getUserPlaylists(id)
-  	.then(function(data) {
+	axios.get('https://api.spotify.com/v1/me/playlists', {
+		params: {limit: 50, offset: 0},
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+			Host: "api.spotify.com",
+		},
+	}).then(function(data) {
 		let playlistIds = Array()
-		for (let i = 0; i < data.body.items.length; i++) {
-			if (id == data.body.items[i].owner.id) {
-				playlistIds.push(data.body.items[i].id)
+		for (let i = 0; i < data.data.items.length; i++) {
+			if (id == data.data.items[i].owner.id) {
+				playlistIds.push(data.data.items[i].id)
 			}
 		}
 		res.status(200).json(playlistIds);
