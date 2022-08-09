@@ -273,7 +273,7 @@ class Histogram {
     }
 }
 
-class PiChart {  // Top 5
+class PiChart {  // Top 13
     constructor(data) {
         this.labels = Object.keys(data);
 

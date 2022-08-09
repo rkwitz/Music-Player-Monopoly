@@ -133,3 +133,9 @@ dist
 secret.js
 secret.mjs
 config.js
+
+# Heroku
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env

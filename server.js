@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 // app.use(express.static(__dirname + '/../frontend'));
 const path = require('path');
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, './frontend')));
 
 
 // initialize OAuth
@@ -70,8 +70,7 @@ app.get('/callback', (req, res) => {
 
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
 		res.redirect('/index.html');
-		spotifyApi.searchPlaylists('workout')
-
+		
 		setInterval(async () => {
 			const data = await spotifyApi.refreshAccessToken();
 			const access_token = data.body['access_token'];
@@ -127,7 +126,7 @@ async function topArtistsParser(range, num) {
 				let artist = {}
 				artist.name = data.data.items[j].name
 				let genreArr = Array()
-				for (let k = 0; k < data.data.items[j].genres; k++) {
+				for (let k = 0; k < data.data.items[j].genres.length; k++) {
 					genreArr.push(data.data.items[j].genres[k])
 				}
 				artist.popularity = data.data.items[j].popularity
@@ -280,7 +279,7 @@ app.listen(port, () => {
 
 // favicon
 var favicon = require('serve-favicon');
-app.use(favicon(__dirname + '/../frontend/resources/logo.png'));
+app.use(favicon(__dirname + '/frontend/resources/logo.png'));
 
 // Pause a User's Playback
 app.get('/pause', (req, res) => {
@@ -358,7 +357,12 @@ app.get('/playlistGetTracks', (req, res) => {
 		let result = {}
 		let songsArr = Array()
 		result.name = data.body.name
-		result.art = data.body.images[0].url
+		if (data.body.images.length != 0) {
+			result.art = data.body.images[0].url
+		}
+		else {
+			result.art = "/resources/noimage.png"
+		}
 		for (let i = 0; i < data.body.tracks.items.length; i++) {
 			let song = {}
 			song.name = data.body.tracks.items[i].track.name
@@ -368,7 +372,12 @@ app.get('/playlistGetTracks', (req, res) => {
 			}
 			song.artists = artistArr
 			song.album = data.body.tracks.items[i].track.album.name
-			song.art = data.body.tracks.items[i].track.album.images[0].url
+			if (data.body.tracks.items[i].track.album.images.length != 0) {
+				song.art = data.body.tracks.items[i].track.album.images[0].url
+			}
+			else {
+				song.art = "/resources/noimage.png"
+			}
 			song.id = data.body.tracks.items[i].track.id
 			song.releaseDate = data.body.tracks.items[i].track.album.release_date
 			songsArr.push(song)

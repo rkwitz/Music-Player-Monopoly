@@ -1,18 +1,25 @@
 {
-  "name": "backend",
+  "name": "music-player-monopoly",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Spotify extension music player web app. Uses Spotify's API to collect user data and present statics to user. Primarly coded in JavaScript, CSS, and HTML.",
+  "main": "config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rkwitz/Music-Player-Monopoly.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rkwitz/Music-Player-Monopoly/issues"
+  },
+  "homepage": "https://github.com/rkwitz/Music-Player-Monopoly#readme",
   "dependencies": {
     "axios": "^0.27.2",
     "express": "^4.18.1",
-    "path": "^0.12.7",
     "serve-favicon": "^2.5.0",
     "spotify-web-api-node": "^5.0.2"
   }
