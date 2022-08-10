@@ -564,8 +564,24 @@ class Login {
                 console.log(err);
             }
         });
-        
-        
+    }
+    setToken() {
+        // store access token in cookie upon login
+        if (window.location.hash) {
+            const hash = window.location.hash
+            .substring(1)
+            .split('&')
+            .reduce(function (initial, item) {
+            if (item) {
+                var parts = item.split('=');
+                initial[parts[0]] = decodeURIComponent(parts[1]);
+            }
+            return initial;
+            }, {});
+            window.location.hash = '';
+            document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
+        }
+        // console.log(decodeURIComponent(document.cookie));
     }
 }
 /*  =============================================================

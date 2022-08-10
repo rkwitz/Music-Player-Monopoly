@@ -9,6 +9,7 @@ async function waitVerify() {
         url: "/usersPlaylists",
         type: "GET",
         ContentType: 'application/json',
+        Headers: {"Authorization": `Bearer ${hash.access_token}`},
         success: result => {
             let sidebar = document.getElementById("music-sidebar");
             let playlistContainer = document.getElementById("music-content");
@@ -26,4 +27,5 @@ async function waitVerify() {
 
 $( document ).ready(function() {
     waitVerify();
+    console.log(decodeURIComponent(document.cookie));
 });
