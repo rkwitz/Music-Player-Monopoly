@@ -9,7 +9,7 @@ async function waitVerify() {
         url: "/usersPlaylists",
         type: "GET",
         ContentType: 'application/json',
-        Headers: {"Authorization": `Bearer ${login.getToken()}`},
+        headers: {"Authorization": `${login.getToken()}`},
         success: result => {
             let sidebar = document.getElementById("music-sidebar");
             let playlistContainer = document.getElementById("music-content");

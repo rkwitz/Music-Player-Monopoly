@@ -31,6 +31,7 @@ let topArtistFunction = function(container) {
         url: "/myTopArtists/?" + $.param(req),
         type: "GET",
         ContentType: 'application/json',
+        headers: {"Authorization": `${login.getToken()}`},
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let artist = new ArtistCard(result.artists[i]);
@@ -52,6 +53,7 @@ let topSongsFunction = function(container) {
         url: "/myTopSongs/?" + $.param(req),
         type: "GET",
         ContentType: 'application/json',
+        headers: {"Authorization": `${login.getToken()}`},
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let song = new TrackCard(result.songs[i]);
@@ -86,6 +88,7 @@ let topDecadesFunction = function(container) {
         url: "/myTopSongs/?" + $.param(req),
         type: "GET",
         ContentType: 'application/json',
+        headers: {"Authorization": `${login.getToken()}`},
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 //parse date to year string
@@ -119,6 +122,7 @@ let topGenreFunction = function(container) {
         url: "/myTopArtists/?" + $.param(req),
         type: "GET",
         ContentType: 'application/json',
+        headers: {"Authorization": `${login.getToken()}`},
         success: result => {
             for (let i=0; i<result.total; ++i) {
                 let genreList = Array();

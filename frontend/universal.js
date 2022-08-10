@@ -103,6 +103,7 @@ class PlaylistCard extends InformationCard {
             url: "/playlistGetTracks/?"  + $.param(req),
             type: "GET",
             ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
             success: result => {
                 this.img = result.art;
                 this.name = result.name;
@@ -454,8 +455,8 @@ class Login {
     }
 
     logout() {
-        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         location.reload();
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
     setToken() {
@@ -496,15 +497,16 @@ class Login {
 
     isLogged() {
         if (this.getToken()){
+            console.log("logged");
             return true;
         } else {
+            console.log("not logged");
             return false;
         }
     }
 
     html(container) {    
         if (this.isLogged()) { // user is logged in
-            this.loginVerify = true;
             let playback = new Playback();
             playback.html(document.body);
 
@@ -576,7 +578,6 @@ class Login {
             if (this.page != 'index.html' && this.page != ''){
                 location.href = "/index.html";
             }
-            this.loginVerify = true;
 
             let loginbtn = document.createElement("btn");
             loginbtn.id = "login-btn";
@@ -614,6 +615,7 @@ class Playback {
             url: "/playbackState",
             type: "GET",
             ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
             success: result => {
                 if (result == "playing") {
                     btn.toggleClass("paused");
@@ -627,6 +629,7 @@ class Playback {
                     url: "/pause",
                     type: "GET",
                     ContentType: 'application/json',
+                    headers: {"Authorization": `${login.getToken()}`},
                     success: result => {
                         btn.toggleClass("paused");
                         console.log("Paused Sucessfully");
@@ -650,6 +653,7 @@ class Playback {
                     url: "/play",
                     type: "GET",
                     ContentType: 'application/json',
+                    headers: {"Authorization": `${login.getToken()}`},
                     success: result => {
                         btn.toggleClass("paused");
                         console.log("Played Sucessfully");
@@ -676,12 +680,14 @@ class Playback {
                 url: "/skipNext",
                 type: "GET",
                 ContentType: 'application/json',
+                headers: {"Authorization": `${login.getToken()}`},
                 success: result => {
                     console.log("Skipped Forward Sucessfully")
                     $.ajax({
                         url: "/playbackState",
                         type: "GET",
                         ContentType: 'application/json',
+                        headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
                             if (result == "paused") {
                                 btn.toggleClass("paused");
@@ -701,12 +707,14 @@ class Playback {
                 url: "/skipPrevious",
                 type: "GET",
                 ContentType: 'application/json',
+                headers: {"Authorization": `${login.getToken()}`},
                 success: result => {
                     console.log("Skipped Backward Sucessfully")
                     $.ajax({
                         url: "/playbackState",
                         type: "GET",
                         ContentType: 'application/json',
+                        headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
                             if (result == "paused") {
                                 btn.toggleClass("paused");

@@ -252,27 +252,27 @@ app.get('/myTopSongs', (req, res) => {
 	});
 });
 
-app.get('/isLogged', (req, res) => {
-	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
-	loggedInSpotifyApi.getMe()
-	.then(function(data) {
-		res.status(200).json(true);
-	}, function(err) {
-		res.status(200).json(false);
-  	});
-});
+// app.get('/isLogged', (req, res) => {
+// 	var loggedInSpotifyApi = new SpotifyWebApi();
+// 	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+// 	loggedInSpotifyApi.getMe()
+// 	.then(function(data) {
+// 		res.status(200).json(true);
+// 	}, function(err) {
+// 		res.status(200).json(false);
+//   	});
+// });
 
-app.get('/logout', (req, res) => {
-	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
-	loggedInSpotifyApi = new SpotifyWebApi({
-		// make sure you don't push with clientID or secret filled in
-		clientId: config[0],
-		clientSecret: config[1],
-		redirectUri: 'http://localhost:3000/callback'
-	});
-});
+// app.get('/logout', (req, res) => {
+// 	var loggedInSpotifyApi = new SpotifyWebApi();
+// 	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+// 	loggedInSpotifyApi = new SpotifyWebApi({
+// 		// make sure you don't push with clientID or secret filled in
+// 		clientId: config[0],
+// 		clientSecret: config[1],
+// 		redirectUri: 'http://localhost:3000/callback'
+// 	});
+// });
 
 app.listen(port, () => {
 	console.log('Listening on *:3000');
