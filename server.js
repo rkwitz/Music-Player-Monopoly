@@ -151,7 +151,7 @@ app.get('/myTopArtists', (req, res) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let request = req.query;
 	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
 	&& !isNaN(request.numberArtists) && parseInt(request.numberArtists) > 0 && parseInt(request.numberArtists) <= 99)) {
@@ -233,7 +233,7 @@ app.get('/myTopSongs', (req, res) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let request = req.query;
 	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
 	&& !isNaN(request.numberSongs) && parseInt(request.numberSongs) > 0 && parseInt(request.numberSongs) <= 99)) {
@@ -254,7 +254,7 @@ app.get('/myTopSongs', (req, res) => {
 
 app.get('/isLogged', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.getMe()
 	.then(function(data) {
 		res.status(200).json(true);
@@ -265,7 +265,7 @@ app.get('/isLogged', (req, res) => {
 
 app.get('/logout', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi = new SpotifyWebApi({
 		// make sure you don't push with clientID or secret filled in
 		clientId: config[0],
@@ -285,7 +285,7 @@ app.use(favicon(__dirname + '/frontend/resources/logo.png'));
 // Pause a User's Playback
 app.get('/pause', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.pause()
     	.then(function() {
       	res.status(200).send();
@@ -299,7 +299,7 @@ app.get('/pause', (req, res) => {
 // Start/Resume a User's Playback
 app.get('/play', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.play()
     .then(function() {
       	res.status(200).send();
@@ -313,7 +313,7 @@ app.get('/play', (req, res) => {
 // Get Information About The User's Current Playback State
 app.get('/playbackState', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.getMyCurrentPlaybackState()
     	.then(function(data) {
       	// Output items
@@ -331,7 +331,7 @@ app.get('/playbackState', (req, res) => {
 // Skip User’s Playback To Next Track
 app.get('/skipNext', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.skipToNext()
     .then(function() {
       	res.status(200).send();
@@ -345,7 +345,7 @@ app.get('/skipNext', (req, res) => {
 // Skip User’s Playback To Previous Track 
 app.get('/skipPrevious', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.skipToPrevious()
     .then(function() {
       	res.status(200).send();
@@ -359,7 +359,7 @@ app.get('/skipPrevious', (req, res) => {
 // Get a playlist
 app.get('/playlistGetTracks', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	format = {id: "idNumberHere"}
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
@@ -406,7 +406,7 @@ app.get('/playlistGetTracks', (req, res) => {
 // Get a user's playlists
 app.get('/usersPlaylists', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let id;
 	loggedInSpotifyApi.getMe()
 	.then(function(data) {
@@ -440,7 +440,7 @@ app.get('/usersPlaylists', (req, res) => {
 // Get the User's Currently Playing Track
 app.get('/trackPlaying', (req, res) => {
 	var loggedInSpotifyApi = new SpotifyWebApi();
-	loggedInSpotifyApi.setAccessToken(request.headers['authorization']);
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	loggedInSpotifyApi.getMyCurrentPlayingTrack()
   	.then(function(data) {
 		let result = {}
