@@ -452,119 +452,12 @@ class Login {
     login() {
         location.href = "/login";
     }
+
     logout() {
-        const url = 'https://www.spotify.com/logout/';
-        const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
-        setTimeout(() => spotifyLogoutWindow.close(), 1000);
-        $.ajax({
-            url: "/logout",
-            type: "GET",
-            ContentType: 'application/json',
-        });
-        setTimeout(() => location.href = "/index.html", 1050);
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        location.reload();
     }
 
-    setLoggedState(state) {
-        this.logged = state;
-    }
-    html(container) {
-        $.ajax({
-            url: "/isLogged",
-            type: "GET",
-            ContentType: 'application/json',
-            success: result => {
-                if (result){ 
-                    this.loginVerify = true;
-                    let playback = new Playback();
-                    playback.html(document.body);
-
-                    let homebtn = document.createElement("btn");
-                    homebtn.id = "home-btn";
-                    homebtn.innerHTML = "Home";
-                    homebtn.classList.add('small-white-btn');
-                    
-
-                    if (this.page == 'index.html'){
-                        homebtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'home-btn'){
-                                location.href = "/index.html";
-                            }
-                        });
-                    }
-
-                    let statsbtn = document.createElement("btn");
-                    statsbtn.id = "stats-btn";
-                    statsbtn.innerHTML = "Stats";
-                    statsbtn.classList.add('small-white-btn');
-                    
-                    if (this.page == 'stats.html'){
-                        statsbtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'stats-btn'){
-                                location.href = "/stats.html";
-                            }
-                        });
-                    }
-
-                    let musicbtn = document.createElement("btn");
-                    musicbtn.id = "music-btn";
-                    musicbtn.innerHTML = "Music";
-                    musicbtn.classList.add('small-white-btn');
-                    
-                    if (this.page == 'music.html'){
-                        musicbtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'music-btn'){
-                                location.href = "/music.html";
-                            }
-                        });
-                    }
-
-                    let logoutbtn = document.createElement("btn");
-                    logoutbtn.id = "logout-btn";
-                    logoutbtn.innerHTML = "Logout";
-                    logoutbtn.classList.add('large-white-btn');
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'logout-btn'){
-                            this.logout();
-                        }
-                    });
-                    container.prepend(logoutbtn);
-                    container.prepend(homebtn);
-                    container.prepend(musicbtn);
-                    container.prepend(statsbtn);
-                }
-                else {
-                    if (this.page != 'index.html' && this.page != ''){
-                        location.href = "/index.html";
-                    }
-                    this.loginVerify = true;
-
-                    let loginbtn = document.createElement("btn");
-                    loginbtn.id = "login-btn";
-                    loginbtn.innerHTML = "Login";
-                    loginbtn.classList.add('large-white-btn');
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'login-btn'){
-                            this.login();
-                        }
-                    });
-                    container.prepend(loginbtn);
-                }
-            }, error: err => {
-                console.log(err);
-            }
-        });
-    }
     setToken() {
         // store access token in cookie upon login
         if (window.location.hash) {
@@ -580,8 +473,123 @@ class Login {
             }, {});
             window.location.hash = '';
             document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
+            location.reload();
         }
         // console.log(decodeURIComponent(document.cookie));
+    }
+
+    getToken() {
+        let name = "access_token=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
+    isLogged() {
+        if (this.getToken()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    html(container) {    
+        if (this.isLogged()) { // user is logged in
+            this.loginVerify = true;
+            let playback = new Playback();
+            playback.html(document.body);
+
+            let homebtn = document.createElement("btn");
+            homebtn.id = "home-btn";
+            homebtn.innerHTML = "Home";
+            homebtn.classList.add('small-white-btn');
+            
+
+            if (this.page == 'index.html'){
+                homebtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'home-btn'){
+                        location.href = "/index.html";
+                    }
+                });
+            }
+
+            let statsbtn = document.createElement("btn");
+            statsbtn.id = "stats-btn";
+            statsbtn.innerHTML = "Stats";
+            statsbtn.classList.add('small-white-btn');
+            
+            if (this.page == 'stats.html'){
+                statsbtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'stats-btn'){
+                        location.href = "/stats.html";
+                    }
+                });
+            }
+
+            let musicbtn = document.createElement("btn");
+            musicbtn.id = "music-btn";
+            musicbtn.innerHTML = "Music";
+            musicbtn.classList.add('small-white-btn');
+            
+            if (this.page == 'music.html'){
+                musicbtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'music-btn'){
+                        location.href = "/music.html";
+                    }
+                });
+            }
+
+            let logoutbtn = document.createElement("btn");
+            logoutbtn.id = "logout-btn";
+            logoutbtn.innerHTML = "Logout";
+            logoutbtn.classList.add('large-white-btn');
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'logout-btn'){
+                    this.logout();
+                }
+            });
+            container.prepend(logoutbtn);
+            container.prepend(homebtn);
+            container.prepend(musicbtn);
+            container.prepend(statsbtn);
+        }
+        else { // user is not logged in
+            if (this.page != 'index.html' && this.page != ''){
+                location.href = "/index.html";
+            }
+            this.loginVerify = true;
+
+            let loginbtn = document.createElement("btn");
+            loginbtn.id = "login-btn";
+            loginbtn.innerHTML = "Login";
+            loginbtn.classList.add('large-white-btn');
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'login-btn'){
+                    this.login();
+                }
+            });
+            container.prepend(loginbtn);
+        }
     }
 }
 /*  =============================================================
