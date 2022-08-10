@@ -25,7 +25,6 @@ const scopes = [
     'app-remote-control',
     'playlist-read-collaborative',
     'playlist-read-private',
-    'playlist-modify-private',
     'user-library-read',
     'user-top-read',
     'user-read-recently-played',
