@@ -58,3 +58,10 @@
     font-size: 35px;
     color: var(--accent-color);
 }
+
+.music-img {
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 1;
+    width: 400px;
+}

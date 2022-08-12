@@ -25,23 +25,16 @@ class ArtistCard extends InformationCard  {
         super(data);
     }
     html(clickable = true) {
-        // return html element to be displayed on page 
-        // const format = {
-        //     name: "Cage The Elephant",
-        //     followers: 2921544,
-        //     popularity: 73,
-        //     genres: [
-        //       "modern alternative rock",
-        //       "modern rock",
-        //       "punk blues",
-        //       "rock"
-        //     ],
-        //     image: "https://i.scdn.co/image/ab6761610000e5eb7d994f7e137c10249de19455",
-        //     url: "https://open.spotify.com/artist/26T3LtbuGT1Fu9m0eRq5X3",
-        //     uri: "spotify:artist:26T3LtbuGT1Fu9m0eRq5X3"
-        // }
         let card = document.createElement('div');
         card.classList.add('card', 'artist-card');
+
+        console.log(this.data);
+
+        if (clickable) {
+            card.addEventListener("click", (e) => {
+                window.location = this.data.url;
+            });
+        }
 
         let followers = document.createElement('p');
         followers.innerHTML = this.data.followers.toLocaleString("en-US"); // adds commas
@@ -164,19 +157,14 @@ class TrackCard extends InformationCard {
         super(data);
     }
     html(clickable = true) {
-        // return html element to be displayed on page 
-        // const format = {
-        //     "name": "Kids",
-        //     "artist": [
-        //       "MGMT"
-        //     ],
-        //     "album": "Oracular Spectacular",
-        //     "art": "https://i.scdn.co/image/ab67616d0000b2738b32b139981e79f2ebe005eb",
-        //     "id": "1jJci4qxiYcOHhQR247rEU",
-        //     "realeaseDate": "2007-12-14"
-        // }
         let card = document.createElement('div');
         card.classList.add('card', 'track-card');
+
+        if (clickable) {
+            card.addEventListener("click", (e) => {
+                window.location = this.data.url;
+            });
+        }
 
         let name = document.createElement('h3');
         name.className = 'track-name';
