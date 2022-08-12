@@ -64,4 +64,13 @@
     object-position: center;
     aspect-ratio: 1;
     width: 400px;
+    cursor: pointer;
+}
+
+.logo-img {
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 2362/709;
+    width: 150px;
+    margin-bottom: 1em;
 }

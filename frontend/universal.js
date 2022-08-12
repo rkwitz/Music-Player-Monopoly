@@ -100,6 +100,7 @@ class PlaylistCard extends InformationCard {
             success: result => {
                 this.img = result.art;
                 this.name = result.name;
+                this.url = result.url;
                 let trackArr = result.songs;
                 let trackCards = Array();
                 for (let i=0; i<trackArr.length; ++i) {
@@ -136,10 +137,20 @@ class PlaylistCard extends InformationCard {
         let title = document.createElement("h2");
         title.innerHTML = this.name;
         title.className = "music-title"
+        
         let img = document.createElement("img");
         img.src = this.img;
         img.className = "music-img";
         img.alt = `Playlist cover for ${this.name}`;
+
+        let logo = document.createElement("img");
+        logo.src = "/resources/Spotify/Logos/Spotify_Logo_RGB_Green.png";
+        logo.className = "logo-img";
+
+        console.log(this.data);
+        img.addEventListener("click", (e) => {
+            window.location = this.url;
+        });
         let content = document.createElement("div");
         content.id = "card-container";
         // display tracks and playlist information
@@ -147,6 +158,7 @@ class PlaylistCard extends InformationCard {
             content.append(track.html());
         });
         container.append(title);
+        container.append(logo)
         container.append(img);
         container.append(content);
     }
