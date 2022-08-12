@@ -131,6 +131,7 @@ async function topArtistsParser(range, num, loggedInSpotifyApi) {
 				artist.genres = genreArr
 				artist.id = data.data.items[j].id
 				artist.followers = data.data.items[j].followers.total
+				artists.url = data.data.items[j].external_urls.spotify
 				artist.uri = data.data.items[j].uri
 				artists.push(artist)
 			}
@@ -215,6 +216,7 @@ async function topSongsParser(range, num, loggedInSpotifyApi) {
 				}
 				song.id = data.data.items[j].id
 				song.releaseDate = data.data.items[j].album.release_date
+				song.url = data.data.items[j].external_urls.spotify
 				songs.push(song)
 			}
 		});
@@ -391,10 +393,12 @@ app.get('/playlistGetTracks', (req, res) => {
 				song.art = "/resources/noimage.png"
 			}
 			song.id = data.body.tracks.items[i].track.id
+			song.url = data.body.tracks.items[i].track.external_urls.spotify
 			song.releaseDate = data.body.tracks.items[i].track.album.release_date
 			songsArr.push(song)
 		}
 		result.songs = songsArr
+		result.url = data.body.external_urls.spotify
 		res.status(200).json(result);
   	}, function(err) {
 		res.status(500).json(err);
