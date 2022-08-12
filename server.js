@@ -131,7 +131,7 @@ async function topArtistsParser(range, num, loggedInSpotifyApi) {
 				artist.genres = genreArr
 				artist.id = data.data.items[j].id
 				artist.followers = data.data.items[j].followers.total
-				artists.url = data.data.items[j].external_urls.spotify
+				artist.url = data.data.items[j].external_urls.spotify
 				artist.uri = data.data.items[j].uri
 				artists.push(artist)
 			}
