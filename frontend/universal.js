@@ -100,6 +100,7 @@ class PlaylistCard extends InformationCard {
             success: result => {
                 this.img = result.art;
                 this.name = result.name;
+                this.url = result.url;
                 let trackArr = result.songs;
                 let trackCards = Array();
                 for (let i=0; i<trackArr.length; ++i) {
@@ -146,6 +147,10 @@ class PlaylistCard extends InformationCard {
         logo.src = "/resources/Spotify/Logos/Spotify_Logo_RGB_Green.png";
         logo.className = "logo-img";
 
+        console.log(this.data);
+        img.addEventListener("click", (e) => {
+            window.location = this.url;
+        });
         let content = document.createElement("div");
         content.id = "card-container";
         // display tracks and playlist information
