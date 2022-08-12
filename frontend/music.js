@@ -22,7 +22,6 @@ async function waitVerify() {
             alert("something went wrong with building music page");
         }   
     });
-    // }
 }
 
 $( document ).ready(function() {
