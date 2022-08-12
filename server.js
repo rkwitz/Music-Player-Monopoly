@@ -18,25 +18,16 @@ app.use(express.static(path.join(__dirname, './frontend')));
 // copied from: https://github.com/thelinmichael/spotify-web-api-node/blob/master/examples/tutorial/00-get-access-token.js
 var SpotifyWebApi = require('spotify-web-api-node');
 const scopes = [
-    'ugc-image-upload',
     'user-read-playback-state',
     'user-modify-playback-state',
     'user-read-currently-playing',
     'streaming',
     'app-remote-control',
-    'user-read-email',
-    'user-read-private',
     'playlist-read-collaborative',
-    'playlist-modify-public',
     'playlist-read-private',
-    'playlist-modify-private',
-    'user-library-modify',
     'user-library-read',
     'user-top-read',
-    'user-read-playback-position',
     'user-read-recently-played',
-    'user-follow-read',
-    'user-follow-modify'
 ];
 var spotifyApi = new SpotifyWebApi({
 	// make sure you don't push with clientID or secret filled in
@@ -65,23 +56,24 @@ app.get('/callback', (req, res) => {
 		const refresh_token = data.body['refresh_token'];
 		const expires_in = data.body['expires_in'];
 
-		spotifyApi.setAccessToken(access_token);
-		spotifyApi.setRefreshToken(refresh_token);
+		// spotifyApi.setAccessToken(access_token);
+		// spotifyApi.setRefreshToken(refresh_token);
 
 		console.log(`Sucessfully retreived access token. Expires in ${expires_in} s.`);
-		res.redirect('/index.html');
-		
-		setInterval(async () => {
-			const data = await spotifyApi.refreshAccessToken();
-			const access_token = data.body['access_token'];
+		// res.redirect('/index.html');
+		res.redirect(`/#access_token=${access_token}&refresh_token=${refresh_token}`)
 
-			console.log('The access token has been refreshed!');
-			console.log('access_token:', access_token);
-			spotifyApi.setAccessToken(access_token);
-		}, expires_in / 2 * 1000);
-		}).catch(error => {
-			console.error('Error getting Tokens:', error);
-			res.send(`Error getting Tokens: ${error}`);
+	// 	setInterval(async () => {
+	// 		const data = await spotifyApi.refreshAccessToken();
+	// 		const access_token = data.body['access_token'];
+
+	// 		console.log('The access token has been refreshed!');
+	// 		console.log('access_token:', access_token);
+	// 		spotifyApi.setAccessToken(access_token);
+	// 	}, expires_in / 2 * 1000);
+	// 	}).catch(error => {
+	// 		console.error('Error getting Tokens:', error);
+	// 		res.send(`Error getting Tokens: ${error}`);
 	});
 });
 
@@ -94,7 +86,7 @@ function correctKeys(ob1, ob2) {
 /*********************************************************************************************************************/
 // statistic endpoints
 
-async function topArtistsParser(range, num) {
+async function topArtistsParser(range, num, loggedInSpotifyApi) {
 	let numItems = 0
 	let rem = num
 	let itr
@@ -113,7 +105,7 @@ async function topArtistsParser(range, num) {
 			params: {limit: lim, offset: off, time_range: range},
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+				Authorization: `Bearer ${loggedInSpotifyApi.getAccessToken()}`,
 				Host: "api.spotify.com",
 			},
 		}).then((data) => {
@@ -139,6 +131,7 @@ async function topArtistsParser(range, num) {
 				artist.genres = genreArr
 				artist.id = data.data.items[j].id
 				artist.followers = data.data.items[j].followers.total
+				artist.url = data.data.items[j].external_urls.spotify
 				artist.uri = data.data.items[j].uri
 				artists.push(artist)
 			}
@@ -157,6 +150,8 @@ app.get('/myTopArtists', (req, res) => {
 	format = {range: "short|medium|long", numberArtists: "1 - 99"}
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let request = req.query;
 	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
 	&& !isNaN(request.numberArtists) && parseInt(request.numberArtists) > 0 && parseInt(request.numberArtists) <= 99)) {
@@ -166,7 +161,7 @@ app.get('/myTopArtists', (req, res) => {
 	}
 	let range = `${request.range}_term`;
 	let num = parseInt(request.numberArtists);	
-	topArtistsParser(range, num).then((data) => {
+	topArtistsParser(range, num, loggedInSpotifyApi).then((data) => {
 		res.status(200).json(data);
 		console.log(`sent top ${num} artists`);
 	})
@@ -176,7 +171,7 @@ app.get('/myTopArtists', (req, res) => {
 	});
 });
 
-async function topSongsParser(range, num) {
+async function topSongsParser(range, num, loggedInSpotifyApi) {
 	let numItems = 0
 	let rem = num
 	let itr
@@ -195,7 +190,7 @@ async function topSongsParser(range, num) {
 			params: {limit: lim, offset: off, time_range: range},
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+				Authorization: `Bearer ${loggedInSpotifyApi.getAccessToken()}`,
 				Host: "api.spotify.com",
 			},
 		}).then((data) => {
@@ -221,6 +216,7 @@ async function topSongsParser(range, num) {
 				}
 				song.id = data.data.items[j].id
 				song.releaseDate = data.data.items[j].album.release_date
+				song.url = data.data.items[j].external_urls.spotify
 				songs.push(song)
 			}
 		});
@@ -237,6 +233,8 @@ app.get('/myTopSongs', (req, res) => {
 	format = {range: "short|medium|long", numberSongs: "1 - 99"}
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let request = req.query;
 	if (!(correctKeys(format, request) && (request.range == "short" || request.range == "medium" || request.range == "long") 
 	&& !isNaN(request.numberSongs) && parseInt(request.numberSongs) > 0 && parseInt(request.numberSongs) <= 99)) {
@@ -246,7 +244,7 @@ app.get('/myTopSongs', (req, res) => {
 	}
 	let range = `${request.range}_term`;
 	let num = parseInt(request.numberSongs);	
-	topSongsParser(range, num).then((data) => {
+	topSongsParser(range, num, loggedInSpotifyApi).then((data) => {
 		res.status(200).json(data);
 		console.log(`sent top ${num} songs`);
 	})
@@ -255,23 +253,27 @@ app.get('/myTopSongs', (req, res) => {
 	});
 });
 
-app.get('/isLogged', (req, res) => {
-	spotifyApi.getMe()
-	.then(function(data) {
-		res.status(200).json(true);
-	}, function(err) {
-		res.status(200).json(false);
-  	});
-});
+// app.get('/isLogged', (req, res) => {
+// 	var loggedInSpotifyApi = new SpotifyWebApi();
+// 	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+// 	loggedInSpotifyApi.getMe()
+// 	.then(function(data) {
+// 		res.status(200).json(true);
+// 	}, function(err) {
+// 		res.status(200).json(false);
+//   	});
+// });
 
-app.get('/logout', (req, res) => {
-	spotifyApi = new SpotifyWebApi({
-		// make sure you don't push with clientID or secret filled in
-		clientId: config[0],
-		clientSecret: config[1],
-		redirectUri: 'http://localhost:3000/callback'
-	});
-});
+// app.get('/logout', (req, res) => {
+// 	var loggedInSpotifyApi = new SpotifyWebApi();
+// 	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+// 	loggedInSpotifyApi = new SpotifyWebApi({
+// 		// make sure you don't push with clientID or secret filled in
+// 		clientId: config[0],
+// 		clientSecret: config[1],
+// 		redirectUri: 'http://localhost:3000/callback'
+// 	});
+// });
 
 app.listen(port, () => {
 	console.log('Listening on *:3000');
@@ -283,76 +285,88 @@ app.use(favicon(__dirname + '/frontend/resources/logo.png'));
 
 // Pause a User's Playback
 app.get('/pause', (req, res) => {
-  spotifyApi.pause()
-    .then(function() {
-      res.status(200).send();
-    }, function(err) {
-      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-      res.status(500).json(err);
-      console.log(err);
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.pause()
+    	.then(function() {
+      	res.status(200).send();
+    	}, function(err) {
+      	//if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      	res.status(500).json(err);
+      	console.log(err);
     });
 });
 
 // Start/Resume a User's Playback
 app.get('/play', (req, res) => {
-  spotifyApi.play()
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.play()
     .then(function() {
-      res.status(200).send();
+      	res.status(200).send();
     }, function(err) {
-      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-      res.status(500).json(err);
-      console.log(err);
+      	//if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      	res.status(500).json(err);
+      	console.log(err);
     });
 });
 
 // Get Information About The User's Current Playback State
 app.get('/playbackState', (req, res) => {
-  spotifyApi.getMyCurrentPlaybackState()
-    .then(function(data) {
-      // Output items
-      if (data.body && data.body.is_playing) {
-        res.status(200).send("playing");
-      } else {
-        res.status(200).send("paused");
-      }
-    }, function(err) {
-      res.status(500).json(err);
-      console.log(err);
-  });
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.getMyCurrentPlaybackState()
+    	.then(function(data) {
+      	// Output items
+      	if (data.body && data.body.is_playing) {
+        	res.status(200).send("playing");
+      	} else {
+        	res.status(200).send("paused");
+      	}
+    	}, function(err) {
+      	res.status(500).json(err);
+      	console.log(err);
+  	});
 });
 
 // Skip User’s Playback To Next Track
 app.get('/skipNext', (req, res) => {
-  spotifyApi.skipToNext()
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.skipToNext()
     .then(function() {
-      res.status(200).send();
+      	res.status(200).send();
     }, function(err) {
-      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-      res.status(500).json(err);
-      console.log(err);
+      	//if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+      	res.status(500).json(err);
+      	console.log(err);
     });
 });
 
 // Skip User’s Playback To Previous Track 
 app.get('/skipPrevious', (req, res) => {
-  spotifyApi.skipToPrevious()
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.skipToPrevious()
     .then(function() {
-      res.status(200).send();
+      	res.status(200).send();
     }, function(err) {
-      //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-      res.status(500).json(err);
-      console.log(err);
+    	//if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    	res.status(500).json(err);
+      	console.log(err);
     });
 });
 
 // Get a playlist
 app.get('/playlistGetTracks', (req, res) => {
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	format = {id: "idNumberHere"}
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Content-type', 'application/json');
 	let request = req.query;
 	let id = `${request.id}`;
-	spotifyApi.getPlaylist(id)
+	loggedInSpotifyApi.getPlaylist(id)
   	.then(function(data) {
 		let result = {}
 		let songsArr = Array()
@@ -379,10 +393,12 @@ app.get('/playlistGetTracks', (req, res) => {
 				song.art = "/resources/noimage.png"
 			}
 			song.id = data.body.tracks.items[i].track.id
+			song.url = data.body.tracks.items[i].track.external_urls.spotify
 			song.releaseDate = data.body.tracks.items[i].track.album.release_date
 			songsArr.push(song)
 		}
 		result.songs = songsArr
+		result.url = data.body.external_urls.spotify
 		res.status(200).json(result);
   	}, function(err) {
 		res.status(500).json(err);
@@ -392,20 +408,28 @@ app.get('/playlistGetTracks', (req, res) => {
 
 // Get a user's playlists
 app.get('/usersPlaylists', (req, res) => {
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
 	let id;
-	spotifyApi.getMe()
+	loggedInSpotifyApi.getMe()
 	.then(function(data) {
 		id = data.body.id;
 	}, function(err) {
 		res.status(500).json(err);
     	console.log(err);
   	});
-	spotifyApi.getUserPlaylists(id)
-  	.then(function(data) {
+	axios.get('https://api.spotify.com/v1/me/playlists', {
+		params: {limit: 50, offset: 0},
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loggedInSpotifyApi.getAccessToken()}`,
+			Host: "api.spotify.com",
+		},
+	}).then(function(data) {
 		let playlistIds = Array()
-		for (let i = 0; i < data.body.items.length; i++) {
-			if (id == data.body.items[i].owner.id) {
-				playlistIds.push(data.body.items[i].id)
+		for (let i = 0; i < data.data.items.length; i++) {
+			if (id == data.data.items[i].owner.id) {
+				playlistIds.push(data.data.items[i].id)
 			}
 		}
 		res.status(200).json(playlistIds);
@@ -418,7 +442,9 @@ app.get('/usersPlaylists', (req, res) => {
 
 // Get the User's Currently Playing Track
 app.get('/trackPlaying', (req, res) => {
-	spotifyApi.getMyCurrentPlayingTrack()
+	var loggedInSpotifyApi = new SpotifyWebApi();
+	loggedInSpotifyApi.setAccessToken(req.headers['authorization']);
+	loggedInSpotifyApi.getMyCurrentPlayingTrack()
   	.then(function(data) {
 		let result = {}
 		result.name = data.body.item.name

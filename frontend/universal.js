@@ -25,23 +25,16 @@ class ArtistCard extends InformationCard  {
         super(data);
     }
     html(clickable = true) {
-        // return html element to be displayed on page 
-        // const format = {
-        //     name: "Cage The Elephant",
-        //     followers: 2921544,
-        //     popularity: 73,
-        //     genres: [
-        //       "modern alternative rock",
-        //       "modern rock",
-        //       "punk blues",
-        //       "rock"
-        //     ],
-        //     image: "https://i.scdn.co/image/ab6761610000e5eb7d994f7e137c10249de19455",
-        //     url: "https://open.spotify.com/artist/26T3LtbuGT1Fu9m0eRq5X3",
-        //     uri: "spotify:artist:26T3LtbuGT1Fu9m0eRq5X3"
-        // }
         let card = document.createElement('div');
         card.classList.add('card', 'artist-card');
+
+        console.log(this.data);
+
+        if (clickable) {
+            card.addEventListener("click", (e) => {
+                window.location = this.data.url;
+            });
+        }
 
         let followers = document.createElement('p');
         followers.innerHTML = this.data.followers.toLocaleString("en-US"); // adds commas
@@ -103,6 +96,7 @@ class PlaylistCard extends InformationCard {
             url: "/playlistGetTracks/?"  + $.param(req),
             type: "GET",
             ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
             success: result => {
                 this.img = result.art;
                 this.name = result.name;
@@ -163,19 +157,14 @@ class TrackCard extends InformationCard {
         super(data);
     }
     html(clickable = true) {
-        // return html element to be displayed on page 
-        // const format = {
-        //     "name": "Kids",
-        //     "artist": [
-        //       "MGMT"
-        //     ],
-        //     "album": "Oracular Spectacular",
-        //     "art": "https://i.scdn.co/image/ab67616d0000b2738b32b139981e79f2ebe005eb",
-        //     "id": "1jJci4qxiYcOHhQR247rEU",
-        //     "realeaseDate": "2007-12-14"
-        // }
         let card = document.createElement('div');
         card.classList.add('card', 'track-card');
+
+        if (clickable) {
+            card.addEventListener("click", (e) => {
+                window.location = this.data.url;
+            });
+        }
 
         let name = document.createElement('h3');
         name.className = 'track-name';
@@ -452,120 +441,144 @@ class Login {
     login() {
         location.href = "/login";
     }
+
     logout() {
-        const url = 'https://www.spotify.com/logout/';
-        const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
-        setTimeout(() => spotifyLogoutWindow.close(), 1000);
-        $.ajax({
-            url: "/logout",
-            type: "GET",
-            ContentType: 'application/json',
-        });
-        setTimeout(() => location.href = "/index.html", 1050);
+        location.reload();
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
-    setLoggedState(state) {
-        this.logged = state;
+    setToken() {
+        // store access token in cookie upon login
+        if (window.location.hash) {
+            const hash = window.location.hash
+            .substring(1)
+            .split('&')
+            .reduce(function (initial, item) {
+            if (item) {
+                var parts = item.split('=');
+                initial[parts[0]] = decodeURIComponent(parts[1]);
+            }
+            return initial;
+            }, {});
+            window.location.hash = '';
+            document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
+            location.reload();
+        }
+        // console.log(decodeURIComponent(document.cookie));
     }
-    html(container) {
-        $.ajax({
-            url: "/isLogged",
-            type: "GET",
-            ContentType: 'application/json',
-            success: result => {
-                if (result){ 
-                    this.loginVerify = true;
-                    let playback = new Playback();
-                    playback.html(document.body);
 
-                    let homebtn = document.createElement("btn");
-                    homebtn.id = "home-btn";
-                    homebtn.innerHTML = "Home";
-                    homebtn.classList.add('small-white-btn');
-                    
+    getToken() {
+        let name = "access_token=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
 
-                    if (this.page == 'index.html'){
-                        homebtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'home-btn'){
-                                location.href = "/index.html";
-                            }
-                        });
-                    }
+    isLogged() {
+        if (this.getToken()){
+            console.log("logged");
+            return true;
+        } else {
+            console.log("not logged");
+            return false;
+        }
+    }
 
-                    let statsbtn = document.createElement("btn");
-                    statsbtn.id = "stats-btn";
-                    statsbtn.innerHTML = "Stats";
-                    statsbtn.classList.add('small-white-btn');
-                    
-                    if (this.page == 'stats.html'){
-                        statsbtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'stats-btn'){
-                                location.href = "/stats.html";
-                            }
-                        });
-                    }
+    html(container) {    
+        if (this.isLogged()) { // user is logged in
+            let playback = new Playback();
+            playback.html(document.body);
 
-                    let musicbtn = document.createElement("btn");
-                    musicbtn.id = "music-btn";
-                    musicbtn.innerHTML = "Music";
-                    musicbtn.classList.add('small-white-btn');
-                    
-                    if (this.page == 'music.html'){
-                        musicbtn.classList.add("current");
-                    }
-                    else{
-                        document.addEventListener('click',(e) => {
-                            if(e.target && e.target.id== 'music-btn'){
-                                location.href = "/music.html";
-                            }
-                        });
-                    }
+            let homebtn = document.createElement("btn");
+            homebtn.id = "home-btn";
+            homebtn.innerHTML = "Home";
+            homebtn.classList.add('small-white-btn');
+            
 
-                    let logoutbtn = document.createElement("btn");
-                    logoutbtn.id = "logout-btn";
-                    logoutbtn.innerHTML = "Logout";
-                    logoutbtn.classList.add('large-white-btn');
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'logout-btn'){
-                            this.logout();
-                        }
-                    });
-                    container.prepend(logoutbtn);
-                    container.prepend(homebtn);
-                    container.prepend(musicbtn);
-                    container.prepend(statsbtn);
-                }
-                else {
-                    if (this.page != 'index.html' && this.page != ''){
+            if (this.page == 'index.html'){
+                homebtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'home-btn'){
                         location.href = "/index.html";
                     }
-                    this.loginVerify = true;
-
-                    let loginbtn = document.createElement("btn");
-                    loginbtn.id = "login-btn";
-                    loginbtn.innerHTML = "Login";
-                    loginbtn.classList.add('large-white-btn');
-        
-                    document.addEventListener('click',(e) => {
-                        if(e.target && e.target.id== 'login-btn'){
-                            this.login();
-                        }
-                    });
-                    container.prepend(loginbtn);
-                }
-            }, error: err => {
-                console.log(err);
+                });
             }
-        });
-        
-        
+
+            let statsbtn = document.createElement("btn");
+            statsbtn.id = "stats-btn";
+            statsbtn.innerHTML = "Stats";
+            statsbtn.classList.add('small-white-btn');
+            
+            if (this.page == 'stats.html'){
+                statsbtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'stats-btn'){
+                        location.href = "/stats.html";
+                    }
+                });
+            }
+
+            let musicbtn = document.createElement("btn");
+            musicbtn.id = "music-btn";
+            musicbtn.innerHTML = "Music";
+            musicbtn.classList.add('small-white-btn');
+            
+            if (this.page == 'music.html'){
+                musicbtn.classList.add("current");
+            }
+            else{
+                document.addEventListener('click',(e) => {
+                    if(e.target && e.target.id== 'music-btn'){
+                        location.href = "/music.html";
+                    }
+                });
+            }
+
+            let logoutbtn = document.createElement("btn");
+            logoutbtn.id = "logout-btn";
+            logoutbtn.innerHTML = "Logout";
+            logoutbtn.classList.add('large-white-btn');
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'logout-btn'){
+                    this.logout();
+                }
+            });
+            container.prepend(logoutbtn);
+            container.prepend(homebtn);
+            container.prepend(musicbtn);
+            container.prepend(statsbtn);
+        }
+        else { // user is not logged in
+            if (this.page != 'index.html' && this.page != ''){
+                location.href = "/index.html";
+            }
+
+            let loginbtn = document.createElement("btn");
+            loginbtn.id = "login-btn";
+            loginbtn.innerHTML = "Login";
+            loginbtn.classList.add('large-white-btn');
+
+            document.addEventListener('click',(e) => {
+                if(e.target && e.target.id== 'login-btn'){
+                    this.login();
+                }
+            });
+            container.prepend(loginbtn);
+        }
     }
 }
 /*  =============================================================
@@ -590,6 +603,7 @@ class Playback {
             url: "/playbackState",
             type: "GET",
             ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
             success: result => {
                 if (result == "playing") {
                     btn.toggleClass("paused");
@@ -603,6 +617,7 @@ class Playback {
                     url: "/pause",
                     type: "GET",
                     ContentType: 'application/json',
+                    headers: {"Authorization": `${login.getToken()}`},
                     success: result => {
                         btn.toggleClass("paused");
                         console.log("Paused Sucessfully");
@@ -626,6 +641,7 @@ class Playback {
                     url: "/play",
                     type: "GET",
                     ContentType: 'application/json',
+                    headers: {"Authorization": `${login.getToken()}`},
                     success: result => {
                         btn.toggleClass("paused");
                         console.log("Played Sucessfully");
@@ -652,12 +668,14 @@ class Playback {
                 url: "/skipNext",
                 type: "GET",
                 ContentType: 'application/json',
+                headers: {"Authorization": `${login.getToken()}`},
                 success: result => {
                     console.log("Skipped Forward Sucessfully")
                     $.ajax({
                         url: "/playbackState",
                         type: "GET",
                         ContentType: 'application/json',
+                        headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
                             if (result == "paused") {
                                 btn.toggleClass("paused");
@@ -677,12 +695,14 @@ class Playback {
                 url: "/skipPrevious",
                 type: "GET",
                 ContentType: 'application/json',
+                headers: {"Authorization": `${login.getToken()}`},
                 success: result => {
                     console.log("Skipped Backward Sucessfully")
                     $.ajax({
                         url: "/playbackState",
                         type: "GET",
                         ContentType: 'application/json',
+                        headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
                             if (result == "paused") {
                                 btn.toggleClass("paused");
