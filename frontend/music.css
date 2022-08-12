@@ -64,4 +64,5 @@
     object-position: center;
     aspect-ratio: 1;
     width: 400px;
+    cursor: pointer;
 }
