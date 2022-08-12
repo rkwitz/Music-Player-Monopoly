@@ -28,8 +28,6 @@ class ArtistCard extends InformationCard  {
         let card = document.createElement('div');
         card.classList.add('card', 'artist-card');
 
-        console.log(this.data);
-
         if (clickable) {
             card.addEventListener("click", (e) => {
                 window.location = this.data.url;
@@ -147,7 +145,6 @@ class PlaylistCard extends InformationCard {
         logo.src = "/resources/Spotify/Logos/Spotify_Logo_RGB_Green.png";
         logo.className = "logo-img";
 
-        console.log(this.data);
         img.addEventListener("click", (e) => {
             window.location = this.url;
         });
@@ -158,8 +155,8 @@ class PlaylistCard extends InformationCard {
             content.append(track.html());
         });
         container.append(title);
-        container.append(logo)
         container.append(img);
+        container.append(logo);
         container.append(content);
     }
 }
@@ -476,7 +473,6 @@ class Login {
             document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
             location.reload();
         }
-        // console.log(decodeURIComponent(document.cookie));
     }
 
     getToken() {

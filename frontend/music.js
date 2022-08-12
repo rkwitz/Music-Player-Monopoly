@@ -26,5 +26,5 @@ async function waitVerify() {
 
 $( document ).ready(function() {
     waitVerify();
-    console.log(decodeURIComponent(document.cookie));
+    //console.log(decodeURIComponent(document.cookie));
 });
