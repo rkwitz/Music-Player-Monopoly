@@ -104,7 +104,7 @@ let topDecadesFunction = function(container) {
             }
             let histogram = new Histogram(decades);
             htmlArt = histogram.html();
-            htmlArt.classList.add('canvas');
+            htmlArt.classList.add('canvas', 'hist');
             container.append(htmlArt);
         }, error: err => {
             console.log("Something went wrong:");
@@ -159,7 +159,7 @@ let topGenreFunction = function(container) {
 
             let piChart = new PiChart(sortedGenre);
             htmlArt = piChart.html();
-            htmlArt.classList.add('canvas');
+            htmlArt.classList.add('canvas', 'pie');
             container.append(htmlArt);
         }, error: err => {
             console.log("Something went wrong:");

@@ -302,7 +302,7 @@ class PiChart {  // Top 13
         }
         let pie = document.createElement('canvas');
         pie.id = 'pie';
-        pie.classList.add('pie');
+        // pie.classList.add('pie');
 
         const ctx = pie.getContext('2d');
         const chart = new Chart(ctx, {
@@ -317,19 +317,19 @@ class PiChart {  // Top 13
             },
             options: {
                 plugins: {
-                    title: {
-                        display: true,
-                        text: '',
-                        padding: {
-                            top: 10,
-                            bottom: 30
-                        }
-                    },
+                    // title: {
+                    //     display: true,
+                    //     text: '',
+                    //     padding: {
+                    //         top: 10,
+                    //         bottom: 30
+                    //     }
+                    // },
                     legend: {
                         font: {
                             size: 20
                         },
-                        position: 'bottom'
+                        position: 'right'
                     }
                 },
             }
@@ -452,8 +452,12 @@ class Login {
     }
 
     logout() {
-        location.reload();
+        const url = 'https://www.spotify.com/logout/';
+        const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
+        setTimeout(() => spotifyLogoutWindow.close(), 500);
         document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        setTimeout(() => location.reload(), 510);
+        
     }
 
     setToken() {

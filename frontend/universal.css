@@ -288,10 +288,19 @@ body{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 80%;
-    height: 50%;
     position: relative;
     gap: 20px;
+}
+
+.pie {
+    margin-left: 24%;
+    margin-right: 24%;
+    margin-top: -8%;
+}
+
+.hist {
+    margin-left: 14%;
+    margin-right: 14%;
 }
 
 /*  =============================================================
