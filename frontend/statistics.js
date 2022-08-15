@@ -26,7 +26,7 @@ $( document ).ready(function() {
 
 // top category
 let topArtistFunction = function(container) {
-    let req = {'range': 'long', 'numberArtists': 50}
+    let req = {'range': 'long', 'numberArtists': 99}
     $.ajax({
         url: "/myTopArtists/?" + $.param(req),
         type: "GET",
@@ -48,7 +48,7 @@ let topArtistFunction = function(container) {
 }
 
 let topSongsFunction = function(container) {
-    let req = {'range': 'long', 'numberSongs': 50}
+    let req = {'range': 'long', 'numberSongs': 99}
     $.ajax({
         url: "/myTopSongs/?" + $.param(req),
         type: "GET",
