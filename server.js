@@ -378,24 +378,26 @@ app.get('/playlistGetTracks', (req, res) => {
 			result.art = "/resources/noimage.png"
 		}
 		for (let i = 0; i < data.body.tracks.items.length; i++) {
-			let song = {}
-			song.name = data.body.tracks.items[i].track.name
-			let artistArr = Array()
-			for (let j = 0; j < data.body.tracks.items[i].track.artists.length; j++) {
-				artistArr.push(data.body.tracks.items[i].track.artists[j].name)
+			if (data.body.tracks.items[i].track != null) {
+				let song = {}
+				song.name = data.body.tracks.items[i].track.name
+				let artistArr = Array()
+				for (let j = 0; j < data.body.tracks.items[i].track.artists.length; j++) {
+					artistArr.push(data.body.tracks.items[i].track.artists[j].name)
+				}
+				song.artists = artistArr
+				song.album = data.body.tracks.items[i].track.album.name
+				if (data.body.tracks.items[i].track.album.images.length != 0) {
+					song.art = data.body.tracks.items[i].track.album.images[0].url
+				}
+				else {
+					song.art = "/resources/noimage.png"
+				}
+				song.id = data.body.tracks.items[i].track.id
+				song.url = data.body.tracks.items[i].track.external_urls.spotify
+				song.releaseDate = data.body.tracks.items[i].track.album.release_date
+				songsArr.push(song)
 			}
-			song.artists = artistArr
-			song.album = data.body.tracks.items[i].track.album.name
-			if (data.body.tracks.items[i].track.album.images.length != 0) {
-				song.art = data.body.tracks.items[i].track.album.images[0].url
-			}
-			else {
-				song.art = "/resources/noimage.png"
-			}
-			song.id = data.body.tracks.items[i].track.id
-			song.url = data.body.tracks.items[i].track.external_urls.spotify
-			song.releaseDate = data.body.tracks.items[i].track.album.release_date
-			songsArr.push(song)
 		}
 		result.songs = songsArr
 		result.url = data.body.external_urls.spotify
