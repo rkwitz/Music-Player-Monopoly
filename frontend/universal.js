@@ -389,6 +389,17 @@ class Category {
         let right = document.createElement("btn");
         right.id = "right-btn";
         right.className = "1";
+
+        let short = document.createElement("btn");
+        short.id = "short-btn";
+        short.innerHTML = "4 weeks"
+        let medium = document.createElement("btn");
+        medium.id = "medium-btn";
+        medium.innerHTML = "6 months"
+        let long = document.createElement("btn");
+        long.id = "long-btn";
+        long.innerHTML = "all time"
+
         // add event listeners to change currently visualized data
         left.addEventListener('click',(e) => {
             let targetIndex = parseInt(e.target.className);
@@ -422,7 +433,19 @@ class Category {
                 document.getElementById("left-btn").className = ++left;
             }
         });
+        short.addEventListener('click',(e) => {
+            
+        });
+        medium.addEventListener('click',(e) => {
+            
+        });
+        long.addEventListener('click',(e) => {
+            
+        });
         statContainer.append(title);
+        statContainer.append(short);
+        statContainer.append(medium);
+        statContainer.append(long);
         statContainer.append(left);
         statContainer.append(content);
         statContainer.append(right);
