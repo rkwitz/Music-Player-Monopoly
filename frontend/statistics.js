@@ -27,46 +27,56 @@ $( document ).ready(function() {
 // top category
 let topArtistFunction = function(container) {
     let req = {'range': 'long', 'numberArtists': 99}
-    $.ajax({
-        url: "/myTopArtists/?" + $.param(req),
-        type: "GET",
-        ContentType: 'application/json',
-        headers: {"Authorization": `${login.getToken()}`},
-        success: result => {
-            for (let i=0; i<result.total; ++i) {
-                let artist = new ArtistCard(result.artists[i]);
-                htmlArt = artist.html();
-                htmlArt.dataset.ranking = i+1;
-                htmlArt.classList.add('card-numbered');
-                container.append(htmlArt);
+    if (login.isLogged()) {
+        $.ajax({
+            url: "/myTopArtists/?" + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
+            success: result => {
+                for (let i=0; i<result.total; ++i) {
+                    let artist = new ArtistCard(result.artists[i]);
+                    htmlArt = artist.html();
+                    htmlArt.dataset.ranking = i+1;
+                    htmlArt.classList.add('card-numbered');
+                    container.append(htmlArt);
+                }
+            }, error: err => {
+                console.log("Something went wrong:");
+                console.log(err.responseJSON);
             }
-        }, error: err => {
-            console.log("Something went wrong:");
-            console.log(err.responseJSON);
-        }
-    });
+        });
+    }
+    else {
+        location.href = "/index.html";
+    }
 }
 
 let topSongsFunction = function(container) {
     let req = {'range': 'long', 'numberSongs': 99}
-    $.ajax({
-        url: "/myTopSongs/?" + $.param(req),
-        type: "GET",
-        ContentType: 'application/json',
-        headers: {"Authorization": `${login.getToken()}`},
-        success: result => {
-            for (let i=0; i<result.total; ++i) {
-                let song = new TrackCard(result.songs[i]);
-                htmlArt = song.html();
-                htmlArt.dataset.ranking = i+1;
-                htmlArt.classList.add('card-numbered');
-                container.append(htmlArt);
+    if (login.isLogged()) {
+        $.ajax({
+            url: "/myTopSongs/?" + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
+            success: result => {
+                for (let i=0; i<result.total; ++i) {
+                    let song = new TrackCard(result.songs[i]);
+                    htmlArt = song.html();
+                    htmlArt.dataset.ranking = i+1;
+                    htmlArt.classList.add('card-numbered');
+                    container.append(htmlArt);
+                }
+            }, error: err => {
+                console.log("Something went wrong:");
+                console.log(err.responseJSON);
             }
-        }, error: err => {
-            console.log("Something went wrong:");
-            console.log(err.responseJSON);
-        }
-    });
+        });
+    }
+    else {
+        location.href = "/index.html";
+    }
 }
 
 let topDecadesFunction = function(container) {
@@ -84,33 +94,38 @@ let topDecadesFunction = function(container) {
     const num = 99;
     let req = {'range': 'long', 'numberSongs': num}
     const rankWeight = 5 // #1 top Track will add to the score of its decade by a factor of rankWeight more than the last available top Track
-    $.ajax({
-        url: "/myTopSongs/?" + $.param(req),
-        type: "GET",
-        ContentType: 'application/json',
-        headers: {"Authorization": `${login.getToken()}`},
-        success: result => {
-            for (let i=0; i<result.total; ++i) {
-                //parse date to year string
-                let date = result.songs[i].releaseDate;
-                year = parseInt(date.substring(0,4));
-                labels = Object.keys(decades);
-                for (var j = labels.length-1; j >= 0;j--){
-                    if (year >= (1940 + 10*j)) {
-                        decades[labels[j]] += (num-i)*(rankWeight - 1) + num;
-                        break;
+    if (login.isLogged()) {
+        $.ajax({
+            url: "/myTopSongs/?" + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
+            success: result => {
+                for (let i=0; i<result.total; ++i) {
+                    //parse date to year string
+                    let date = result.songs[i].releaseDate;
+                    year = parseInt(date.substring(0,4));
+                    labels = Object.keys(decades);
+                    for (var j = labels.length-1; j >= 0;j--){
+                        if (year >= (1940 + 10*j)) {
+                            decades[labels[j]] += (num-i)*(rankWeight - 1) + num;
+                            break;
+                        }
                     }
                 }
+                let histogram = new Histogram(decades);
+                htmlArt = histogram.html();
+                htmlArt.classList.add('canvas', 'hist');
+                container.append(htmlArt);
+            }, error: err => {
+                console.log("Something went wrong:");
+                console.log(err.responseJSON);
             }
-            let histogram = new Histogram(decades);
-            htmlArt = histogram.html();
-            htmlArt.classList.add('canvas', 'hist');
-            container.append(htmlArt);
-        }, error: err => {
-            console.log("Something went wrong:");
-            console.log(err.responseJSON);
-        }
-    });
+        });
+    }
+    else {
+        location.href = "/index.html";
+    }
 }
 
 let topGenreFunction = function(container) {
@@ -118,52 +133,57 @@ let topGenreFunction = function(container) {
     const num = 99;
     const rankWeight = 5 // #1 top Artist will add to the score of its genres by a factor of rankWeight more than the last available top Artist
     let req = {'range': 'long', 'numberArtists': num}
-    $.ajax({
-        url: "/myTopArtists/?" + $.param(req),
-        type: "GET",
-        ContentType: 'application/json',
-        headers: {"Authorization": `${login.getToken()}`},
-        success: result => {
-            for (let i=0; i<result.total; ++i) {
-                let genreList = Array();
-                genreList = result.artists[i].genres;
-                genreList.forEach((genreName) => {
-                    score = (num-i)*(rankWeight - 1) + num
-                    if (genres.hasOwnProperty(genreName)){
-                        genres[genreName] += score;
-                    }
-                    else {
-                        genres[genreName] = score;
-                    }
+    if (login.isLogged()) {
+        $.ajax({
+            url: "/myTopArtists/?" + $.param(req),
+            type: "GET",
+            ContentType: 'application/json',
+            headers: {"Authorization": `${login.getToken()}`},
+            success: result => {
+                for (let i=0; i<result.total; ++i) {
+                    let genreList = Array();
+                    genreList = result.artists[i].genres;
+                    genreList.forEach((genreName) => {
+                        score = (num-i)*(rankWeight - 1) + num
+                        if (genres.hasOwnProperty(genreName)){
+                            genres[genreName] += score;
+                        }
+                        else {
+                            genres[genreName] = score;
+                        }
+                    });
+                }
+                // Create items array
+                var items = Object.keys(genres).map(function(key) {
+                    return [key, genres[key]];
                 });
+                
+                // Sort the array based on the second element
+                items.sort(function(first, second) {
+                    return second[1] - first[1];
+                });
+                
+                // Create a new array with only the first 13 items
+                items = items.slice(0, 13);
+    
+                sortedGenre={}
+                items.forEach((v) => {
+                    useKey = v[0]
+                    useValue = v[1]
+                    sortedGenre[useKey] = useValue
+                });
+    
+                let piChart = new PiChart(sortedGenre);
+                htmlArt = piChart.html();
+                htmlArt.classList.add('canvas', 'pie');
+                container.append(htmlArt);
+            }, error: err => {
+                console.log("Something went wrong:");
+                console.log(err.responseJSON);
             }
-            // Create items array
-            var items = Object.keys(genres).map(function(key) {
-                return [key, genres[key]];
-            });
-            
-            // Sort the array based on the second element
-            items.sort(function(first, second) {
-                return second[1] - first[1];
-            });
-            
-            // Create a new array with only the first 13 items
-            items = items.slice(0, 13);
-
-            sortedGenre={}
-            items.forEach((v) => {
-                useKey = v[0]
-                useValue = v[1]
-                sortedGenre[useKey] = useValue
-            });
-
-            let piChart = new PiChart(sortedGenre);
-            htmlArt = piChart.html();
-            htmlArt.classList.add('canvas', 'pie');
-            container.append(htmlArt);
-        }, error: err => {
-            console.log("Something went wrong:");
-            console.log(err.responseJSON);
-        }
-    });
+        });
+    }
+    else {
+        location.href = "/index.html";
+    }
 }

@@ -90,44 +90,49 @@ class PlaylistCard extends InformationCard {
     html(sidebar, playlistContainer) {
         // call backend for tracks in playlist
         let req = {"id": this.playlistID};
-        $.ajax({
-            url: "/playlistGetTracks/?"  + $.param(req),
-            type: "GET",
-            ContentType: 'application/json',
-            headers: {"Authorization": `${login.getToken()}`},
-            success: result => {
-                this.img = result.art;
-                this.name = result.name;
-                this.url = result.url;
-                let trackArr = result.songs;
-                let trackCards = Array();
-                for (let i=0; i<trackArr.length; ++i) {
-                    // create Tracks cards for each track in playlist
-                    let track = new TrackCard(trackArr[i]);
-                    trackCards.push(track);
-                }
-                this.trackCards = trackCards;
-                let btn = document.createElement("button");
-                btn.className = "playlist";
-                btn.classList.add('small-white-btn');
-                btn.classList.add('min-width-50')
-                btn.innerHTML = this.name;
-                
-                btn.addEventListener("click", (e) => {
-                    if (!e.target.classList.contains("current")) {
-                        var elems = document.querySelectorAll(".playlist");
-                        [].forEach.call(elems, function(el) {
-                            el.classList.remove("current");
-                        });
-                        e.target.classList.add("current");
-                        this.enterPlaylist(playlistContainer);
+        if (login.isLogged()) {
+            $.ajax({
+                url: "/playlistGetTracks/?"  + $.param(req),
+                type: "GET",
+                ContentType: 'application/json',
+                headers: {"Authorization": `${login.getToken()}`},
+                success: result => {
+                    this.img = result.art;
+                    this.name = result.name;
+                    this.url = result.url;
+                    let trackArr = result.songs;
+                    let trackCards = Array();
+                    for (let i=0; i<trackArr.length; ++i) {
+                        // create Tracks cards for each track in playlist
+                        let track = new TrackCard(trackArr[i]);
+                        trackCards.push(track);
                     }
-                });
-                sidebar.append(btn);
-            }, error: err => {
-                alert("Something went wrong bulding a PlaylistCard")
-            }
-        });
+                    this.trackCards = trackCards;
+                    let btn = document.createElement("button");
+                    btn.className = "playlist";
+                    btn.classList.add('small-white-btn');
+                    btn.classList.add('min-width-50')
+                    btn.innerHTML = this.name;
+                    
+                    btn.addEventListener("click", (e) => {
+                        if (!e.target.classList.contains("current")) {
+                            var elems = document.querySelectorAll(".playlist");
+                            [].forEach.call(elems, function(el) {
+                                el.classList.remove("current");
+                            });
+                            e.target.classList.add("current");
+                            this.enterPlaylist(playlistContainer);
+                        }
+                    });
+                    sidebar.append(btn);
+                }, error: err => {
+                    alert("Something went wrong bulding a PlaylistCard")
+                }
+            });
+        }
+        else {
+            location.href = "/index.html";
+        }
     }
 
     enterPlaylist(container) {
@@ -474,8 +479,10 @@ class Login {
             return initial;
             }, {});
             window.location.hash = '';
-            alert(hash.expires_in); // this is in seconds
-            document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
+            var date = new Date();
+            date.setTime(date.getTime() + (hash.expires_in*1000));
+            var expires = "; expires="+date.toGMTString();
+            document.cookie = `access_token=${hash.access_token}${expires}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
             location.reload();
         }
     }
@@ -612,122 +619,157 @@ class Playback {
         var btn = $("#playback-button");
         var skipForwards = $("#skip-forward");
         var skipBackwards = $("#skip-backwards");
-        $.ajax({
-            url: "/playbackState",
-            type: "GET",
-            ContentType: 'application/json',
-            headers: {"Authorization": `${login.getToken()}`},
-            success: result => {
-                if (result == "playing") {
-                    btn.toggleClass("paused");
-                }
-            }, error: err => {}
-        });
-        //play or pause clicked
-        btn.click(function() {
-            if (btn.hasClass("paused")) {
-                $.ajax({
-                    url: "/pause",
-                    type: "GET",
-                    ContentType: 'application/json',
-                    headers: {"Authorization": `${login.getToken()}`},
-                    success: result => {
-                        btn.toggleClass("paused");
-                        console.log("Paused Sucessfully");
-                    }, error: err => {
-                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
-                            alert("No Active Device Found");
-                        }
-                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
-                            btn.toggleClass("paused");
-                        }
-                        else {
-                            alert("Something Went Wrong");
-                            console.log("Something went wrong:");
-                            console.log(err.responseJSON);
-                        }
-                    }
-                });
-            }
-            else {
-                $.ajax({
-                    url: "/play",
-                    type: "GET",
-                    ContentType: 'application/json',
-                    headers: {"Authorization": `${login.getToken()}`},
-                    success: result => {
-                        btn.toggleClass("paused");
-                        console.log("Played Sucessfully");
-                    }, error: err => {
-                        if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
-                            alert("No Active Device Found");
-                        }
-                        else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
-                            btn.toggleClass("paused");
-                        }
-                        else {
-                            alert("Something Went Wrong");
-                            console.log("Something went wrong:");
-                            console.log(err.responseJSON);
-                        }
-                    }
-                });
-            }
-            return false;
-        });
-        //skip foward clicked
-        skipForwards.click(function() {
+        if (login.isLogged()) {
             $.ajax({
-                url: "/skipNext",
+                url: "/playbackState",
                 type: "GET",
                 ContentType: 'application/json',
                 headers: {"Authorization": `${login.getToken()}`},
                 success: result => {
-                    console.log("Skipped Forward Sucessfully")
+                    if (result == "playing") {
+                        btn.toggleClass("paused");
+                    }
+                }, error: err => {}
+            });
+            //play or pause clicked
+            btn.click(function() {
+                if (btn.hasClass("paused")) {
+                    if (login.isLogged()) {
+                        $.ajax({
+                            url: "/pause",
+                            type: "GET",
+                            ContentType: 'application/json',
+                            headers: {"Authorization": `${login.getToken()}`},
+                            success: result => {
+                                btn.toggleClass("paused");
+                                console.log("Paused Sucessfully");
+                            }, error: err => {
+                                if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                                    alert("No Active Device Found");
+                                }
+                                else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                                    btn.toggleClass("paused");
+                                }
+                                else {
+                                    alert("Something Went Wrong");
+                                    console.log("Something went wrong:");
+                                    console.log(err.responseJSON);
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        location.href = "/index.html";
+                    }
+                }
+                else {
+                    if (login.isLogged()) {
+                        $.ajax({
+                            url: "/play",
+                            type: "GET",
+                            ContentType: 'application/json',
+                            headers: {"Authorization": `${login.getToken()}`},
+                            success: result => {
+                                btn.toggleClass("paused");
+                                console.log("Played Sucessfully");
+                            }, error: err => {
+                                if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                                    alert("No Active Device Found");
+                                }
+                                else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
+                                    btn.toggleClass("paused");
+                                }
+                                else {
+                                    alert("Something Went Wrong");
+                                    console.log("Something went wrong:");
+                                    console.log(err.responseJSON);
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        location.href = "/index.html";
+                    }
+                }
+                return false;
+            });
+            //skip foward clicked
+            skipForwards.click(function() {
+                if (login.isLogged()) {
                     $.ajax({
-                        url: "/playbackState",
+                        url: "/skipNext",
                         type: "GET",
                         ContentType: 'application/json',
                         headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
-                            if (result == "paused") {
-                                btn.toggleClass("paused");
+                            console.log("Skipped Forward Sucessfully")
+                            if (login.isLogged()) {
+                                $.ajax({
+                                    url: "/playbackState",
+                                    type: "GET",
+                                    ContentType: 'application/json',
+                                    headers: {"Authorization": `${login.getToken()}`},
+                                    success: result => {
+                                        if (result == "paused") {
+                                            btn.toggleClass("paused");
+                                        }
+                                    }, error: err => {}
+                                });
                             }
-                        }, error: err => {}
+                            else {
+                                location.href = "/index.html";
+                            }
+                        }, error: err => {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
                     });
-                }, error: err => {
-                    alert("Something Went Wrong");
-                    console.log("Something went wrong:");
-                    console.log(err.responseJSON);
+                }
+                else {
+                    location.href = "/index.html";
                 }
             });
-        });
-        //skip backwards clicked
-        skipBackwards.click(function() {
-            $.ajax({
-                url: "/skipPrevious",
-                type: "GET",
-                ContentType: 'application/json',
-                headers: {"Authorization": `${login.getToken()}`},
-                success: result => {
-                    console.log("Skipped Backward Sucessfully")
+            //skip backwards clicked
+            skipBackwards.click(function() {
+                if (login.isLogged()) {
                     $.ajax({
-                        url: "/playbackState",
+                        url: "/skipPrevious",
                         type: "GET",
                         ContentType: 'application/json',
                         headers: {"Authorization": `${login.getToken()}`},
                         success: result => {
-                            if (result == "paused") {
-                                btn.toggleClass("paused");
+                            console.log("Skipped Backward Sucessfully")
+                            if (login.isLogged()) {
+                                $.ajax({
+                                    url: "/playbackState",
+                                    type: "GET",
+                                    ContentType: 'application/json',
+                                    headers: {"Authorization": `${login.getToken()}`},
+                                    success: result => {
+                                        if (result == "paused") {
+                                            btn.toggleClass("paused");
+                                        }
+                                    }, error: err => {}
+                                });
                             }
-                        }, error: err => {}
+                            else {
+                                location.href = "/index.html";
+                            }
+                        }, error: err => {
+                            alert("Something Went Wrong");
+                            console.log("Something went wrong:");
+                            console.log(err.responseJSON);
+                        }
                     });
-                }, error: err => {
-                    alert("Something Went Wrong");
-                    console.log("Something went wrong:");
-                    console.log(err.responseJSON);
+                }
+                else {
+                    location.href = "/index.html";
                 }
             });
-        });
+        }
+        else {
+            location.href = "/index.html";
+        }
     }
 }
