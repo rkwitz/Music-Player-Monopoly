@@ -570,10 +570,10 @@ class Login {
                     this.logout();
                 }
             });
-            container.prepend(logoutbtn);
-            container.prepend(homebtn);
-            container.prepend(musicbtn);
-            container.prepend(statsbtn);
+            container.append(logoutbtn);
+            container.append(homebtn);
+            container.append(musicbtn);
+            container.append(statsbtn);
         }
         else { // user is not logged in
             if (this.page != 'index.html' && this.page != ''){

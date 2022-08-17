@@ -75,3 +75,15 @@
     border-bottom: var(--size) solid transparent;
     border-left: var(--size) solid var(--accent-color);
 }
+
+@media all and (max-width: 1155px) {
+    #right-btn, #left-btn {
+        transform: none;
+    }
+    #right-btn {
+        right: 10px;
+    }
+    #left-btn {
+        left: 10px;
+    }
+}

@@ -57,6 +57,7 @@
 .music-title {
     font-size: 35px;
     color: var(--accent-color);
+    text-align: center;
 }
 
 .music-img {
@@ -73,4 +74,14 @@
     aspect-ratio: 2362/709;
     width: 150px;
     margin-top: 2em;
+}
+
+@media all and (max-width: 830px) {
+    #music-content {
+        margin-left: calc(var(--sidebar-width) + 100px);
+    }
+    .music-img {
+        width: 150%;
+        max-width: none;
+    }
 }
