@@ -474,6 +474,7 @@ class Login {
             return initial;
             }, {});
             window.location.hash = '';
+            alert(hash.expires_in); // this is in seconds
             document.cookie = `access_token=${hash.access_token}; path=/`; // expires=Thu, 18 Dec 2013 12:00:00 UTC;
             location.reload();
         }
