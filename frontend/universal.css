@@ -67,6 +67,7 @@ header {
     position: absolute;
     top: 50px; 
     right: 100px;
+    z-index: 99;
 }
 
 .large-white-btn {
@@ -422,4 +423,8 @@ footer {
     footer {
         width: 50%;
     }
+}
+
+@media all and (max-width: 740px) {
+
 }
