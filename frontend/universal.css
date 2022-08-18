@@ -6,8 +6,7 @@
     --card-color: rgb(170, 170, 170);
     --btn-color: #999999;
     --accent-color: rgb(255, 69, 69);
-    --header-height: 150px;
-    
+    --header-height: 150px;  
 }
 
 *, *:before, *:after {
@@ -36,10 +35,12 @@ html, body {
 #overview {
     font-size: 24px;
 }
+
 /*  =============================================================
     ==                    Styling for Header                   ==
     =============================================================
 */
+
 header {
     border: thin solid rgb(29, 29, 29); 
 	width:100%; 
@@ -58,6 +59,7 @@ header {
     width:100px;
     height:100px;
 }
+
 #home-btn, #music-btn, #stats-btn {
     margin: 0 .5em;
     transform: translateY(-50px);
@@ -329,11 +331,13 @@ footer {
     border-width: 12.3px 0 12.3px 20px;
     margin-left: 15px;
 }
+
 #playback-button.paused {
     border-style: double;
     border-width: 0px 0 0px 20px;
     transform: translateY(3px);
 }
+
 #playback-button:hover {
     border-color: transparent transparent transparent #ffffff;
 }
@@ -425,6 +429,4 @@ footer {
     }
 }
 
-@media all and (max-width: 740px) {
-
-}
+@media all and (max-width: 740px) {}
