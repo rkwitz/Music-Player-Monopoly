@@ -30,9 +30,9 @@ const scopes = [
 ];
 var spotifyApi = new SpotifyWebApi({
 	// make sure you don"t push with clientID or secret filled in
-    clientId: config[0],
-    clientSecret: config[1],
-    redirectUri: "http://localhost:3000/callback"
+    clientId: process.env.id,
+    clientSecret: process.env.secret,
+    redirectUri: 'http://www.musicplayermonopoly.com/callback'
 });
 
 app.get("/login", (req, res) => {
