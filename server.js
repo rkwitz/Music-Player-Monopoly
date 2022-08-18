@@ -1,4 +1,4 @@
-const { config } = require("./config"); // 0: client ID, 1: client secret
+//const { config } = require("./config"); // 0: client ID, 1: client secret
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
