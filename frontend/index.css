@@ -1,3 +1,7 @@
+/*  =============================================================
+    ==                Styling for Home Page                    ==
+    =============================================================
+*/
 #overview {
     color: white;
     text-align: center;
@@ -17,7 +21,11 @@
     color: var(--accent-color);
 }
 
-/* MOBILE */
+
+/*  =============================================================
+    ==          Styling for Mobile (smaller screens)           ==
+    =============================================================
+*/
 @media all and (max-width: 830px) {
     #overview {
         height: auto;

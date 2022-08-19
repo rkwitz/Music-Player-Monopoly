@@ -9,14 +9,15 @@ $( document ).ready(function() {
     login = new Login();
     login.html(document.getElementById("head"));
 });
+
+
 /*  =============================================================
     ==               logic for informationCards                ==
     =============================================================
 */
-
 class InformationCard {
     constructor(data) {
-        this.data = data; // data from frontend
+        this.data = data; // data from backend
     }
     html(clickable = true) {}
 }
@@ -220,6 +221,7 @@ class TrackCard extends InformationCard {
     }
 }
 
+
 /*  =============================================================
     ==           Other Methods of Displaying Stats             ==
     =============================================================
@@ -323,14 +325,6 @@ class PiChart {  // Top 13
             },
             options: {
                 plugins: {
-                    // title: {
-                    //     display: true,
-                    //     text: "",
-                    //     padding: {
-                    //         top: 10,
-                    //         bottom: 30
-                    //     }
-                    // },
                     legend: {
                         font: {
                             size: 20
@@ -344,11 +338,11 @@ class PiChart {  // Top 13
     }
 }
 
+
 /*  =============================================================
-    ==               logic for statistics page                 ==
+    ==               logic for Statistics                      ==
     =============================================================
 */
-
 class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
@@ -443,11 +437,11 @@ class Statistic {
     }
 }
 
+
 /*  =============================================================
     ==               User Login                                ==
     =============================================================
 */
-
 class Login {
     constructor() {
         this.loginVerify = false;
@@ -602,6 +596,8 @@ class Login {
         }
     }
 }
+
+
 /*  =============================================================
     ==               Playback                                  ==
     =============================================================
@@ -610,7 +606,6 @@ class Playback {
     constructor(){}
     
     html(container) {
-
         let footer = document.createElement("footer");
         let image = document.createElement("img");
         footer.innerHTML = "<ul id='playback'><li> <button id='skip-backwards'></button> </li><li> <button id='playback-button'></button> </li><li> <button id='skip-forward'></button> </li></ul>";

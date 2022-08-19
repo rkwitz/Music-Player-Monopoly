@@ -1,5 +1,5 @@
 /*  =============================================================
-    ==                      Universal                          ==
+    ==                 Styling for All Pages                   ==
     =============================================================
 */
 :root {
@@ -36,11 +36,11 @@ html, body {
     font-size: 24px;
 }
 
+
 /*  =============================================================
     ==                    Styling for Header                   ==
     =============================================================
 */
-
 header {
     border: thin solid rgb(29, 29, 29); 
 	width:100%; 
@@ -87,7 +87,9 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.large-white-btn:hover {background-color: var(--btn-color)}
+.large-white-btn:hover {
+    background-color: var(--btn-color)
+}
   
 .large-white-btn:active {
     background-color: var(--btn-color);
@@ -110,7 +112,9 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.small-white-btn:hover {background-color: var(--btn-color)}
+.small-white-btn:hover {
+    background-color: var(--btn-color)
+}
   
 .current {
     background: var(--btn-color);
@@ -132,11 +136,11 @@ body{
     background-color: rgb(36, 36, 36); 
 }
 
+
 /*  =============================================================
-    ==             stylying for informationCards               ==
+    ==             Stylying for informationCards               ==
     =============================================================
 */
-
 #card-container {
     flex-direction: row;
     flex-wrap: wrap;
@@ -274,8 +278,9 @@ body{
     margin: .5em 0;
 }
 
+
 /*  =============================================================
-    ==            stylying for Other Statistics                ==
+    ==            Stylying for Other Statistics                ==
     =============================================================
 */
 .canvas {
@@ -299,11 +304,11 @@ body{
     margin-right: 14%;
 }
 
+
 /*  =============================================================
     ==                 Styling for Music Player                ==
     =============================================================
 */
-
 footer {
 	width:30%; 
     height: 70px;
@@ -408,7 +413,11 @@ footer {
     background-color: rgb(22, 22, 22);
 }
 
-/* MOBILE */
+
+/*  =============================================================
+    ==          Styling for Mobile (smaller screens)           ==
+    =============================================================
+*/
 @media all and (max-width: 830px) {
     #login-btn, #logout-btn{
         right: 5px;
@@ -428,5 +437,3 @@ footer {
         width: 50%;
     }
 }
-
-@media all and (max-width: 740px) {}

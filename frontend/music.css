@@ -1,5 +1,5 @@
 /*  =============================================================
-    ==             stylying for Music Page                     ==
+    ==             Stylying for Music Page                     ==
     =============================================================
 */
 
@@ -76,6 +76,11 @@
     margin-top: 2em;
 }
 
+
+/*  =============================================================
+    ==          Styling for Mobile (smaller screens)           ==
+    =============================================================
+*/
 @media all and (max-width: 830px) {
     #music-content {
         margin-left: calc(var(--sidebar-width) + 100px);
