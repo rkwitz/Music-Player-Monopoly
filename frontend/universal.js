@@ -15,6 +15,15 @@ $( document ).ready(function() {
     ==               logic for informationCards                ==
     =============================================================
 */
+/* All InformationCards and their childeren follow the Cards design pattern documented here:
+   https://ui-patterns.com/patterns/cards
+   We used this design pattern because of their easy to digest, intuitive, and responsive design
+   Cards are meant to hold a collection of elements of different data types. Our track, artist
+   and playlist cards each contain images as well as informational text. By using this design pattern
+   across our site users are able to quickly understand different pieces of information, thanks to
+   each card having a unified look and feel. Lastly, cards are easily responsive to different screen
+   sizes, ensuring the same user experience for different devices.
+*/
 class InformationCard {
     constructor(data) {
         this.data = data; // data from backend
@@ -444,7 +453,6 @@ class Statistic {
 */
 class Login {
     constructor() {
-        this.loginVerify = false;
         this.page = window.location.pathname.split("/").pop();
     }
     login() {
