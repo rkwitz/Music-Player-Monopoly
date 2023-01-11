@@ -1,13 +1,12 @@
 /*  =============================================================
-    ==                      Universal                          ==
+    ==                 Styling for All Pages                   ==
     =============================================================
 */
 :root {
     --card-color: rgb(170, 170, 170);
     --btn-color: #999999;
     --accent-color: rgb(255, 69, 69);
-    --header-height: 150px;
-    
+    --header-height: 150px;  
 }
 
 *, *:before, *:after {
@@ -36,6 +35,8 @@ html, body {
 #overview {
     font-size: 24px;
 }
+
+
 /*  =============================================================
     ==                    Styling for Header                   ==
     =============================================================
@@ -58,6 +59,7 @@ header {
     width:100px;
     height:100px;
 }
+
 #home-btn, #music-btn, #stats-btn {
     margin: 0 .5em;
     transform: translateY(-50px);
@@ -85,7 +87,9 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.large-white-btn:hover {background-color: var(--btn-color)}
+.large-white-btn:hover {
+    background-color: var(--btn-color)
+}
   
 .large-white-btn:active {
     background-color: var(--btn-color);
@@ -108,7 +112,9 @@ header {
     box-shadow: 0 9px #999;
 }
 
-.small-white-btn:hover {background-color: var(--btn-color)}
+.small-white-btn:hover {
+    background-color: var(--btn-color)
+}
   
 .current {
     background: var(--btn-color);
@@ -130,11 +136,11 @@ body{
     background-color: rgb(36, 36, 36); 
 }
 
+
 /*  =============================================================
-    ==             stylying for informationCards               ==
+    ==             Stylying for informationCards               ==
     =============================================================
 */
-
 #card-container {
     flex-direction: row;
     flex-wrap: wrap;
@@ -155,8 +161,6 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    
-
     cursor: pointer;
     margin: 0;
 }
@@ -272,8 +276,9 @@ body{
     margin: .5em 0;
 }
 
+
 /*  =============================================================
-    ==            stylying for Other Statistics                ==
+    ==            Stylying for Other Statistics                ==
     =============================================================
 */
 .canvas {
@@ -297,11 +302,11 @@ body{
     margin-right: 14%;
 }
 
+
 /*  =============================================================
     ==                 Styling for Music Player                ==
     =============================================================
 */
-
 footer {
 	width:30%; 
     height: 70px;
@@ -329,11 +334,13 @@ footer {
     border-width: 12.3px 0 12.3px 20px;
     margin-left: 15px;
 }
+
 #playback-button.paused {
     border-style: double;
     border-width: 0px 0 0px 20px;
     transform: translateY(3px);
 }
+
 #playback-button:hover {
     border-color: transparent transparent transparent #ffffff;
 }
@@ -404,7 +411,11 @@ footer {
     background-color: rgb(22, 22, 22);
 }
 
-/* MOBILE */
+
+/*  =============================================================
+    ==          Styling for Mobile (smaller screens)           ==
+    =============================================================
+*/
 @media all and (max-width: 830px) {
     #login-btn, #logout-btn{
         right: 5px;
@@ -423,8 +434,4 @@ footer {
     footer {
         width: 50%;
     }
-}
-
-@media all and (max-width: 740px) {
-
 }

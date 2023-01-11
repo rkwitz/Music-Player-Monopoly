@@ -26,7 +26,7 @@ $( document ).ready(function() {
 
 // top category
 let topArtistFunction = function(container) {
-    let req = {'range': 'long', 'numberArtists': 99}
+    let req = {'range': 'long', 'numberArtists': 99};
     if (login.isLogged()) {
         $.ajax({
             url: "/myTopArtists/?" + $.param(req),
@@ -50,10 +50,10 @@ let topArtistFunction = function(container) {
     else {
         location.href = "/index.html";
     }
-}
+};
 
 let topSongsFunction = function(container) {
-    let req = {'range': 'long', 'numberSongs': 99}
+    let req = {'range': 'long', 'numberSongs': 99};
     if (login.isLogged()) {
         $.ajax({
             url: "/myTopSongs/?" + $.param(req),
@@ -77,7 +77,7 @@ let topSongsFunction = function(container) {
     else {
         location.href = "/index.html";
     }
-}
+};
 
 let topDecadesFunction = function(container) {
     var decades = {
@@ -92,8 +92,8 @@ let topDecadesFunction = function(container) {
         '2020s': 0.0
     };
     const num = 99;
-    let req = {'range': 'long', 'numberSongs': num}
-    const rankWeight = 5 // #1 top Track will add to the score of its decade by a factor of rankWeight more than the last available top Track
+    let req = {'range': 'long', 'numberSongs': num};
+    const rankWeight = 5; // #1 top Track will add to the score of its decade by a factor of rankWeight more than the last available top Track
     if (login.isLogged()) {
         $.ajax({
             url: "/myTopSongs/?" + $.param(req),
@@ -126,13 +126,13 @@ let topDecadesFunction = function(container) {
     else {
         location.href = "/index.html";
     }
-}
+};
 
 let topGenreFunction = function(container) {
     var genres = {};
     const num = 99;
-    const rankWeight = 5 // #1 top Artist will add to the score of its genres by a factor of rankWeight more than the last available top Artist
-    let req = {'range': 'long', 'numberArtists': num}
+    const rankWeight = 5; // #1 top Artist will add to the score of its genres by a factor of rankWeight more than the last available top Artist
+    let req = {'range': 'long', 'numberArtists': num};
     if (login.isLogged()) {
         $.ajax({
             url: "/myTopArtists/?" + $.param(req),
@@ -144,7 +144,7 @@ let topGenreFunction = function(container) {
                     let genreList = Array();
                     genreList = result.artists[i].genres;
                     genreList.forEach((genreName) => {
-                        score = (num-i)*(rankWeight - 1) + num
+                        let score = (num-i)*(rankWeight - 1) + num;
                         if (genres.hasOwnProperty(genreName)){
                             genres[genreName] += score;
                         }
@@ -166,11 +166,11 @@ let topGenreFunction = function(container) {
                 // Create a new array with only the first 13 items
                 items = items.slice(0, 13);
     
-                sortedGenre={}
+                sortedGenre={};
                 items.forEach((v) => {
-                    useKey = v[0]
-                    useValue = v[1]
-                    sortedGenre[useKey] = useValue
+                    useKey = v[0];
+                    useValue = v[1];
+                    sortedGenre[useKey] = useValue;
                 });
     
                 let piChart = new PiChart(sortedGenre);
@@ -186,4 +186,4 @@ let topGenreFunction = function(container) {
     else {
         location.href = "/index.html";
     }
-}
+};

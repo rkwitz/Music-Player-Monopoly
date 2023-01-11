@@ -2,20 +2,31 @@
     ==                         Main                            ==
     =============================================================
 */
+var i;
 let login;
 
 $( document ).ready(function() {
     login = new Login();
-    login.html(document.getElementById('head'));
+    login.html(document.getElementById("head"));
 });
+
+
 /*  =============================================================
     ==               logic for informationCards                ==
     =============================================================
 */
-
+/* All InformationCards and their childeren follow the Cards design pattern documented here:
+   https://ui-patterns.com/patterns/cards
+   We used this design pattern because of their easy to digest, intuitive, and responsive design
+   Cards are meant to hold a collection of elements of different data types. Our track, artist
+   and playlist cards each contain images as well as informational text. By using this design pattern
+   across our site users are able to quickly understand different pieces of information, thanks to
+   each card having a unified look and feel. Lastly, cards are easily responsive to different screen
+   sizes, ensuring the same user experience for different devices.
+*/
 class InformationCard {
     constructor(data) {
-        this.data = data; // data from frontend
+        this.data = data; // data from backend
     }
     html(clickable = true) {}
 }
@@ -25,8 +36,8 @@ class ArtistCard extends InformationCard  {
         super(data);
     }
     html(clickable = true) {
-        let card = document.createElement('div');
-        card.classList.add('card', 'artist-card');
+        let card = document.createElement("div");
+        card.classList.add("card", "artist-card");
 
         if (clickable) {
             card.addEventListener("click", (e) => {
@@ -34,27 +45,27 @@ class ArtistCard extends InformationCard  {
             });
         }
 
-        let followers = document.createElement('p');
+        let followers = document.createElement("p");
         followers.innerHTML = this.data.followers.toLocaleString("en-US"); // adds commas
         followers.innerHTML += " followers";
         followers.className = "followers";
         
         // TODO: some sort of graphic with popularity?
 
-        let genreTitle = document.createElement('h4');
+        let genreTitle = document.createElement("h4");
         genreTitle.innerHTML = "Genres:";
-        genreTitle.className = "genre-title"
+        genreTitle.className = "genre-title";
 
-        let genres = document.createElement('ul');
-        genres.className = 'genre-list'
+        let genres = document.createElement("ul");
+        genres.className = "genre-list";
         let genreList = Array();
-        genreList = this.data.genres
+        genreList = this.data.genres;
         let maxGenres = 4;
         genreList.forEach((genreName) => {
             if (maxGenres != 0) {
-                let li = document.createElement('li');
-                li.className = 'genre-item';
-                let genre = document.createElement('p');
+                let li = document.createElement("li");
+                li.className = "genre-item";
+                let genre = document.createElement("p");
                 genre.innerHTML = genreName;
                 genre.className = "genre";
                 li.append(genre);
@@ -63,12 +74,12 @@ class ArtistCard extends InformationCard  {
             }
         });
 
-        let name = document.createElement('h3');
-        name.className = 'artist-name';
+        let name = document.createElement("h3");
+        name.className = "artist-name";
         name.innerHTML = this.data.name;
 
-        let img = document.createElement('img');
-        img.className = 'artist-image';
+        let img = document.createElement("img");
+        img.className = "artist-image";
         img.src = this.data.image;
         img.alt = `A photo of the artist "${this.data.name}"`;
 
@@ -94,15 +105,15 @@ class PlaylistCard extends InformationCard {
             $.ajax({
                 url: "/playlistGetTracks/?"  + $.param(req),
                 type: "GET",
-                ContentType: 'application/json',
+                ContentType: "application/json",
                 headers: {"Authorization": `${login.getToken()}`},
-                success: result => {
+                success: (result) => {
                     this.img = result.art;
                     this.name = result.name;
                     this.url = result.url;
                     let trackArr = result.songs;
                     let trackCards = Array();
-                    for (let i=0; i<trackArr.length; ++i) {
+                    for (i=0; i<trackArr.length; i += 1) {
                         // create Tracks cards for each track in playlist
                         let track = new TrackCard(trackArr[i]);
                         trackCards.push(track);
@@ -110,8 +121,8 @@ class PlaylistCard extends InformationCard {
                     this.trackCards = trackCards;
                     let btn = document.createElement("button");
                     btn.className = "playlist";
-                    btn.classList.add('small-white-btn');
-                    btn.classList.add('min-width-50')
+                    btn.classList.add("small-white-btn");
+                    btn.classList.add("min-width-50");
                     btn.innerHTML = this.name;
                     
                     btn.addEventListener("click", (e) => {
@@ -125,8 +136,8 @@ class PlaylistCard extends InformationCard {
                         }
                     });
                     sidebar.append(btn);
-                }, error: err => {
-                    alert("Something went wrong bulding a PlaylistCard")
+                }, error: (err) => {
+                    alert("Something went wrong bulding a PlaylistCard");
                 }
             });
         }
@@ -139,7 +150,7 @@ class PlaylistCard extends InformationCard {
         container.innerHTML = ""; // clear the container
         let title = document.createElement("h2");
         title.innerHTML = this.name;
-        title.className = "music-title"
+        title.className = "music-title";
         
         let img = document.createElement("img");
         img.src = this.img;
@@ -171,8 +182,8 @@ class TrackCard extends InformationCard {
         super(data);
     }
     html(clickable = true) {
-        let card = document.createElement('div');
-        card.classList.add('card', 'track-card');
+        let card = document.createElement("div");
+        card.classList.add("card", "track-card");
 
         if (clickable) {
             card.addEventListener("click", (e) => {
@@ -180,24 +191,24 @@ class TrackCard extends InformationCard {
             });
         }
 
-        let name = document.createElement('h3');
-        name.className = 'track-name';
+        let name = document.createElement("h3");
+        name.className = "track-name";
         name.innerHTML = this.data.name;
 
-        let artistTitle = document.createElement('h4');
+        let artistTitle = document.createElement("h4");
         artistTitle.innerHTML = "artists:";
-        artistTitle.className = "artists-title"
+        artistTitle.className = "artists-title";
 
-        let artists = document.createElement('ul');
-        artists.className = 'track-list'
+        let artists = document.createElement("ul");
+        artists.className = "track-list";
         let artistList = Array();
-        artistList = this.data.artists
+        artistList = this.data.artists;
         let maxArtists = 3;
-        for (let i=0; i<artistList.length; ++i) {
+        for (i=0; i<artistList.length; i += 1) {
             if (maxArtists != 0) {
-                let li = document.createElement('li');
-                li.className = 'artist-item';
-                let artist = document.createElement('p');
+                let li = document.createElement("li");
+                li.className = "artist-item";
+                let artist = document.createElement("p");
                 artist.innerHTML = artistList[i];
                 artist.className = "artist";
                 li.append(artist);
@@ -206,8 +217,8 @@ class TrackCard extends InformationCard {
             }
         }
 
-        let img = document.createElement('img');
-        img.className = 'track-image';
+        let img = document.createElement("img");
+        img.className = "track-image";
         img.src = this.data.art;
         img.alt = `A photo of the track "${this.data.name}" by ${this.data.artists[0]}`;
         
@@ -219,6 +230,7 @@ class TrackCard extends InformationCard {
     }
 }
 
+
 /*  =============================================================
     ==           Other Methods of Displaying Stats             ==
     =============================================================
@@ -228,23 +240,23 @@ class Histogram {
         this.labels = Object.keys(data);
 
         this.data = Array();
-        for (var i = 0; i < this.labels.length;i++){
+        for (i = 0; i < this.labels.length; i += 1){
             this.data.push(data[this.labels[i]]);
         }
     }
     html() {
-        let hist = document.createElement('canvas');
-        hist.id = 'histogram';
-        hist.classList.add('histogram');
+        let hist = document.createElement("canvas");
+        hist.id = "histogram";
+        hist.classList.add("histogram");
 
-        const ctx = hist.getContext('2d');
+        const ctx = hist.getContext("2d");
         const chart = new Chart(ctx, {
-            type: 'bar',
+            type: "bar",
             data: {
                 labels: this.labels,
                 datasets: [{
                     data: this.data,
-                    backgroundColor: 'blue'
+                    backgroundColor: "blue"
                 }]
             },
             options: {
@@ -254,7 +266,7 @@ class Histogram {
                     },
                     title: {
                         display: false,
-                        text: '',
+                        text: "",
                         padding: {
                             top: 10,
                             bottom: 5
@@ -282,36 +294,36 @@ class PiChart {  // Top 13
         this.labels = Object.keys(data);
 
         this.data = [];
-        for (var i = 0; i < this.labels.length;i++){
+        for (i = 0; i < this.labels.length; i += 1){
             this.data.push(data[this.labels[i]]);
         }
     }
     html() {
         let colors = [
-            'blue',
-            'red',
-            'green',
-            'yellow',
-            'purple',
-            'orange',
-            'maroon',
-            'fuchsia',
-            'lime',
-            'olive',
-            'navy',
-            'teal',
-            'aqua'
+            "blue",
+            "red",
+            "green",
+            "yellow",
+            "purple",
+            "orange",
+            "maroon",
+            "fuchsia",
+            "lime",
+            "olive",
+            "navy",
+            "teal",
+            "aqua"
         ];
         if (this.data.length < 13){
             colors = colors.slice(0, this.data.length);
         }
-        let pie = document.createElement('canvas');
-        pie.id = 'pie';
-        // pie.classList.add('pie');
+        let pie = document.createElement("canvas");
+        pie.id = "pie";
+        // pie.classList.add("pie");
 
-        const ctx = pie.getContext('2d');
+        const ctx = pie.getContext("2d");
         const chart = new Chart(ctx, {
-            type: 'pie',
+            type: "pie",
             data: {
                 labels: this.labels,
                 datasets: [{
@@ -322,19 +334,11 @@ class PiChart {  // Top 13
             },
             options: {
                 plugins: {
-                    // title: {
-                    //     display: true,
-                    //     text: '',
-                    //     padding: {
-                    //         top: 10,
-                    //         bottom: 30
-                    //     }
-                    // },
                     legend: {
                         font: {
                             size: 20
                         },
-                        position: 'right'
+                        position: "right"
                     }
                 },
             }
@@ -343,11 +347,11 @@ class PiChart {  // Top 13
     }
 }
 
+
 /*  =============================================================
-    ==               logic for statistics page                 ==
+    ==               logic for Statistics                      ==
     =============================================================
 */
-
 class Category {
     constructor(name, statistics) {
         this.statistics = statistics; // arry of statistic objects within the catagory
@@ -378,14 +382,14 @@ class Category {
         statContainer.innerHTML = "";
         let title = document.createElement("h2");
         title.innerHTML = this.statistics[0].name;
-        title.className = "stat-title"
+        title.className = "stat-title";
         let content = document.createElement("div");
         content.id = "card-container";
         this.statistics[0].performStatistic(content);
 
         let left = document.createElement("btn");
         left.id = "left-btn";
-        left.className = "-1"
+        left.className = "-1";
         let right = document.createElement("btn");
         right.id = "right-btn";
         right.className = "1";
@@ -401,15 +405,15 @@ class Category {
         long.innerHTML = "all time"
 
         // add event listeners to change currently visualized data
-        left.addEventListener('click',(e) => {
+        left.addEventListener("click",(e) => {
             let targetIndex = parseInt(e.target.className);
             if (targetIndex >= 0) {
                 // hide button briefly to account for api call 
                 // otherwise user can "unalign" stats
-                e.target.style.display = 'none';
+                e.target.style.display = "none";
                 setTimeout(() => {
-                    e.target.style.display = 'block';
-                }, 1000)
+                    e.target.style.display = "block";
+                }, 1000);
                 this.statistics[targetIndex].performStatistic(content);
                 title.innerHTML = this.statistics[targetIndex].name;
                 e.target.className = --targetIndex;
@@ -417,15 +421,15 @@ class Category {
                 document.getElementById("right-btn").className = --right;
             }
         });
-        right.addEventListener('click',(e) => {
+        right.addEventListener("click",(e) => {
             let targetIndex = parseInt(e.target.className);
             if (targetIndex < this.statistics.length) {
                 // hide button briefly to account for api call 
                 // otherwise user can "unalign" stats
-                e.target.style.display = 'none';
+                e.target.style.display = "none";
                 setTimeout(() => {
-                    e.target.style.display = 'block';
-                }, 1000)
+                    e.target.style.display = "block";
+                }, 1000);
                 this.statistics[targetIndex].performStatistic(content);
                 title.innerHTML = this.statistics[targetIndex].name;
                 e.target.className = ++targetIndex;
@@ -465,14 +469,13 @@ class Statistic {
     }
 }
 
+
 /*  =============================================================
     ==               User Login                                ==
     =============================================================
 */
-
 class Login {
     constructor() {
-        this.loginVerify = false;
         this.page = window.location.pathname.split("/").pop();
     }
     login() {
@@ -480,8 +483,8 @@ class Login {
     }
 
     logout() {
-        const url = 'https://www.spotify.com/logout/';
-        const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40');
+        const url = "https://www.spotify.com/logout/";
+        const spotifyLogoutWindow = window.open(url, "Spotify Logout", "width=700,height=500,top=40,left=40");
         setTimeout(() => spotifyLogoutWindow.close(), 500);
         document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         setTimeout(() => location.reload(), 510);
@@ -493,15 +496,15 @@ class Login {
         if (window.location.hash) {
             const hash = window.location.hash
             .substring(1)
-            .split('&')
+            .split("&")
             .reduce(function (initial, item) {
             if (item) {
-                var parts = item.split('=');
+                var parts = item.split("=");
                 initial[parts[0]] = decodeURIComponent(parts[1]);
             }
             return initial;
             }, {});
-            window.location.hash = '';
+            window.location.hash = "";
             var date = new Date();
             date.setTime(date.getTime() + (hash.expires_in*1000));
             var expires = "; expires="+date.toGMTString();
@@ -513,10 +516,10 @@ class Login {
     getToken() {
         let name = "access_token=";
         let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
+        let ca = decodedCookie.split(";");
+        for(i = 0; i <ca.length; i += 1) {
           let c = ca[i];
-          while (c.charAt(0) == ' ') {
+          while (c.charAt(0) == " ") {
             c = c.substring(1);
           }
           if (c.indexOf(name) == 0) {
@@ -544,15 +547,15 @@ class Login {
             let homebtn = document.createElement("btn");
             homebtn.id = "home-btn";
             homebtn.innerHTML = "Home";
-            homebtn.classList.add('small-white-btn');
+            homebtn.classList.add("small-white-btn");
             
 
-            if (this.page == 'index.html'){
+            if (this.page == "index.html"){
                 homebtn.classList.add("current");
             }
             else{
-                document.addEventListener('click',(e) => {
-                    if(e.target && e.target.id== 'home-btn'){
+                document.addEventListener("click",(e) => {
+                    if(e.target && e.target.id== "home-btn"){
                         location.href = "/index.html";
                     }
                 });
@@ -561,14 +564,14 @@ class Login {
             let statsbtn = document.createElement("btn");
             statsbtn.id = "stats-btn";
             statsbtn.innerHTML = "Stats";
-            statsbtn.classList.add('small-white-btn');
+            statsbtn.classList.add("small-white-btn");
             
-            if (this.page == 'stats.html'){
+            if (this.page == "stats.html"){
                 statsbtn.classList.add("current");
             }
             else{
-                document.addEventListener('click',(e) => {
-                    if(e.target && e.target.id== 'stats-btn'){
+                document.addEventListener("click",(e) => {
+                    if(e.target && e.target.id== "stats-btn"){
                         location.href = "/stats.html";
                     }
                 });
@@ -577,14 +580,14 @@ class Login {
             let musicbtn = document.createElement("btn");
             musicbtn.id = "music-btn";
             musicbtn.innerHTML = "Music";
-            musicbtn.classList.add('small-white-btn');
+            musicbtn.classList.add("small-white-btn");
             
-            if (this.page == 'music.html'){
+            if (this.page == "music.html"){
                 musicbtn.classList.add("current");
             }
             else{
-                document.addEventListener('click',(e) => {
-                    if(e.target && e.target.id== 'music-btn'){
+                document.addEventListener("click",(e) => {
+                    if(e.target && e.target.id== "music-btn"){
                         location.href = "/music.html";
                     }
                 });
@@ -593,10 +596,10 @@ class Login {
             let logoutbtn = document.createElement("btn");
             logoutbtn.id = "logout-btn";
             logoutbtn.innerHTML = "Logout";
-            logoutbtn.classList.add('large-white-btn');
+            logoutbtn.classList.add("large-white-btn");
 
-            document.addEventListener('click',(e) => {
-                if(e.target && e.target.id== 'logout-btn'){
+            document.addEventListener("click",(e) => {
+                if(e.target && e.target.id== "logout-btn"){
                     this.logout();
                 }
             });
@@ -606,17 +609,17 @@ class Login {
             container.append(statsbtn);
         }
         else { // user is not logged in
-            if (this.page != 'index.html' && this.page != ''){
+            if (this.page != "index.html" && this.page != ""){
                 location.href = "/index.html";
             }
 
             let loginbtn = document.createElement("btn");
             loginbtn.id = "login-btn";
             loginbtn.innerHTML = "Login";
-            loginbtn.classList.add('large-white-btn');
+            loginbtn.classList.add("large-white-btn");
 
-            document.addEventListener('click',(e) => {
-                if(e.target && e.target.id== 'login-btn'){
+            document.addEventListener("click",(e) => {
+                if(e.target && e.target.id== "login-btn"){
                     this.login();
                 }
             });
@@ -624,6 +627,8 @@ class Login {
         }
     }
 }
+
+
 /*  =============================================================
     ==               Playback                                  ==
     =============================================================
@@ -632,12 +637,10 @@ class Playback {
     constructor(){}
     
     html(container) {
-
         let footer = document.createElement("footer");
         let image = document.createElement("img");
         footer.innerHTML = "<ul id='playback'><li> <button id='skip-backwards'></button> </li><li> <button id='playback-button'></button> </li><li> <button id='skip-forward'></button> </li></ul>";
-        image.className = "albumArt"
-        //footer.prepend(image)
+        image.className = "albumArt";
         container.append(footer);
         var btn = $("#playback-button");
         var skipForwards = $("#skip-forward");
@@ -646,13 +649,13 @@ class Playback {
             $.ajax({
                 url: "/playbackState",
                 type: "GET",
-                ContentType: 'application/json',
+                ContentType: "application/json",
                 headers: {"Authorization": `${login.getToken()}`},
-                success: result => {
+                success: (result) => {
                     if (result == "playing") {
                         btn.toggleClass("paused");
                     }
-                }, error: err => {}
+                }, error: (err) => {}
             });
             //play or pause clicked
             btn.click(function() {
@@ -661,13 +664,13 @@ class Playback {
                         $.ajax({
                             url: "/pause",
                             type: "GET",
-                            ContentType: 'application/json',
+                            ContentType: "application/json",
                             headers: {"Authorization": `${login.getToken()}`},
-                            success: result => {
+                            success: (result) => {
                                 btn.toggleClass("paused");
                                 console.log("Paused Sucessfully");
-                            }, error: err => {
-                                if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            }, error: (err) => {
+                                if (err.responseJSON.body.error.reason == "NO_ACTIVE_DEVICE") {
                                     alert("No Active Device Found");
                                 }
                                 else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
@@ -690,13 +693,13 @@ class Playback {
                         $.ajax({
                             url: "/play",
                             type: "GET",
-                            ContentType: 'application/json',
+                            ContentType: "application/json",
                             headers: {"Authorization": `${login.getToken()}`},
-                            success: result => {
+                            success: (result) => {
                                 btn.toggleClass("paused");
                                 console.log("Played Sucessfully");
-                            }, error: err => {
-                                if (err.responseJSON.body.error.reason == 'NO_ACTIVE_DEVICE') {
+                            }, error: (err) => {
+                                if (err.responseJSON.body.error.reason == "NO_ACTIVE_DEVICE") {
                                     alert("No Active Device Found");
                                 }
                                 else if (err.responseJSON.body.error.message == "Player command failed: Restriction violated") {
@@ -722,27 +725,27 @@ class Playback {
                     $.ajax({
                         url: "/skipNext",
                         type: "GET",
-                        ContentType: 'application/json',
+                        ContentType: "application/json",
                         headers: {"Authorization": `${login.getToken()}`},
-                        success: result => {
-                            console.log("Skipped Forward Sucessfully")
+                        success: (result) => {
+                            console.log("Skipped Forward Sucessfully");
                             if (login.isLogged()) {
                                 $.ajax({
                                     url: "/playbackState",
                                     type: "GET",
-                                    ContentType: 'application/json',
+                                    ContentType: "application/json",
                                     headers: {"Authorization": `${login.getToken()}`},
-                                    success: result => {
+                                    success: (result) => {
                                         if (result == "paused") {
                                             btn.toggleClass("paused");
                                         }
-                                    }, error: err => {}
+                                    }, error: (err) => {}
                                 });
                             }
                             else {
                                 location.href = "/index.html";
                             }
-                        }, error: err => {
+                        }, error: (err) => {
                             alert("Something Went Wrong");
                             console.log("Something went wrong:");
                             console.log(err.responseJSON);
@@ -759,27 +762,27 @@ class Playback {
                     $.ajax({
                         url: "/skipPrevious",
                         type: "GET",
-                        ContentType: 'application/json',
+                        ContentType: "application/json",
                         headers: {"Authorization": `${login.getToken()}`},
-                        success: result => {
-                            console.log("Skipped Backward Sucessfully")
+                        success: (result) => {
+                            console.log("Skipped Backward Sucessfully");
                             if (login.isLogged()) {
                                 $.ajax({
                                     url: "/playbackState",
                                     type: "GET",
-                                    ContentType: 'application/json',
+                                    ContentType: "application/json",
                                     headers: {"Authorization": `${login.getToken()}`},
-                                    success: result => {
+                                    success: (result) => {
                                         if (result == "paused") {
                                             btn.toggleClass("paused");
                                         }
-                                    }, error: err => {}
+                                    }, error: (err) => {}
                                 });
                             }
                             else {
                                 location.href = "/index.html";
                             }
-                        }, error: err => {
+                        }, error: (err) => {
                             alert("Something Went Wrong");
                             console.log("Something went wrong:");
                             console.log(err.responseJSON);
