@@ -8,7 +8,6 @@ How To Setup Server
 ===========================================
 - config.js file must be in the root folder
     - this file is not included in the GIT repo, please contact developers directly if you do not have this file
-    - (We have included this file in our submission on lms)
 - Install Node.JS for your operating system
 - Open a terminal to /Music-Player-Monopoly$
 - run the following commands:
