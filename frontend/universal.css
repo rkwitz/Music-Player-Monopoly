@@ -364,7 +364,7 @@ footer {
     height: 24.6px;
     width: 4px;
     position: absolute;
-    right: 10px;
+    right: 8px;
     background-color: #ffffff;
     transform: translateY(-50%);
 }
@@ -388,7 +388,7 @@ footer {
     height: 24.6px;
     width: 4px;
     position: absolute;
-    left: 10px;
+    left: 8px;
     background-color: #ffffff;
     transform: translateY(-50%);
 }
