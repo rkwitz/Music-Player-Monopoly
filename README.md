@@ -1,4 +1,4 @@
-Spotify extension music player web app. Uses Spotify's API to collect user data and present statics to user. Primarily coded in JavaScript, CSS, and HTML.
+Spotify extension music player web app. Uses Spotify's API to collect user data and present statistics to user. Primarily coded in JavaScript, CSS, and HTML.
 
 Site is now live and can be reached at: http://www.musicplayermonopoly.com/
 
